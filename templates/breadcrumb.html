@@ -1,0 +1,28 @@
+
+<div class="row">
+	<div class="col-lg-12">
+		<div class="page-title">
+			<div class="blue_header">
+				<div class="col-md-8">
+					<h1><%=this.getTitle()%></h1>
+				</div>
+				<div class="col-md-4">
+					<p>
+						Full name: <%=this.options.setting.users.firstname%>
+						<%=this.options.setting.users.lastname%> IP Address:
+						<%=this.options.setting.users.setting.ip%> <br /> Login Since :
+						<%=this.options.setting.getFormatedDate(this.options.setting.users.setting.since)%>
+						Phone : <%=this.options.setting.users.phone%>
+						<a class='logout'> Logout </a>
+					</p>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			<ol class="breadcrumb">
+				<li><i class="fa fa-dashboard"></i> <a> Home </a></li>
+				<li class="active"><%=this.getTitle()%></li>
+			</ol>
+		</div>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>

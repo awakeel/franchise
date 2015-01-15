@@ -1,0 +1,55 @@
+
+<div>
+	<button class="btn btn-primary add-new">Create new schedule</button>
+</div>
+<div>&nbsp;</div>
+
+<div id='calendar'></div>
+
+<div class="modal modal-flex fade in" id="popup" tabindex="-1"
+	role="dialog" aria-labelledby="flexModalLabel" aria-hidden="false"
+	style="display: none;">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close close-p" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4 class="modal-title" id="flexModalLabel">Add new department</h4>
+			</div>
+			<div class="modal-body">
+				 
+				 	<h4>Schedule Date</h4>
+					<div id="scheduledate">
+						<input class="form-control" type="text" style="width: 276px;" />
+					</div>
+				 	<h4>Job Types</h4>
+                     <input type="text" class="form-control" id="txtjobtypes" value="" placeholder="Start Typing..." />
+				 	
+					<h4>Time from</h4>
+					<div class="input-append bootstrap-timepicker input-group">
+					   <input id="timefrom" class="form-control" type="text" style="width: 176px;">
+					    
+					</div>
+				    <h4>Time to</h4>
+					<div class="input-append bootstrap-timepicker input-group">
+					   <input id="timeto" class="form-control" type="text" style="width: 176px;">
+					    
+					</div>
+					<!-- /input-group -->
+				     <h4>Employees</h4>
+				     <input type="text"  class="form-control"  id="txtemployees"  placeholder="Start typing..." />
+                     
+			  
+				</div>
+			 
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default close-p"
+					data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-green save-p">Save
+					changes</button>
+			</div>
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>

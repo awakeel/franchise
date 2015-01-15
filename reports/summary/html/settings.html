@@ -1,0 +1,108 @@
+<div class=" camp_set">
+
+
+    <div class="row-fluid ">
+
+        <div class="span6">
+
+            <h2><i class="icon hinfo"></i>Header Information</h2>
+
+            <div class="camp_set_box">
+                <div class="camp_set_boxinner">
+
+                    <div class="sumry">
+
+                        <div class="row"><label>Subject</label><span class="text"><%=this.app.encodeHTML(this.model.get('subject'))%></span></div>
+                        <div class="row"><label>From Email</label><span class="text from-email">
+
+                            </span></div>
+                        <div class="row"><label>From Name</label><span class="text from-name"> 
+
+                            </span></div>
+                        <div class="row"><label>Reply To</label><span class="text reply-to">  
+                            </span></div>
+
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+        <div class="span6">
+
+            <h2><i class="icon setting"></i>Setting</h2>
+
+
+            <div class="camp_set_box">
+                <div class="camp_set_boxinner">
+
+
+
+                    <div>
+
+                          <div class="step1-settings">
+                            <div class="inputlabel" style="margin-top:10px;">
+                                <input type="checkbox" id="campaign_profileUpdate" value="" >
+                                <label for="campaign_profileUpdate">Subscriber Information Update <a style="display:none">Choose  fields</a> </label>
+                            </div>                
+                            
+                            <div class="inputlabel">
+                                <input type="checkbox" id="campaign_isTextOnly" class="checkinput"  value="">
+                                <label for="campaign_isTextOnly">Send Text version only </label>
+                            </div>
+                            <div class="inputlabel">
+                                <input type="checkbox" id="campaign_isWebVersion" class="checkinput"  value="">
+                                <label for="campaign_isWebVersion">Show web version on my email </label>
+                            </div>
+                            
+                        </div>
+                         <%if(this.model.get('isFooterText')=='Y'){%>
+                          <div class="row fluidlabel" style="margin:15px 0 0;"> <label class=""><strong>Company and Physical Address in email footer:</strong></label> 
+                            <p> <%=this.app.encodeHTML(this.model.get('footerText'))%>
+                            </p>
+                          </div>
+                         <%}%>
+                        <div class="clearfix"></div>
+                    </div>
+
+
+
+
+
+
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>      <!--  row-fluid  -->
+
+<%if(!this.trackId && !this.botId){%>
+
+    <h2><i class="icon contacts"></i>Recipients</h2>
+
+    <div class="camp_set_box">
+        <div class="camp_set_boxinner" style="min-height:35px;">
+
+
+
+            <div class="recepient_type">
+
+              <div class='loading-wheel' style='margin-left:10px;margin-top: 20px;position: inherit!important;'></div>
+
+            </div>
+
+
+
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+<%}%>
+
+
+</div>
