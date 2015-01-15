@@ -7,6 +7,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         	 var that = this;
         	 this.selectedLanguage = 1;
         	 this.jobTypes = {};
+        	 this.modules = {};
         	 this.services = {};
         	 this.users = users || {};
              this.set(_.extend({
@@ -22,6 +23,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
             }, window.sz_config || {}));
 			  this.objLanguage = new Language();
 			  var that = this;
+			  this.getModules();
 			    this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
                                     //alert(key.languagetitle);
 			    		that.checkError('err');
@@ -68,9 +70,18 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 
             } ); 
          }, 
+         getModules: function () {
+             var URL = "api/modules";
+             var that = this;
+             jQuery.getJSON(URL,  function (tsv, state, xhr) {
+                 var _json = jQuery.parseJSON(xhr.responseText);
+                 that.modules = _json;
+                
+             } ); 
+          }, 
          getFormatedDate:function(date){
              if(date) 
-	            return moment(date).fromNow();;
+	            return date+moment(date).fromNow();;
          },
          clearCache: function () {
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);

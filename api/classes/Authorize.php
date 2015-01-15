@@ -52,6 +52,7 @@ class Authorize {
         						$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
         						$_SESSION['login_failure'] = false;
         						$_SESSION['branchid'] =  $cursor[0]->branchid;
+        						$_SESSION['roleid'] = $cursor[0]->roleid;
         						$basic['ip'] =  $_SERVER['REMOTE_ADDR'];
         						$basic['since'] = date("F j, Y, g:i a");
         						$basic['login_failure'] = false;
@@ -84,6 +85,9 @@ function getLoggedInMessages(){
 	}else{
 		return true;
 	}
+}
+function getRoleId(){
+	return @$_SESSION['user']->roleid;
 }
 function getLoginType($branchid = 0, $useAsFranchise = false){
 	$isFranchise = $_SESSION['user']->isfranchise;

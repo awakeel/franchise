@@ -9,11 +9,12 @@ require $path .'/classes/Employees.php';
 require $path .'/classes/JobTypes.php';
 require $path .'/classes/Branches.php';
 require $path .'/classes/Services.php';
-
 require $path .'/classes/Authorize.php';
+require $path .'/classes/Permission.php';
 require $path .'/classes/Schedule.php';
 $app = new Slim(); 
 $auth = new Authorize($app);
+$permission = new Permission($app,$auth);
  
 //$app->add(new \ContentTypes());
 //$app->add(new \Slim\Middleware\ContentTypes());
