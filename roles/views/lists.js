@@ -1,15 +1,14 @@
-define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes/views/list','jobtypes/models/jobtype'],
-	function (template,JobTypes,JobType,JobTypeModel) {
+define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list','roles/models/role'],
+	function (template,Roles,Role,RoleModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
 			className:"col-lg-13",
 			events:{
-				"keyup #txtsearchjobtype":"searchjobtypes",
-				//"click .close-p":"closePopup",
-				//"click .save-p":"saveToken",
+			 
 				"click .delete-p":"deleteToken",
-				//"click .add-new":'addNew'
+				"keyup #txtsearchrole":"searchRoles"
+				 
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -18,23 +17,24 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				this.searchText = '';
 				this.setting = this.options.setting;
 				this.offsetLength = 10;
-				this.objJobTypes = new JobTypes();
+				this.objRoles = new Roles();
 				this.render();
-				this.addNew();
+			 
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
-                this.fetchJobTypes();
+                this.fetchRoles();
                 //this.fillJobTypes();
                 var that = this;
                 var id = null;
-               
+               this.addNew();
                 
 			},
 			 
-			fetchJobTypes:function(){
+			fetchRoles:function(){
+				console.log('I am fetched');
 				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
 				var that = this;
 				var _data = {}; 
@@ -43,15 +43,14 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
 				 that.$el.find('tbody').empty();
-				 that.setting.jobTypes = {};
+				 
 				 if(this.request)
 	                    this.request.abort();
-				 this.request = this.objJobTypes.fetch({data: _data, success: function(data) {
+				 this.request = this.objRoles.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
-						var objJobType = new JobType({model:model,page:that,setting:that.setting});
-						that.$el.find('tbody').append(objJobType.$el);
-						that.setting.jobTypes[model.attributes['id']] = model.attributes['name'];
-					})
+						var objRole = new Role({model:model,page:that,setting:that.setting});
+						that.$el.find('tbody').append(objRole.$el);
+					 })
 					if(data.length < 1){
 						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
 						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newjobtypes">';
@@ -78,10 +77,12 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			},
 			addNew:function(){
 				var that = this;
-				require(['jobtypes/views/addupdate'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({page:that});
-					that.$el.append(objAddUpdate.$el);
+				require(['roles/views/addupdate'],function(AddUpdate){
+					var objAddUpdate = new AddUpdate({page:that,isnew:true});
+					that.$el.find('.roles').append(objAddUpdate.$el);
 				})
+				 
+                	 
 			},
 			fillJobTypes:function(){
 				 var url = "api/jobtypes";
@@ -122,7 +123,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                     this.fetchJobTypes(this.offsetLength);
                 }
             },
-            searchjobtypes:function(ev){ 
+            searchRoles:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -134,11 +135,11 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                      }
                      console.log(nonKey);
                      if($.inArray(code, nonKey)!==-1) return;
-                     console.log(code)
+                    
                           if(code == 8 || code == 46){
 	                                 if(text){ 
 			                        	 that.searchText = text;
-				                          that.fetchJobTypes();
+				                          that.fetchRoles();
 			                         }
                            }else{
 		                   
@@ -147,7 +148,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchJobTypes(that.langaugeFilter);
+		                                that.fetchRoles(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             } 

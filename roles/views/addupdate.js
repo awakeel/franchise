@@ -1,5 +1,5 @@
-define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/models/jobtype'],
-	function (template,JobType,JobTypeModel) {
+define(['text!roles/tpl/addupdate.html','roles/views/list','roles/models/role'],
+	function (template,Role,RoleModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
@@ -13,6 +13,11 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 			},
 			render: function () {  
 				this.$el.html(this.template( ));
+				if(this.options.name || this.options.description){
+					console.log(this.options)
+					this.$el.find('#txtname').val(this.options.name);
+					this.$el.find('#txtcomments').val(this.options.description);
+				}
 			},
 			closeView:function(){
 				this.$el.find('.modal').modal('toggle'); 
@@ -25,6 +30,7 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 			clearErrorFilter:function(){
 				this.$el.find('.name-error').addClass('hide');
 			},
+			
 			save:function(){
 						 var name = this.$el.find('#txtname').val();
 						 var comments = this.$el.find('#txtcomments').val()
@@ -33,22 +39,32 @@ define(['text!jobtypes/tpl/addupdate.html','jobtypes/views/list','jobtypes/model
 							 return false;
 						 }
 						var spin = this.options.page.setting.showLoading('',this.$el);
-		            	var objjobtype = new JobTypeModel();
-		            	objjobtype.set('branchid',1);
-		            	objjobtype.set('name',name);
-		            	objjobtype.set('comments',comments);
-		            	var model = objjobtype.save(); 
-		            	this.options.page.objJobTypes.add(objjobtype);  
-		                var last_model = this.options.page.objJobTypes.last();
-		                //this.closePopup();
-		                var objjobtype = new JobType({model:objjobtype,page:this.options.page,setting:this.options.page.setting});
-						this.options.page.$el.find('tbody').prepend(objjobtype.$el);
-						this.options.page.setting.jobTypes[this.options.page.setting.jobTypes.length-1] = name;
+						 
+						if( this.options.isnew == true){
+			            	var objRoleModel = new RoleModel();
+			             	objRoleModel.set('name',name);
+			            	objRoleModel.set('description',comments);
+			            	var model = objRoleModel.save(); 
+			            	this.options.page.objRoles.add(objRoleModel);  
+			                var last_model = this.options.page.objRoles.last();
+			                //this.closePopup();
+			                var objRole = new Role({model:objRoleModel,page:this.options.page,setting:this.options.page.setting});
+							this.options.page.$el.find('tbody').prepend(objRole.$el);
+							this.options.page.fetchRoles();
+							this.options.page.setting.successMessage();
+						}else{
+							this.model.set('name',name);
+			            	this.model.set('description',comments);
+			            	var model = this.model.save(); 
+			            	this.options.page.options.page.fetchRoles();
+							this.options.page.options.page.setting.successMessage();
+						}
+						spin.stop();
 						this.closeView();
-						this.options.page.setting.successMessage();
+						
 						this.$el.find('#txtname').val('');
 						this.$el.find('#txtcomments').val('');
-						spin.stop();
+						
 			}
 		 
 		});

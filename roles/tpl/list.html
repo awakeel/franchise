@@ -1,8 +1,17 @@
                                            		<td><%=this.model.get('id')%></td>
                                                 <td><%=this.model.get('name')%></td> 
-                                                <td width="25%">
+                                                <td><ul class="list-inline">
+                                                 
+                        <li>
+                          <%=this.getModules()%>
+                              
+                        </li>
+                                                
+               </ul></td> 
+                                                <td width="30%">
                                                 	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info activate-token"><%=this.setting.language['activate']%></button>
+                                                	<button class="btn btn-info edit-token"  data-toggle="modal"  ><%=this.setting.language['edit']%></button>
+                                                	<button class="btn btn-info manage-permission"  data-toggle="modal">  Permission</button>
                                                  </td>
                                            
                                            

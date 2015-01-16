@@ -12,6 +12,6 @@ define(['backbone'], function (Backbone) {
         initialize:function(){
                     
           } ,
-          url:'api/jobtypes'
+          url:'api/roles'
 	});
 });

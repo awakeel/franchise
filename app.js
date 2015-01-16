@@ -38,14 +38,23 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         loadPages : function() {
 			var objContainer = new Container({
 				setting : this
-			});
+			}); 
+			console.log(this.users.isnew + 'Awesome information');
 			$('#wrapper').html(objContainer.objHeader.$el);
 			$('#wrapper').append(objContainer.objLeftMenu.$el);
 			$('#wrapper').append(objContainer.$el);
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
-			$('#page-wrapper').find('.page-content').append(
-			objContainer.objDashboard.$el);
+			if( this.users.isnew == "1"){ 
+				console.log('I am in new one please insert ');
+				var that = this;
+			  	 require(['branches/views/addupdate'],function(addupdate){
+			  		$('#page-wrapper').find('.page-content').append(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.setting}).$el);
+				 }) 
+			}else{
+				$('#page-wrapper').find('.page-content').append(
+						objContainer.objDashboard.$el);
+			}
 			$('#wrapper').append(objContainer.objFooter.$el);
 			console.log('I am here at the dashboard')
 		},
@@ -58,7 +67,8 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                  
                 var allowedAdmin = ['admin', 'jayadams', 'demo'];
                 if(typeof that.users !="undefined" && that.users.setting.is_logged_in){
-                	that.loadPages();
+                	console.log(that.users)
+                	that.loadPages( );
                 }else{
                 	    require(['authorize/views/login'],function(login){
                         	$('body').html(new login().$el);

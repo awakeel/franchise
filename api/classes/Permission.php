@@ -14,6 +14,9 @@ class Permission {
         	$app->get('/modules', function () use ($app) {
         		 $this->getModules();
         	});
+        		$app->get('/allmodules', function () use ($app) {
+        			$this->getAllModules();
+        		});
       }   
 function getModules( ){
 	 
@@ -35,6 +38,29 @@ function getModules( ){
 			echo $_GET['callback'] . '(' . json_encode($modules) . ');';
 		}
 	
+	} catch(PDOException $e) {
+		$error = array("error"=> array("text"=>$e->getMessage()));
+		echo json_encode($error);
+	}
+}
+function getAllModules( ){
+
+	$sql = "select * from modules";
+
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql);
+
+		$stmt->execute();
+		$modules = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$db = null;
+		// Include support for JSONP requests
+		if (!isset($_GET['callback'])) {
+			echo json_encode($modules);
+		} else {
+			echo $_GET['callback'] . '(' . json_encode($modules) . ');';
+		}
+
 	} catch(PDOException $e) {
 		$error = array("error"=> array("text"=>$e->getMessage()));
 		echo json_encode($error);

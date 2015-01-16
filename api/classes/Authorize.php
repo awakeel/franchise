@@ -61,6 +61,7 @@ class Authorize {
         						$_SESSION['user'] = $cursor[0];
         						
         						$this->saveLoginHistory($_SERVER['REMOTE_ADDR'],$cursor[0]->id);
+        						$this->updateIsNew($cursor[0]->id);
         					} else {
         						$_SESSION['login_failure'] = true;
         						$_SESSION['is_logged_in'] = false;
@@ -156,6 +157,21 @@ function saveLoginHistory($ip,$employeeid){
  
 
 }
- 
+function updateIsNew($employeeid){
+
+	$sql = "update employees set isnew = 0 where id=$employeeid "; 
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql); 
+		$stmt->execute();
+		$db = null;
+		return true;
+	} catch(PDOException $e) {
+		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	}
+
+
+}
 }
 ?>

@@ -12,6 +12,7 @@ require $path .'/classes/Services.php';
 require $path .'/classes/Authorize.php';
 require $path .'/classes/Permission.php';
 require $path .'/classes/Schedule.php';
+require $path .'/classes/Roles.php';
 $app = new Slim(); 
 $auth = new Authorize($app);
 $permission = new Permission($app,$auth);
@@ -25,6 +26,7 @@ $objServices = new Services($app);
 $objEmployees = new Employees($app);
 $objBranches = new Branches($app,$auth);
 $objSchedule = new Schedule($app);
+$objRoles = new Roles($app,$auth);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){
