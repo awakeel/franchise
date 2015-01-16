@@ -16,11 +16,57 @@ define(['text!employees/tpl/addupdate.html'],
 				
 			},
 			closeView:function(){
+				 this.options.page.$el.find('#employees').modal('hide');
 				 this.undelegateEvents();
 				 this.$el.remove();
 				 this.$el.removeData().unbind(); 
 				 this.remove();  
 				 Backbone.View.prototype.remove.call(this);
+			},
+			getRoles:function(){
+				var URL = "api/allroles";
+	            var that = this;
+	            var str = "";
+	            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+	                var _json = jQuery.parseJSON(xhr.responseText);
+	               var all = _json;
+	                _.each(all,function(value,key,list){
+	                	 str += '<div class="radio">';
+	      	            str +='<label> <input type="radio" checked=""';
+	      	            str +='	value="'+value.id+'" id="optionfulltime" name="optionsrole"> '+value.name;
+	      	         
+	      	            str +='</label>';
+	      	            str +='</div>';
+	                }) 
+	                that.$el.find('.role-area').append(str);
+	            } );
+	         
+			},
+			getServices:function(){
+				var str = "";
+				 var that = this;
+				 console.log(this.options.page.setting.jobTypes);
+				_.each(this.options.page.setting.jobTypes,function(value,key,list){ 
+					console.log(value);
+					str+='<div class="checkbox">';
+					str+='<label> <input type="checkbox" value="'+key+'">'+list[key];
+						str+='</label>';
+							str+='</div>';
+				});
+				return str;
+			},
+			getJobTypes:function(){
+				var str = "";
+				 var that = this;
+				 
+				_.each(this.options.page.setting.services,function(value,key,list){ 
+					console.log(value);
+					str+='<div class="checkbox">';
+					str+='<label> <input type="checkbox" value="'+key+'">'+list[key];
+						str+='</label>';
+							str+='</div>';
+				});
+				return str;
 			},
 			save:function(){
 				if(!this.options.id){

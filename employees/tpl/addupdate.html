@@ -1,103 +1,102 @@
-
-<div class="modal modal-flex fade in" id="popup" tabindex="-1"
-	role="dialog" aria-labelledby="flexModalLabel" aria-hidden="false"
+ 
+<div class="modal fade"  id="employees" tabindex="-1"
+	role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true"
 	style="display: block;">
 	<div class="modal-dialog" style="width: 85%">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close close-p"  
-				 >×</button>
+				<button type="button" class="close close-p">×</button>
 				<h4 class="modal-title" id="flexModalLabel">Add new employee</h4>
 			</div>
 			<div class="modal-body">
 				<div class="tab-pane fade in active" id="basicInformation">
 					<form role="form">
 						<h4 class="page-header">Personal Information:</h4>
-						<div class="form-group col-sm-5">
+						<div class="form-group col-md-4 col-sm-4">
 							<label>Phone Number</label> <input type="tel"
-								class="form-control" id="txtphone" placeholder="555-2039">
+								placeholder="555-2039" id="txtphone" class="form-control">
+							<label>First Name</label> <input type="text" placeholder="John"
+								class="form-control" id="txtfirstname"> <label>Address</label>
+							<input type="text" placeholder="8516 Market St."
+								class="form-control" id="txtaddress"> <label>Password</label>
+							<input type="password" placeholder="8516 Market St."
+								class="form-control" id="txtpassword"> <label><i
+								class="fa fa-envelope-o fa-fw"></i> Email Address</label> <input
+								type="email" id="txtemail" placeholder="email"
+								class="form-control"> <label>Last Name</label> <input
+								type="text" placeholder="Smith" class="form-control"
+								id="txtlastname">
 						</div>
-						<div class="form-group col-sm-7">
-							<label>Password</label> <input type="password" id="txtpassword"
-								class="form-control" placeholder="8516 Market St.">
-						</div>
-						<div class="form-group  col-sm-5">
-							<label>First Name</label> <input type="text" id="txtfirstname"
-								class="form-control" placeholder="John">
-						</div>
-						<div class="form-group  col-sm-7">
-							<label>Last Name</label> <input type="text" id="txtlastname"
-								class="form-control" placeholder="Smith">
-						</div>
-						
-						<div class="form-group col-sm-5">
-							<label>Address</label> <input type="text" id="txtaddress"
-								class="form-control" placeholder="8516 Market St.">
-						</div>
-  						<div class="form-group col-sm-7">
-							<label><i class="fa fa-envelope-o fa-fw"></i> Email
-								Address</label> <input type="email" class="form-control"
-								placeholder="email" id="txtemail">
-						</div>
-						<div class="row">
-						  <div class="form-group col-sm-4">
-                                                    <label class="col-sm-4 control-label">Work Type</label>
-                                                    <div class="col-sm-10">
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="optionstype" id="optionfulltime" value="Full Time" checked="">Full Time
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="optionstype" id="optionvisiting" value="Full Time">Visiting
-                                                            </label>
-                                                        </div>
-                                                        <div class="radio">
-                                                            <label>
-                                                                <input type="radio" name="optionstype" id="optionnone" value="" >None
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-						  	   <div class="form-group col-sm-4">
-									<label class="col-sm-4 control-label">Job Types</label>
-									<div class="col-sm-10">
-										<% var that = this;
-										_.each(this.options.page.setting.jobTypes,function(id,key){%>
-										<div class="checkbox">
-											<label> <input type="checkbox" value="<%=key%>"><%=that.options.page.setting.jobTypes[key]%>
-											</label>
-										</div>
-										<%});%>
+						<div class="form-group col-md-4 col-sm-4">
+							<div class="col-md-4 col-sm-4">
+								<label class="control-label">Work Type</label>
 
-									</div>
-								</div>
-						  
-								<div class="form-group col-sm-4">
-									<label class="col-sm-4 control-label">Services</label>
-									<div class="col-sm-10">
-										<% var that = this;
-										_.each(this.options.page.setting.services,function(id,key){%>
-										<div class="checkbox">
-											<label> <input type="checkbox" value="<%=key%>"><%=that.options.page.setting.services[key]%>
-											</label>
-										</div>
-										<%});%>
 
-									</div>
+								<div class="radio">
+									<label> <input type="radio" checked=""
+										value="Full Time" id="optionfulltime" name="optionstype">Full
+										Time
+									</label>
 								</div>
-							
+								<div class="radio">
+									<label> <input type="radio" value="Full Time"
+										id="optionvisiting" name="optionstype">Visiting
+									</label>
+								</div>
+								<div class="radio">
+									<label> <input type="radio" value="" id="optionnone"
+										name="optionstype">None
+									</label>
+								</div>
+								<div class="clearfix"></div>
+								<label class="control-label">Role</label>
+								 <div class="role-area"> <%=this.getRoles()%></div>
  
-					 
+							</div>
+
+							<div class="col-md-8 col-sm-8">
+								<div class="service_box jobtypes-box">
+									<label class="control-label">Job Type</label>
+									<div class="input-group">
+										<input type="text" placeholder="Search Your Service"
+											class="form-control"> <span class="input-group-btn">
+											<button class="btn btn-default" type="button">Go!</button>
+										</span>
+									</div>
+									<%=this.getJobTypes()%>	
+								</div>
+							</div>
+						</div>
+						<div class="form-group col-sm-4 col-md-4">
+							<div class="service_box ">
+								<label class="control-label">Services</label>
+								<div class="input-group">
+
+									<div class="clearfix"></div>
+									<input type="text" class="form-control"
+										placeholder="Search Job Type"> <span
+										class="input-group-btn">
+										<button type="button" class="btn btn-default">Go!</button>
+									</span>
+								</div>
+								<div class="col-sm-10 services-box">
+									<%=this.getServices()%>
+									 
+
+
+
+								</div>
+							</div>
+						</div>
+
 
 
 					</form>
 				</div>
 			</div>
+			 <div class="clearfix"></div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default close-p"
-					 >Close</button>
+				<button type="button" class="btn btn-default close-p">Close</button>
 				<button type="button" class="btn btn-green save-p">Save
 					changes</button>
 			</div>

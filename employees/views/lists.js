@@ -67,7 +67,8 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				var that = this;
 				require(['employees/views/addupdate'],function(AddUpdate){
 					var objAddUpdate = new AddUpdate({page:that});
-					that.$el.append(objAddUpdate.$el);
+					that.$el.find('.employees').append(objAddUpdate.$el);
+					that.$el.find('#employees').modal('show');
 				})
 			},
 			fillJobTypes:function(){
