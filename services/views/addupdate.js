@@ -3,12 +3,15 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close':"closeView", 
+				 'click .close-pp':"closeView", 
 				 "click .save-p":"save"
 			 },
 			  initialize: function () {
 				this.template = _.template(template);
-				 
+				this.app = this.options.page.setting;
+				this.branchid = this.app.users.branchid;
+				if(typeof this.options.page.branchid !="undefined")
+					this.branchid = this.options.page.branchid;
 				this.render();
 			},
 			render: function () {  
@@ -28,9 +31,14 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 	                    }
 	                    	
 				})
+				that.$el.find("#txtservice").typeahead({
+					  hint: true,
+					   
+					  local: that.app.globalservices
+					}); 
 			},
 			closeView:function(){
-				this.$el.find('#newservice').modal('toggle'); 
+				this.$el.find('#newservice').modal('hide'); 
 				 //this.undelegateEvents();
 				// this.$el.remove();
 				// this.$el.removeData().unbind(); 
@@ -45,7 +53,7 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 			save:function(){ 
 				this.clearErrorFilter();
 				var name = this.$el.find('#txtservice').val();
-				var type = this.$el.find('#radioBtn .active').data('title') 
+				var type = this.$el.find('#radioBtn .active').data('toggle') 
 				var comments = this.$el.find('#txtcomments').val();
 				var time = this.$el.find('#txttime').val();
 				var price = this.$el.find('#txtprice').val();
@@ -65,8 +73,9 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 					 }
 				
 				 }
-				 	var objService = new ServiceModel();
-		            	objService.set('branchid',1);
+				 this.app.showLoading('Saving Info...',this.$el);
+				 	   var objService = new ServiceModel();
+		            	objService.set('branchid',this.branchid);
 		            	objService.set('name',name);
 		            	objService.set('type',type);
 		            	objService.set('comments',comments);
@@ -81,7 +90,8 @@ define(['text!services/tpl/addupdate.html','services/models/service','services/v
 						this.options.page.setting.services[this.options.page.setting.services.length-1] = name;
 						this.closeView();
 						this.options.page.setting.successMessage();
-		            
+						this.app.showLoading(false,this.$el);
+						$("#tr_norecord").remove();
 			}
 		 
 		});

@@ -63,9 +63,8 @@ class Roles {
 				as modulename from role as r
 				left join rolemodules on rolemodules.roleid = r.id
 				left join modules on modules.id = rolemodules.moduleid
-				$search 
-				 group by r.name  
-				
+				$search  
+				group by r.name
 				";
 
 		try {
@@ -91,8 +90,9 @@ class Roles {
 		if($this->auth->getLoggedInMessages() == false){
 			return false;
 		}
-		$params = json_decode($r->getBody()); 
-		if( $params->id){
+		$params = json_decode($r->getBody());
+		 
+		if(isset($params->id) ){
 			 $sql = "update role set name=:p, description=:d where id=".$params->id;
 			
 			try {

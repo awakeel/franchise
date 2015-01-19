@@ -38,7 +38,7 @@ define(['text!roles/tpl/addupdate.html','roles/views/list','roles/models/role'],
 							 this.$el.find('.name-error').removeClass('hide')
 							 return false;
 						 }
-						var spin = this.options.page.setting.showLoading('',this.$el);
+						 this.options.page.setting.showLoading('Saving role...',this.$el);
 						 
 						if( this.options.isnew == true){
 			            	var objRoleModel = new RoleModel();
@@ -59,7 +59,7 @@ define(['text!roles/tpl/addupdate.html','roles/views/list','roles/models/role'],
 			            	this.options.page.options.page.fetchRoles();
 							this.options.page.options.page.setting.successMessage();
 						}
-						spin.stop();
+						 this.options.page.setting.showLoading(false,this.$el);
 						this.closeView();
 						
 						this.$el.find('#txtname').val('');

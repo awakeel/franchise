@@ -91,7 +91,9 @@ function getRoleId(){
 	return @$_SESSION['user']->roleid;
 }
 function getLoginType($branchid = 0, $useAsFranchise = false){
-	$isFranchise = $_SESSION['user']->isfranchise;
+	$isFranchise = 0;
+	if(isset($_SESSION['user']))
+			$isFranchise= $_SESSION['user']->isfranchise;
 	$branchids = 0;
 	if($isFranchise){
 		   if($useAsFranchise){
@@ -106,6 +108,7 @@ function getLoginType($branchid = 0, $useAsFranchise = false){
 				}
 			}
 	}else{
+		if(isset($_SESSION['user']))
 		$branchids = $_SESSION['user']->id;
 	}
 	return $branchids;

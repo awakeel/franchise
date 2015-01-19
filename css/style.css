@@ -2427,9 +2427,10 @@ input[type="checkbox"]:checked::after,
     margin-bottom: -3px;
 }
 .top-message{
-	position: absolute;
-top: 94px;
-left: 30%;
+	    position: absolute;
+    top: 246px;
+    left: 25%;
+ 
 min-width: 30%;
 z-index: 9;
 }
@@ -2994,10 +2995,10 @@ ol.linenums li {
   background-image: none;
 }
 .top-message{
-	
-	position:absolute;
-	top:150px;
-	left:45%;
+	    position: absolute;
+    top: 246px;
+    left: 25%;
+ 
 }
 .ui-timepicker-wrapper {
 	overflow-y: auto;
@@ -3443,7 +3444,7 @@ font-size: 20px;
 	background: url("../img/trans_white.png") repeat scroll center 0 transparent;
 }
 .loading p {
-	background: url("../img/1d_2.gif") no-repeat scroll center top transparent;
+	background: url("../img/loading.gif") no-repeat scroll center top transparent;
 	font-weight: bold;
 	height: 20px;
 	left: 50%;
@@ -3454,3 +3455,13 @@ font-size: 20px;
 	top: 50%;
 	width: 100px;
 } 
+.timepicker{
+	width:100px;
+	height:30px;
+}
+.timings-div .checkbox{
+	margin:0px;
+}
+.navbar-side a{
+	cursor:pointer;
+}

@@ -83,7 +83,16 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                 },
                 render: function() {
                     this.$el.html(this.template({}));
-                   
+                    $("#sidebar-toggle").click(function(e) {
+                    	   e.preventDefault();
+                    	    $(".navbar-side").toggleClass("collapsed");
+                    	     $("#page-wrapper").toggleClass("collapsed");
+                    	 });
+
+                    	//Portlet Icon Toggle
+                    	$(".portlet-widgets .fa-chevron-down, .portlet-widgets .fa-chevron-up").click(function() {
+                    	    $(this).toggleClass("fa-chevron-down fa-chevron-up");
+                    	});
                      
                   
                 },
@@ -91,9 +100,7 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                     var title = $(obj.target).parent("li").find("a").text();
                     return title;
                 },
-                csvUpload: function() {
-                    this.addWorkSpace({type: '', title: 'CSV Upload', sub_title: 'Add Contacts', url: 'listupload/csvupload', workspace_id: 'csv_upload', tab_icon: 'csvupload', single_row: true});
-                },
+               
                 loadNotifications: function() {
                      $(".add_dialogue" ).animate({top:"-600px"});
                       $(".quick-add").removeClass( "active" );

@@ -3,7 +3,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 			 
 				"click .delete-p":"deleteToken",
@@ -16,6 +16,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 				this.fetched = 0;
 				this.searchText = '';
 				this.setting = this.options.setting;
+				this.app = this.options.setting;
 				this.offsetLength = 10;
 				this.objRoles = new Roles();
 				this.render();
@@ -23,6 +24,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
+				this.app.showLoading('Loading roles...',this.$el);
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchRoles();
@@ -33,9 +35,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
                 
 			},
 			 
-			fetchRoles:function(){
-				console.log('I am fetched');
-				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+			fetchRoles:function(){ 
 				var that = this;
 				var _data = {}; 
 				 _data['search'] = this.searchText;
@@ -52,16 +52,13 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 						that.$el.find('tbody').append(objRole.$el);
 					 })
 					if(data.length < 1){
-						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
-						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newjobtypes">';
-						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
-						trNoRecord += 'add new';
-						trNoRecord += '</button> ';
+						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no role ';
+					 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
 					}
-					spin.stop();
+					 
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					
@@ -70,6 +67,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
+					that.app.showLoading(false,that.$el);
 					 var id = null;
 					 
 				}}) 

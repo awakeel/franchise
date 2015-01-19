@@ -1,6 +1,6 @@
- 
-<div class="modal fade"  id="employees" tabindex="-1"
-	role="dialog" aria-labelledby="standardModalLabel" aria-hidden="true"
+
+<div class="modal fade" id="employees" tabindex="-1" role="dialog"
+	aria-labelledby="standardModalLabel" aria-hidden="true"
 	style="display: block;">
 	<div class="modal-dialog" style="width: 85%">
 		<div class="modal-content">
@@ -15,17 +15,26 @@
 						<div class="form-group col-md-4 col-sm-4">
 							<label>Phone Number</label> <input type="tel"
 								placeholder="555-2039" id="txtphone" class="form-control">
-							<label>First Name</label> <input type="text" placeholder="John"
-								class="form-control" id="txtfirstname"> <label>Address</label>
-							<input type="text" placeholder="8516 Market St."
-								class="form-control" id="txtaddress"> <label>Password</label>
-							<input type="password" placeholder="8516 Market St."
-								class="form-control" id="txtpassword"> <label><i
+							<span class="help-block phone-error hide"><i
+								class="fa fa-warning"></i>Please enter phone eg 0123456789!</span> <label>First
+								Name</label> <input type="text" placeholder="John" class="form-control"
+								id="txtfirstname"> <span
+								class="help-block firsname-error hide"><i
+								class="fa fa-warning"></i>Please enter first name eg Peter!</span> <label>Last
+								Name</label> <input type="text" placeholder="Smith" class="form-control"
+								id="txtlastname"> <span
+								class="help-block lastname-error hide"><i
+								class="fa fa-warning"></i>Please enter last name eg Waignright!</span>
+							<label>Address</label> <input type="text"
+								placeholder="8516 Market St." class="form-control"
+								id="txtaddress"> <label><i
 								class="fa fa-envelope-o fa-fw"></i> Email Address</label> <input
 								type="email" id="txtemail" placeholder="email"
-								class="form-control"> <label>Last Name</label> <input
-								type="text" placeholder="Smith" class="form-control"
-								id="txtlastname">
+								class="form-control"> <label>Password</label> <input
+								type="password" placeholder="8516 Market St."
+								class="form-control" id="txtpassword">
+
+
 						</div>
 						<div class="form-group col-md-4 col-sm-4">
 							<div class="col-md-4 col-sm-4">
@@ -39,19 +48,19 @@
 									</label>
 								</div>
 								<div class="radio">
-									<label> <input type="radio" value="Full Time"
+									<label> <input type="radio" value="Hourly"
 										id="optionvisiting" name="optionstype">Visiting
 									</label>
 								</div>
 								<div class="radio">
-									<label> <input type="radio" value="" id="optionnone"
-										name="optionstype">None
+									<label> <input type="radio" value="Other" id="optionnone"
+										name="optionstype">Other
 									</label>
 								</div>
 								<div class="clearfix"></div>
 								<label class="control-label">Role</label>
-								 <div class="role-area"> <%=this.getRoles()%></div>
- 
+								<div class="role-area"> </div>
+
 							</div>
 
 							<div class="col-md-8 col-sm-8">
@@ -62,13 +71,12 @@
 											class="form-control"> <span class="input-group-btn">
 											<button class="btn btn-default" type="button">Go!</button>
 										</span>
-									</div>
-									<%=this.getJobTypes()%>	
+									</div> 
 								</div>
 							</div>
 						</div>
 						<div class="form-group col-sm-4 col-md-4">
-							<div class="service_box ">
+							<div class="service_box servies_area">
 								<label class="control-label">Services</label>
 								<div class="input-group">
 
@@ -80,11 +88,7 @@
 									</span>
 								</div>
 								<div class="col-sm-10 services-box">
-									<%=this.getServices()%>
 									 
-
-
-
 								</div>
 							</div>
 						</div>
@@ -94,7 +98,7 @@
 					</form>
 				</div>
 			</div>
-			 <div class="clearfix"></div>
+			<div class="clearfix"></div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default close-p">Close</button>
 				<button type="button" class="btn btn-green save-p">Save

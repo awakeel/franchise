@@ -25,7 +25,7 @@ define([ 'backbone', 'underscore',  'text!templates/breadcrumb.html'],
 		                var _json = jQuery.parseJSON(xhr.responseText);
 		                	console.log(_json);
 		                    require(['authorize/views/login'],function(login){
-	                        	$('body').html(new login().$el);
+	                        	$('body').html(new login({app:that.options.setting}).$el);
 	                        })
 		            }); 
 				

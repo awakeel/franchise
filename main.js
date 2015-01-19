@@ -3,7 +3,7 @@
 	require.config({
 		deps : [ 'main' ],
 		waitSeconds : 400,
-		urlArgs : "v=" + new Date().getTime(),
+		urlArgs : "v=22",// + new Date().getTime(),
 		paths : {
 			jquery : 'libs/jquery',
 			underscore : 'libs/underscore',

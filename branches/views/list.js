@@ -43,9 +43,11 @@ define(['text!branches/tpl/list.html','app'],
                  updateToken:function(ev){
                 	 var that = this;
                 	 var id =$(ev.target).data('id');
-                	 require(['language/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
-                	})
+                	 require(['branches/views/addupdate'],function(addupdate){
+               		 	 	that.options.page.$el.html(new addupdate({model:that.model,page:that,setting:that.setting}).$el);
+         			 })
+         			 
+         		     
                  },
                  
                  saveToken:function(id,title,translate,view){
@@ -55,6 +57,19 @@ define(['text!branches/tpl/list.html','app'],
 	                 	this.model.save();
 	                 	view.closeView();
 	                 	this.setting.successMessage();
+                 },
+                 employeeList:function(){
+                	 if(!this.model.get('employeename')) return;
+	                	 var employees = this.model.get('employeename');
+	                	 employees = employees.split(',');
+	                	 var str = "";
+	                	 var comma = "";
+		                	 _.each(employees,function(value,key,list){
+		                		  comma = ",";
+		                		  str +="<span> "+value+"</span>"+comma;
+		                		  
+		                	 }) 
+	                	 return str;
                  }
               
 		});

@@ -11,9 +11,16 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			 id:"rootwizard",
 			  initialize: function () {
 				this.id = 0;
+				this.name = "";
+				this.desc = "";
+				this.id = 0;
+				this.languageid = 0;
+				this.countryid = 0;
+				this.currencyid = 0;
 				this.departmentName = 'Department';
 				this.template = _.template(template);
 				this.setting = this.options.setting;
+				this.app = this.options.setting;
 				this.objModelBranch = new ModelBranch();
 				this.render();
 				
@@ -27,34 +34,73 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			},
 			render: function () {  
 				this.$el.html(this.template( ));
+				 this.app.showLoading('Loading pages....',this.$el);
+				 var that = this;
+					that.$el.find('.first-text').attr('disabled',true);
+					that.$el.find('.end-text').attr('disabled',true);
+				 if(typeof this.options.id  =="undefined"){
+						this.name = this.model.get('name');
+						this.desc = this.model.get('notes');
+						this.languageid = this.model.get('languageid');
+						this.currencyid = this.model.get('currencyid');
+						this.countryid = this.model.get('countryid');
+						this.id = this.model.get('id');
+
+						that.$el.find('.first-text').attr('disabled',false);
+						that.$el.find('.end-text').attr('disabled',false);
+						this.fillTimings();
+						this.objModelBranch = this.model;
+						this.objModelBranch.set({id:this.model.get('id')});
+						this.fillServices();
+						this.fillEmployees();
+						this.fillJobTypes();
+						this.addSchedule();
+					}
 				this.startWizard();
 				this.fillLanguages();
-				this.fillJobTypes();
+			
 				this.fillCountries();
 				this.fillCurrencies();
-				//this.fillTimings();
-				this.fillServices();
-				this.fillEmployees();
-				this.addSchedule();
+				 
+			
 				
-				var that = this;
-				this.$el.find('#chkall').on('click',function(){ 
+				this.$el.find('#txtname').val(this.name);
+				this.$el.find("#txtdescription").text(this.desc);
+				 this.app.showLoading(false,this.$el);
+				
+				this.$el.find('#chkall').on('click',function(ev){ 
+					
 					that.$el.find('.days').prop("checked", !that.$el.find('.days').prop("checked"));
 					var first = that.$el.find("#txtsm").val();
 					var end = that.$el.find("#txtem").val();
 					if(!first)
-						first = "9:00AM";
+						first = "9:00";
 					if(!end)
-						end = "5:00PM";
-					that.$el.find(".first-text").val(first)
-					that.$el.find(".end-text").val(end)
-				})
-				console.log(this.$el.find("#timepicker1"));
+						end = "17:00"; 
+					if($(ev.target).is(':checked')){
+						that.$el.find('.first-text').attr('disabled',false);
+						that.$el.find('.end-text').attr('disabled',false);
+						that.$el.find(".first-text").val(first)
+						that.$el.find(".end-text").val(end)
+					}else{
+						that.$el.find('.first-text').attr('disabled',true);
+						that.$el.find('.end-text').attr('disabled',true);
+						that.$el.find(".first-text").val('')
+						that.$el.find(".end-text").val('')
+					}
+					
+				}) 
+
 				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
 				this.$el.find('.days').on('click',function(){
 					if($(this).prop('checked')!= true){
+						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',true);
+						that.$el.find("#txte"+$(this).attr('id')).attr('disabled',true)
 						var first = that.$el.find("#txts"+$(this).attr('id')).val('');
 						var end = that.$el.find("#txte"+$(this).attr('id')).val('');
+					}else{
+						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',false);
+						that.$el.find("#txte"+$(this).attr('id')).attr('disabled',false)
 					}
 				})
 			} ,
@@ -87,7 +133,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						that.$el.find('.pagerw .next').show();
 						that.$el.find('.pagerw .finish').hide();
 					}
-					console.log($current);
+				 
 					switch($current){
 					case 1:
 						that.changeText('Follow the instruction to create <strong>new department</strong>, These are basic information each department have name, language, timings(close at, open at) etc.');
@@ -135,15 +181,18 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.$el.find('.top-info').html(txt);
 			},
 			saveBasicInfo:function(id){
+				this.app.showLoading('Saving information....',this.$el);
 				this.clearFormInput();
 				var name = this.$el.find('#txtname').val();
 				if(!name){
+					this.app.showLoading(false,this.$el);
 					this.$el.find('.name-error').removeClass('hide');
 					return false;
 				}
 				var desc = this.$el.find('#txtdescription').val();
 				if(!desc){
 					this.$el.find('.desc-error').removeClass('hide');
+					this.app.showLoading(false,this.$el);
 					return false;
 				}
 				
@@ -156,7 +205,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					
 				}
 				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
-				return this.saveTiming(id);
+				return this.saveTiming(this.id);
 				
 			},
 			clearFormInput:function(){
@@ -176,10 +225,10 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			     var returnValue = true;
 			     if(days.length < 1){
 			    	 that.$el.find('.timing-error').removeClass('hide');
+			    	 this.app.showLoading(false,this.$el);
 						return false;
 			     }
-			     _.each(days,function(index){
-			    	 console.log(index);
+			     _.each(days,function(index){ 
 			    	 if(index){
 					    	 console.log(that.$el.find("#txte"+index).val()) 
 					    	 var start = that.$el.find("#txts"+index).val();
@@ -199,18 +248,27 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			    	 } 
 			     })
 			     
-			     if(returnValue == false) return false;
+			     if(returnValue == false){
+			    	 this.app.showLoading(false,this.$el);
+			    	 return false;
+			     }
 	                 var that = this;
-	                 var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
-                  this.objModelBranch.set({timing:data});
+	               this.objModelBranch.set({timing:data});
  				 
- 				  $.when(this.objModelBranch.save()).done(function(){
- 					
+ 				  $.when(this.objModelBranch.save({id:this.id})).done(function(data){
+ 					   var d = jQuery.parseJSON(data);
+ 					    that.id = d.id;
+ 					   that.fillJobTypes();
+ 						that.fillServices();
+ 						that.fillEmployees();
+ 						that.addSchedule();
+ 						 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
+ 						that.app.showLoading(false,that.$el);
  				  }).fail(function(){
- 					    
+ 					 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
+						that.app.showLoading(false,that.$el);
  				   });
- 				 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
- 				 spin.stop ();
+ 				
  				
 			},
 			calculate:function(time1,time2) {
@@ -239,7 +297,10 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
                 jQuery.getJSON(url, function(tsv, state, xhr) {
                     var jobtypes = jQuery.parseJSON(xhr.responseText);
                     _.each(jobtypes,function(key){
-                   	  	options +="<option value="+key.id+"  >"+key.name+"</option>";
+                    	var selected = "";
+                    	if(that.countryid == key.id)
+                    		selected = "selected";
+                   	  	options +="<option value='"+key.id+"' "+selected+">"+key.name+"</option>";
                    	  	
                     })
                     that.$el.find("#ddlcountries").html(options);
@@ -247,16 +308,17 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
                 });
 			},
 			fillTimings:function(){
-				var url = "api/timings";
+				var url = "api/gettimings";
 				 var that = this;
-				 var options = "<select value=0>Select language</option>";
-                jQuery.getJSON(url, function(tsv, state, xhr) {
-                    var jobtypes = jQuery.parseJSON(xhr.responseText);
-                    _.each(jobtypes,function(key){
-                   	  	options +="<option value="+key.id+"  >Opened "+key.opened+ " - Closed "+key.opened+"</option>";
-                   	  	
-                    })
-                    that.$el.find("#ddltimings").html(options);
+				  
+                jQuery.getJSON(url,{branchid:this.id}, function(tsv, state, xhr) {
+                    var timings = jQuery.parseJSON(xhr.responseText);
+                    _.each(timings,function(value,key,list){ 
+                    	that.$el.find("#txts"+value.day).val(value.opened).removeAttr('disabled');
+                    	that.$el.find("#txte"+value.day).val(value.closed).removeAttr('disabled');
+                    	that.$el.find(".timings-div #"+value.day+"").attr('checked',true);
+                    	that.$el.find('#chkall').attr('checked',true);
+                    }) 
                     
                 });
 			},
@@ -267,7 +329,10 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
                jQuery.getJSON(url, function(tsv, state, xhr) {
                    var jobtypes = jQuery.parseJSON(xhr.responseText);
                    _.each(jobtypes,function(key){
-                  	  	options +="<option value="+key.id+"  >"+key.code+" -- "+key.name+"</option>";
+                	   var selected = "";
+                   	if(that.currencyid == key.id)
+                   		selected = "selected";
+                  	  	options +="<option value='"+key.id+"'  "+selected+">"+key.code+" -- "+key.name+"</option>";
                   	  	
                    })
                    that.$el.find("#ddlcurrencies").html(options);
@@ -277,21 +342,21 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			fillJobTypes:function(){
 				var that = this;
 				require(['jobtypes/views/lists'],function(JobTypes){
-					var objJobTypes = new JobTypes({setting:that.setting});
+					var objJobTypes = new JobTypes({setting:that.setting,id:that.id});
 					that.$el.find(".table-jobtypes").html(objJobTypes.$el);
 				})
 			},
 			fillServices:function(){
 				var that = this;
 				require(['services/views/lists'],function(Services){
-					var objServices = new Services({setting:that.setting});
+					var objServices = new Services({setting:that.setting,id:that.id});
 					that.$el.find(".table-services").html(objServices.$el);
 				})
 			},
 			addSchedule:function(){
 				var that = this;
 				require(['schedule/views/lists'],function(Services){
-					var objServices = new Services({setting:that.setting});
+					var objServices = new Services({setting:that.setting,id:that.id});
 					that.$el.find(".table-schedule").html(objServices.$el);
 				})
 			},
@@ -302,7 +367,10 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
                  jQuery.getJSON(url, function(tsv, state, xhr) {
                      var languages = jQuery.parseJSON(xhr.responseText);
                      _.each(languages,function(key){
-                    	  	options +="<option value="+key.id+"  >"+key.title+"</option>";
+                    	 var selected = "";
+                     	if(that.countryid == key.id)
+                     		selected = "selected";
+                    	  	options +="<option value='"+key.id+"' "+selected+"  >"+key.title+"</option>";
                     	  	
                      })
                      that.$el.find("#ddllanguage").html(options);
@@ -312,7 +380,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			fillEmployees:function(){
 				var that = this;
 				require(['employees/views/lists'],function(Employees){
-					var objEmployees = new Employees({setting:that.setting});
+					var objEmployees = new Employees({setting:that.setting,id:that.id});
 					that.$el.find(".table-employees").html(objEmployees.$el);
 				})
 			}

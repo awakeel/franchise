@@ -1,9 +1,9 @@
-define(['text!services/tpl/lists.html','services/collections/services','services/views/list','services/models/service'],
+define(['text!services/tpl/lists.html','services/collections/services','services/views/list','services/models/service','typeahead'],
 	function (template,Services,Service,ServiceModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 				"keyup #txtsearchservices":"searchServices",
 				//"click .close-p":"closePopup",
@@ -17,10 +17,14 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				this.fetched = 0;
 				this.searchText = '';
 				this.setting = this.options.setting;
+				this.app = this.options.setting;
 				this.offsetLength = 10;
+				this.branchid = null;
+				if(typeof this.options.id != "undefined"){
+					this.branchid = this.options.id;
+				}
 				this.objServices = new Services();
-				this.render();
-				this.addNew();
+				this.render(); 
 				
 			}, 
 			render: function () { 
@@ -38,8 +42,9 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 			fetchServices:function(){
 				var that = this;
 				var _data = {}; 
-				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+				this.app.showLoading('Loading services...',this.$el);
 				 _data['search'] = this.searchText;
+				 _data['branchid'] = this.branchid;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -56,9 +61,9 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					if(data.length < 1){
-						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
-						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newservice">';
-						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+						trNoRecord +='<button type="button" class=" add-new" data-toggle="modal" data-target="#newservice">';
+						trNoRecord +=' <span class="a-a"><i class="fa fa-add"></i></span> ';
 						trNoRecord += 'add new';
 						trNoRecord += '</button> ';
 						trNoRecord += '</div></td>';	
@@ -70,7 +75,12 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
-					spin.stop();
+					 if($.isEmptyObject(that.app.globalservices)){
+						 that.getGlobalServices();
+					 }else{
+						 that.addNew();
+					 }
+					that.app.showLoading(false,that.$el);
 					 var id = null;
 					 
 				}}) 
@@ -78,10 +88,12 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 			},
 			addNew:function(){
 				var that = this;
+				this.app.showLoading('Wait...',this.$el);
 				require(['services/views/addupdate'],function(AddUpdate){
 					var objAddUpdate = new AddUpdate({page:that});
 					that.$el.append(objAddUpdate.$el);
 				})
+				this.app.showLoading(false,this.$el);
 			},
 			fillJobTypes:function(){
 				 var url = "api/services";
@@ -148,8 +160,19 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 		                                that.fetchServices(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
-            } 
-         
+            } ,
+            getGlobalServices:function(){
+           	 var url = "api/globalservices";
+				 var that = this;
+				  
+           	 jQuery.getJSON(url, function(tsv, state, xhr) {
+                    var services = jQuery.parseJSON(xhr.responseText);
+                    _.each(services,function(value,key,list){
+                   	 that.app.globalservices.push(value.name);
+                    }); 
+                     that.addNew()
+                });
+           }
            
             
 		});

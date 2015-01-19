@@ -6,11 +6,11 @@
  * Dependency: Notificaiton Model
  */
 
-define(['backbone',  'language/models/language'], function (Backbone, ModelLanguage) {
+define(['backbone',  'branches/models/branch'], function (Backbone, ModelBranch) {
 	'use strict';
 	return Backbone.Collection.extend({
             
-            model:ModelLanguage,
+            model:ModelBranch,
             url: 'api/branches'
            
            

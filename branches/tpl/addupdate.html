@@ -41,8 +41,8 @@
 
 						<ul class="pagerw wizard">
 
-							<li class="next"><a href="#">Save & Go to next step</a></li>
-							<li class="previous" style=""><a href="#">Previous Step</a></li>
+							<li class="next"><a class="btn btn-blue " href="#">Next</a></li>
+							<li class="previous" style=""><a class="btn btn-blue "  href="#">Previous</a></li>
 
 						</ul>
 						<div class="clearfix"></div>
@@ -69,29 +69,9 @@
 															class="fa fa-warning"></i> You must name your department,
 															e.g Oslo Branch!</span>
 													</div>
+													
 												</div>
-											</div>
-											</br>
-											<div class="form_container">
-												<div class="col-xs-3">
-													</br>
-													<p>Description</p>
-												</div>
-												<div class="col-xs-9">
-													<div class="form_container">
-														<textarea name="" id="txtdescription" cols="" rows=""
-															class="class="form-control""></textarea>
-														<span class="help-block hide desc-error"><i
-															class="fa fa-warning"></i>  Enter few words description!</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="col-md-6">
-										<h4>Basic Settings</h4>
-										<p> Where is your department located and what is your language.
-										<div class="row">
+											 
 											<div class="form_container">
 												<div class="col-xs-3">
 													</br>
@@ -121,6 +101,7 @@
 													</div>
 												</div>
 											</div>
+												
 											<div class="form_container">
 												<div class="col-xs-3">
 													</br>
@@ -135,14 +116,30 @@
 													</div>
 												</div>
 											</div>
+											<div class="form_container">
+												<div class="col-xs-3">
+													</br>
+													<p>Description</p>
+												</div>
+												<div class="col-xs-9">
+													<div class="form_container">
+														<textarea name="" id="txtdescription" cols="" rows=""
+															class="class="form-control""></textarea>
+														<span class="help-block hide desc-error"><i
+															class="fa fa-warning"></i>  Enter few words description!</span>
+													</div>
+												</div>
+											</div>
 										</div>
+											</div>
+										  
 									</div>
-									<div class="clearfix"></div>
-									<h4>
+									<div class="col-md-6">
+										<h4>
 										Timings 
 									</h4>
 									<p>
-									Select when  you want to open  <strong class='department-name'> your newly created department </strong> at morning and close at eveving. eg. 9 to 6
+									Choose timings for <strong class='department-name'> department </strong> . eg. 9 to 6
 									<span class="help-block hide timing-error"
 											style="font-size: 15px; margin-right: 20px;"><i
 											class="fa fa-warning"></i>Please select timing, eg <strong class='department-name'> </strong> opened at 9:00 and closed at 6:00!</span>
@@ -158,8 +155,10 @@
 															</label>
 														</div>
 													</th>
-													<th>From</th>
-													<th>To</th>
+													<th><div class="checkbox">
+															<label> From</label></div></th>
+													<th><div class="checkbox">
+															<label> To</label></div></th>
 												</tr>
 											</thead>
 											<tbody class="timings-div">
@@ -172,9 +171,9 @@
 															</label>
 														</div>
 													</td>
-													<td><input type="text" class="timepicker form-control"
+													<td><input type="text" class="timepicker form-control  first-text"
 														id="txtsmonday" /></td>
-													<td><input type="text" class="timepicker form-control"
+													<td><input type="text" class="timepicker form-control end-text"
 														id="txtemonday" /></td>
 												</tr>
 												<tr>
@@ -262,6 +261,9 @@
 											</tbody>
 										</table>
 									</div>
+									</div>
+									 
+									
 								</div>
 							</div>
 
@@ -271,39 +273,40 @@
 
 							<div class=" ">
 
-								<div class="table-jobtypes"></div>
+								<div class="table-jobtypes"> <p> Please save basic information </p></div>
 							</div>
 
 						</div>
 						<div id="stackedServices" class="tab-pane   ">
 
 							<div class=" ">
-								<div class="table-services"></div>
+								<div class="table-services"><p> Please save basic information </p></div>
 							</div>
 
 						</div>
 						<div id="stackedEmployee" class="tab-pane  ">
 
 							<div class=" ">
-								<div class="table-employees"></div>
+								<div class="table-employees"><p> Please save basic information </p></div>
 							</div>
 
 
 						</div>
 						<div id="stackedschedule" class="tab-pane  ">
 							<div class=" ">
-								<div class="table-schedule"></div>
+								<div class="table-schedule"><p> Please save basic information </p></div>
 							</div>
 
 						</div>
 
 					</div>
 				</div>
+				
 			</div>
 
 			<ul class="pagerw wizard">
-				<li class="next"><a href="#">Save & Go to next step</a></li>
-				<li class="previous"><a href="#">Previous Step</a></li>
+				<li class="next"><a href="#" class="btn btn-blue " >Next</a></li>
+				<li class="previous"><a href="#" class="btn btn-blue " >Previous </a></li>
 
 			</ul>
 		</div>

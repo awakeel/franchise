@@ -8,6 +8,8 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         	 this.selectedLanguage = 1;
         	 this.jobTypes = {};
         	 this.modules = {};
+        	 this.globaljobtypes = [];
+        	 this.globalservices = [];
         	 this.services = {};
         	 this.users = users || {};
              this.set(_.extend({
@@ -39,7 +41,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			var objContainer = new Container({
 				setting : this
 			}); 
-			console.log(this.users.isnew + 'Awesome information');
+			 
 			$('#wrapper').html(objContainer.objHeader.$el);
 			$('#wrapper').append(objContainer.objLeftMenu.$el);
 			$('#wrapper').append(objContainer.$el);
@@ -52,6 +54,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			  		$('#page-wrapper').find('.page-content').append(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.setting}).$el);
 				 }) 
 			}else{
+				$('body').removeClass('login');
 				$('#page-wrapper').find('.page-content').append(
 						objContainer.objDashboard.$el);
 			}
@@ -71,7 +74,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 	that.loadPages( );
                 }else{
                 	    require(['authorize/views/login'],function(login){
-                        	$('body').html(new login().$el);
+                        	$('body').html(new login({app:that}).$el);
                         })
                      
                 }
@@ -91,7 +94,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
           }, 
          getFormatedDate:function(date){
              if(date) 
-	            return date+moment(date).fromNow();;
+	            return  moment(date).fromNow();;
          },
          clearCache: function () {
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);
@@ -117,7 +120,25 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 var image = $('<img />').attr('src', this);
             });
         }, 
-        showLoading: function (message,container,opts) {
+        showLoading: function (message,container,_styles) {
+        	var divStyles = "";
+            if (message) {
+                message = message !== true ? message : 'Loading...';
+                $(container).find('.loading').remove();
+                if (_styles) {
+                    _.each(_styles, function (val, key) {
+                        divStyles += key + ":" + val + ";"
+                    }, this);
+                }
+                $(container).parent().css('position','relative');
+                $(container).append('<div class="loading"><p style= ' + divStyles + '>' + message + '</p></div>');
+                
+            }
+            else {
+                $(container).find(' > .loading').remove();
+            }
+        	
+        	return ;
         	var opts = {
           		  lines: 13, // The number of lines to draw
           		  length: 38, // The length of each line

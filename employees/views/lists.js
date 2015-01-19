@@ -1,9 +1,9 @@
-define(['text!employees/tpl/lists.html','employees/collections/employees','employees/views/list','employees/models/employee'],
-	function (template,Employees,Employee,EmployeeModel) {
+define(['text!employees/tpl/lists.html','employees/collections/employees','employees/views/list'],
+	function (template,Employees,Employee) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 				"keyup #txtsearchemployees":"searchEmployees",
 				"click .close-p":"closePopup",
@@ -18,6 +18,10 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				this.searchText = '';
 				this.setting = this.options.setting;
 				this.offsetLength = 10;
+				this.branchid = null;
+				if(typeof this.options.id != "undefined"){
+					this.branchid = this.options.id;
+				}
 				this.objEmployees = new Employees();
 				this.render();
 				
@@ -37,8 +41,9 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 			fetchEmployees:function(){
 				var that = this;
 				var _data = {}; 
-				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+				  this.setting.showLoading('Loading Employees...',this.$el);
 				 _data['search'] = this.searchText;
+				 _data['branchid'] = this.branchid;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -58,7 +63,17 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                        // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                     //} 
-					spin.stop();
+					if(data.length < 1){
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+						trNoRecord +='<button type="button" class=" add-new" data-toggle="modal" data-target="#newservice">';
+						trNoRecord +=' <span class="a-a"><i class="fa fa-add"></i></span> ';
+						trNoRecord += 'add new';
+						trNoRecord += '</button> ';
+						trNoRecord += '</div></td>';	
+						trNoRecord += '</tr>';
+						that.$el.find("table tbody").append(trNoRecord);
+					}
+				 	that.setting.showLoading(false, that.$el);
 					 var id = null;  
 				}}) 
 				
@@ -66,7 +81,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 			addNew:function(){
 				var that = this;
 				require(['employees/views/addupdate'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({page:that});
+					var objAddUpdate = new AddUpdate({id:123,page:that});
 					that.$el.find('.employees').append(objAddUpdate.$el);
 					that.$el.find('#employees').modal('show');
 				})
@@ -136,28 +151,8 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 		                                that.fetchEmployees(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
-            },
-            save:function(_f,_l,_p,_e,_pas,_add,_about,_type,_b_id,view){
-            	 
-            	var objEmployeeModel = new EmployeeModel();
-            	objEmployeeModel.set('firstname',_f);
-            	objEmployeeModel.set('lastname',_l);
-            	objEmployeeModel.set('phone',_p);
-            	objEmployeeModel.set('email',_e);
-            	objEmployeeModel.set('password',_pas);
-            	objEmployeeModel.set('branchid',_b_id);
-            	objEmployeeModel.set('address',_add);
-            	objEmployeeModel.set('about',_about);
-            	objEmployeeModel.set('type',_type);
-            	var model = objEmployeeModel.save(); 
-            	this.objEmployees.add(objEmployeeModel);  
-                var last_model = this.objEmployees.last();
-                //this.closePopup();
-                var objEmployee = new Employee({model:objEmployeeModel,page:this,setting:this.setting});
-				this.$el.find('tbody').prepend(objEmployee.$el);
-				view.closeView();
-				this.setting.successMessage();
-            }
+             } 
+            
            
             
 		});

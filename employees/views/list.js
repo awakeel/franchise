@@ -5,7 +5,7 @@ define(['text!employees/tpl/list.html','app'],
 			tagName:'tr',
 			events:{
 			 	"click .delete-token":"deleteToken",
-			 	"click .edit-token":"updateToken"
+			 	"click .edit-token":"update"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -37,13 +37,14 @@ define(['text!employees/tpl/list.html','app'],
                             }
                         });
                  },
-                 updateToken:function(ev){
-                	 var that = this;
-                	 var id =$(ev.target).data('id');
-                	 require(['employees/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
-                	})
-                 },
+                 update:function(){
+     				var that = this;
+     				require(['employees/views/addupdate'],function(AddUpdate){
+     					var objAddUpdate = new AddUpdate({page:that,model:that.model});
+     					that.options.page.$el.find('.employees').append(objAddUpdate.$el);
+     					that.options.page.$el.find('#employees').modal('show');
+     				})
+     			},
                  
                  save:function(title,comments,branchid,view){
                 	    this.model.set('branchid',branchid);

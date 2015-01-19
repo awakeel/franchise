@@ -1,27 +1,27 @@
 <?php
 session_start();
-$path =  dirname(__FILE__) ;
- 
+$path =  dirname(__FILE__) ; 
 require $path .'/Slim/Slim.php'; 
+
+require $path .'/classes/Authorize.php';
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
 require $path .'/classes/Employees.php';
 require $path .'/classes/JobTypes.php';
 require $path .'/classes/Branches.php';
 require $path .'/classes/Services.php';
-require $path .'/classes/Authorize.php';
-require $path .'/classes/Permission.php';
-require $path .'/classes/Schedule.php';
 require $path .'/classes/Roles.php';
+require $path .'/classes/Schedule.php';
+
 $app = new Slim(); 
 $auth = new Authorize($app);
-$permission = new Permission($app,$auth);
  
+$permission = new Permission($app,$auth);
 //$app->add(new \ContentTypes());
 //$app->add(new \Slim\Middleware\ContentTypes());
 $objCommon = new Common($app);
 $objLanguages = new Language($app);
-$objJobTypes = new JobTypes($app,$auth);
+$objJobTypes = new JobTypes($app);
 $objServices = new Services($app);
 $objEmployees = new Employees($app);
 $objBranches = new Branches($app,$auth);
@@ -255,8 +255,8 @@ function getModifiedEmployees($modifiedSince) {
 
 function getConnection() {
 	$dbhost="localhost";
-	$dbuser="root";
-	$dbpass="";
+	$dbuser="salonuser";
+	$dbpass="Fr@Us3r";
 	
 	$dbname="franchise";
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);	

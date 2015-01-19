@@ -1,9 +1,9 @@
-define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes/views/list','jobtypes/models/jobtype'],
+define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes/views/list','jobtypes/models/jobtype','typeahead'],
 	function (template,JobTypes,JobType,JobTypeModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 				"keyup #txtsearchjobtype":"searchjobtypes",
 				//"click .close-p":"closePopup",
@@ -17,13 +17,20 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				this.fetched = 0;
 				this.searchText = '';
 				this.setting = this.options.setting;
+				this.app = this.options.setting;
+				this.branchid = null;
+				if(typeof this.options.id != "undefined"){
+					this.branchid = this.options.id;
+				}
+				 
 				this.offsetLength = 10;
 				this.objJobTypes = new JobTypes();
 				this.render();
-				this.addNew();
+				
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
+				this.app.showLoading('Loading Job types....',this.$el);
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchJobTypes();
@@ -34,11 +41,11 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                 
 			},
 			 
-			fetchJobTypes:function(){
-				var spin = this.setting.showLoading('Saving info please wait',this.$el,{top:'30%'});
+			fetchJobTypes:function(){ 
 				var that = this;
 				var _data = {}; 
 				 _data['search'] = this.searchText;
+				 _data['branchid'] = this.branchid;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -53,16 +60,16 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 						that.setting.jobTypes[model.attributes['id']] = model.attributes['name'];
 					})
 					if(data.length < 1){
-						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
-						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new" data-toggle="modal" data-target="#newjobtypes">';
-						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
+						trNoRecord +='<button type="button" class="   add-new" data-toggle="modal" data-target="#newjobtypes">';
+						trNoRecord +=' <span class=" "><i class="fa fa-add"></i></span> ';
 						trNoRecord += 'add new';
 						trNoRecord += '</button> ';
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
 					}
-					spin.stop();
+					that.app.showLoading(false,that.$el);
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					
@@ -72,7 +79,12 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                          
                     //} 
 					 var id = null;
-					 
+					 if($.isEmptyObject(that.app.globaljobtypes)){
+						 that.getGlobalJobTypes();
+					 }else{
+						 that.addNew();
+					 }
+					 that.app.showLoading(false,that.$el);
 				}}) 
 				
 			},
@@ -150,8 +162,19 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 		                                that.fetchJobTypes(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
-            } 
-           
+            } ,
+            getGlobalJobTypes:function(){
+            	 var url = "api/globaljobtypes";
+				 var that = this;
+				  
+            	 jQuery.getJSON(url, function(tsv, state, xhr) {
+                     var jobtypes = jQuery.parseJSON(xhr.responseText);
+                     _.each(jobtypes,function(value,key,list){
+                    	 that.app.globaljobtypes.push(value.name);
+                     }); 
+                      that.addNew()
+                 });
+            }
            
             
 		});

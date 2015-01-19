@@ -3,7 +3,7 @@ define(['text!language/tpl/lists.html','language/collections/languages','languag
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 				"keyup #txtsearch":"searchLanguages",
 				"click .close-p":"closePopup",

@@ -37,24 +37,25 @@ define(['text!roles/tpl/managepermission.html','roles/views/list','roles/models/
 			getModules:function(){ 
 				
 				var allmodules
-				var spin = this.options.page.setting.showLoading('Fetching info...',this.$el,{top:'10%'});
+				this.options.page.setting.showLoading('Fetching modules...',this.$el);
 			             var URL = "api/allmodules";
 			             var that = this;
 			             jQuery.getJSON(URL,  function (tsv, state, xhr) {
 			                 var _json = jQuery.parseJSON(xhr.responseText);
 			                 allmodules = _json;
-			                   that.compareModules(allmodules,spin);
+			                   that.compareModules(allmodules);
 			             } ); 
 			
 			},
-			compareModules:function(allmodules,spin){
+			compareModules:function(allmodules){
 				var lables = "";
-				 spin.stop();
+				
+				this.options.page.setting.showLoading(false,this.$el);
+
+				var modules = {};
 				if(this.options.modules)
-					  modules = this.options.modules.split(",");
+					  modules = this.options.modules.split(","); 
 						
-						
-						var modules = {};
 					  _.each(allmodules,function(value,key,list){ 
 						 
 						 var check =""; 
@@ -78,7 +79,7 @@ define(['text!roles/tpl/managepermission.html','roles/views/list','roles/models/
 				var url = "api/savepermission";
 				checkedValues = checkedValues.join(",");
 				var roleid = this.options.roleid;		 
-				var spin = this.options.page.setting.showLoading('',this.$el);
+				 this.options.page.setting.showLoading('Data saving...',this.$el);
 				$.post(url,
 						  {
 						    modules:checkedValues,
@@ -88,7 +89,7 @@ define(['text!roles/tpl/managepermission.html','roles/views/list','roles/models/
 							  that.options.page.options.page.fetchRoles();
 							  that.closeView();
 						  });    
-				spin.stop();
+				this.options.page.setting.showLoading(false,this.$el);
 				
 			}
 		 

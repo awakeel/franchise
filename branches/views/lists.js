@@ -3,10 +3,11 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-13",
+			className:"col-lg-12",
 			events:{
 			 	"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
+			 	"keyup #txtsearchbranches":"searchBranches",
 				"click .delete-p":"deleteToken",
 				"click .add-new-dep":"addNew",
 				"click .refresh":'render'
@@ -16,7 +17,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.request = null;
 				this.fetched = 0;
 				 this.searchText = '';
-				this.setting = this.options.setting;
+				this.app = this.options.setting;
 				this.offsetLength = 10;
 				
 				this.objBranches = new Branches();
@@ -26,7 +27,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			addNew:function(){
 				var that = this;
 			  	 require(['branches/views/addupdate'],function(addupdate){
-      		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.setting}).$el);
+      		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.app}).$el);
 				 })
 			 
 		     },
@@ -34,7 +35,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.$el.html(this.template({}));
 				$(window).scroll(_.bind(this.lazyLoading, this));
                 $(window).resize(_.bind(this.lazyLoading, this));
-                this.spin = this.setting.showLoading('fetching info please wait',this.$el,{top:'30%'});
+                
                 this.fetchBranches();
                 var that = this;
                 var id = null;
@@ -45,12 +46,14 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 			fetchBranches:function(){
 				var that = this;
 				var _data = {}; 
-				  this.objBranches.reset(); 
+				this.app.showLoading('Loading department...',this.$el.find('.table-responsive'));
+				 _data['search'] = this.searchText;
+				 that.$el.find("table tbody").html('');
 				 if(this.request)
 	                    this.request.abort();
 				 this.request = this.objBranches.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
-						var objBranch = new Branch({model:model,page:that,setting:that.setting});
+						var objBranch = new Branch({model:model,page:that,setting:that.app});
 						that.$el.find("table tbody").append(objBranch.$el);
 					})
 					that.offsetLength = data.length;
@@ -73,7 +76,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 					 var id = null;
 					 
 				}});
-				this.spin.stop();
+				  this.app.showLoading(false,this.$el.find('.table-responsive'));
 				
 			},
 			fillLanguages:function(){
@@ -84,7 +87,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
                      var languages = jQuery.parseJSON(xhr.responseText);
                      _.each(languages,function(key){
                     	 var selected = "";
-                   	     if(that.setting.selectedLanguage == key.langaugeid)1
+                   	     if(that.app.selectedLanguage == key.langaugeid)1
                    	     	selected = "selected";
                    	     
                     	  	options +="<option value="+key.id+" "+selected+">"+key.title+"</option>";
@@ -115,7 +118,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
                     this.fetchLanguages(this.offsetLength);
                 }
             },
-            searchLanguages:function(ev){ 
+            searchBranches:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -129,7 +132,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
                           if(code == 8 || code == 46){
                                  if(text){ 
 		                        	 that.searchText = text;
-			                          that.fetchLanguages();
+			                          that.fetchBranches();
 		                         }
                            }else{
 		                   
@@ -138,7 +141,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
 		                                if (text.length < 2) return;
 		                                that.searchText = text;
-		                                that.fetchLanguages(that.langaugeFilter);
+		                                that.fetchBranches(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             },
@@ -152,10 +155,10 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
             	this.objLanguages.add(objLanguage);  
                 var last_model = this.objLanguages.last();
                 //this.closePopup();
-                var objLanguage = new Language({model:objLanguage,page:this,setting:this.setting});
+                var objLanguage = new Language({model:objLanguage,page:this,setting:this.app});
 				this.$el.find('tbody').prepend(objLanguage.$el);
 				view.closeView();
-				this.setting.successMessage();
+				this.app.successMessage();
             }
            
             
