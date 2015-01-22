@@ -22,7 +22,7 @@ function getModules( ){
 	 
 	$sql = "select modules.id,modules.name ,modules.text ,modules.childof from modules
 			inner join   rolemodules on rolemodules.moduleid = modules.id
-			where rolemodules.isallow = '1' and rolemodules.roleid = '".$this->auth->getRoleId()."' ";
+			where rolemodules.isallow = '1' and rolemodules.roleid = '".$this->auth->getRoleId()."' order by modules.childof desc ";
 	 
 	try {
 		$db = getConnection();

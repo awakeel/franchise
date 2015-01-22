@@ -49,10 +49,11 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
-				 that.$el.find('tbody').empty();
+				 
 				 that.setting.jobTypes = {};
 				 if(this.request)
 	                    this.request.abort();
+				 that.$el.find('tbody').empty();
 				 this.request = this.objJobTypes.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objJobType = new JobType({model:model,page:that,setting:that.setting});
@@ -91,7 +92,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			addNew:function(){
 				var that = this;
 				require(['jobtypes/views/addupdate'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({page:that});
+					var objAddUpdate = new AddUpdate({id:1,page:that});
 					that.$el.append(objAddUpdate.$el);
 				})
 			},

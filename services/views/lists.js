@@ -8,6 +8,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				"keyup #txtsearchservices":"searchServices",
 				//"click .close-p":"closePopup",
 				//"click .save-p":"saveToken",
+				'click .add-new-service':'addNew',
 				"click .delete-p":"deleteToken",
 				 
 			},
@@ -48,10 +49,11 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
-				 that.$el.find('tbody').empty();
+				 
 				 this.setting.services = {};
 				 if(this.request)
 	                    this.request.abort();
+				 that.$el.find('tbody').empty();
 				 this.request = this.objServices.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objService = new Service({model:model,page:that,setting:that.setting});
@@ -77,8 +79,8 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                     //} 
 					 if($.isEmptyObject(that.app.globalservices)){
 						 that.getGlobalServices();
-					 }else{
-						 that.addNew();
+					 
+						
 					 }
 					that.app.showLoading(false,that.$el);
 					 var id = null;
@@ -90,8 +92,8 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				var that = this;
 				this.app.showLoading('Wait...',this.$el);
 				require(['services/views/addupdate'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({page:that});
-					that.$el.append(objAddUpdate.$el);
+					var objAddUpdate = new AddUpdate({page:that,id:123});
+					that.$el.html(objAddUpdate.$el);
 				})
 				this.app.showLoading(false,this.$el);
 			},
@@ -170,7 +172,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                     _.each(services,function(value,key,list){
                    	 that.app.globalservices.push(value.name);
                     }); 
-                     that.addNew()
+                     
                 });
            }
            

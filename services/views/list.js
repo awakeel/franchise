@@ -5,7 +5,7 @@ define(['text!services/tpl/list.html','app'],
 			tagName:'tr',
 			events:{
 			 	"click .delete-token":"deleteToken",
-			 	"click .edit-token":"updateToken"
+			 	"click .edit":"updateToken"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -22,26 +22,41 @@ define(['text!services/tpl/list.html','app'],
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deleteservices";
-                $.get(URL, {id:id})
-                        .done(function(data) {
-                             var _json = jQuery.parseJSON(data);
-                            if (_json[0] !== 'err') {
-                            	that.setting.successMessage();
-                            	that.model.destroy({
-                            	      success: function() { 
-                            	      }
-                            	  });  
-                            }
-                            else {
-                            	that.setting.errorMessage();
-                            }
-                        });
+                swal({
+  			      title: "Are you sure?",
+  			      text: "You will not be able to recover this record!",
+  			      type: "error",
+  			      showCancelButton: true,
+  			      confirmButtonClass: 'btn-danger',
+  			      confirmButtonText: 'Danger!'
+  			    },
+  			    function(isConfirm) {
+  			    	    if (isConfirm) {
+  			    	    	 $.get(URL, {id:id})
+  		                        .done(function(data) {
+  		                             var _json = jQuery.parseJSON(data);
+  		                            if (_json[0] !== 'err') {
+  		                            	that.setting.successMessage();
+  		                            	that.model.destroy({
+  		                            	      success: function() { 
+  		                            	    	  swal("Deleted!", "Record has been deleted.", "success");
+  		                            	      }
+  		                            	  });  
+  		                            }
+  		                            else {
+  		                            	swal("Error", "There is problem while deleting :)", "error");
+  		                            }
+  		                        });
+  			    		    
+  			    		  } else {
+  			    		    
+  			    		  }
+  			    });
                  },
                  updateToken:function(ev){
-                	 var that = this;
-                	 var id =$(ev.target).data('id');
+                	 var that = this; 
                 	 require(['services/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
+                		 	 that.options.page.$el.html(new addupdate({model:that.model,page:that}).$el);
                 	})
                  },
                  

@@ -8,6 +8,9 @@ class Employees
     	$app->get('/employees', function () { 
     		$this->getAllByBranchId(1);
     	});
+    		$app->get('/employeesgetall', function () {
+    			$this->getAll(1);
+    		});
     	$app->post('/employees',function(){
     		$request = Slim::getInstance()->request();
     		$this->saveEmployee($request);
@@ -16,9 +19,12 @@ class Employees
     			$request = Slim::getInstance()->request();
     			$this->deleteEmployee($request);
     		});
+    		$app->get('/employeebyid',function(){
+    			$this->getEmployeesByJobTypeId();
+    		});
     }
     function getAll( ) {  
-        $sql = "select * from employees where branchid = $this->branchid" ;
+        $sql = "select concat(firstname , '' , lastname) as name ,id,picture from employees where branchid = $this->branchid" ;
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -36,6 +42,38 @@ class Employees
                     $error = array("error"=> array("text"=>$e->getMessage()));
                     echo json_encode($error);
             }
+    }
+    function getEmployeesByJobTypeId( ) {
+        if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
+    		$branchid = $_GET['branchid'];
+    		 
+    	}else{
+    		$branchid = $this->branchid;
+    	}
+    	if(isset($_GET['jobtypeid']) && !empty($_GET['jobtypeid'])){
+    		$jobtypeid = $_GET['jobtypeid'];
+    	}
+    	$sql = "select * from employees e left join employeejobtypes ej on ej.employeeid = e.id
+    	 where e.branchid = $this->branchid and ej.jobtypeid = $jobtypeid" ;
+    	try {
+    		  $db = getConnection();
+                    $stmt = $db->prepare($sql);
+                     $stmt->execute();
+                    $employees = $stmt->fetchAll(PDO::FETCH_OBJ);
+                    $db = null;
+    		
+    
+    		// Include support for JSONP requests
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($employees);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($employees) . ');';
+    		}
+    
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
     }
     function getAllByBranchId() { 
     	$search = "";

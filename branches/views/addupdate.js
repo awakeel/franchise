@@ -18,6 +18,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.countryid = 0;
 				this.currencyid = 0;
 				this.departmentName = 'Department';
+				
 				this.template = _.template(template);
 				this.setting = this.options.setting;
 				this.app = this.options.setting;

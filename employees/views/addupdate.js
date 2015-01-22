@@ -16,14 +16,13 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				this.jobtypes = null;
 				this.parent = this.options.page;
 				this.objModelEmployee = new EmployeeModel();
-				if(typeof this.options.page.branchid !="undefined")
+				if(typeof this.options.page.branchid !="undefined" && this.options.page.branchid)
 					this.branchid = this.options.page.branchid;
 				this.render();
 				
 			},
 			render: function () {   
-				this.$el.html(this.template( ));
-			 
+				this.$el.html(this.template( )); 
 				if(typeof this.options.id  == "undefined"){
 					this.objModelEmployee =  this.model;
 					this.jobtypes = this.model.get('jobtypes');
@@ -48,21 +47,27 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					this.$el.find("input:radio[value='"+this.model.get('type')+"']").attr('checked', true);
 				}else{
 					this.getJobTypes();
-					this.getServices();
+					//this.getServices();
 					this.getRoles();
 				}
 				
 			},
 			closeView:function(){
-				 if(this.id)
-					 this.options.page.options.page.$el.find('#employees').modal('hide');
-				 else
-					 this.options.page.$el.find('#employees').modal('hide');
-				 this.undelegateEvents();
-				 this.$el.remove();
-				 this.$el.removeData().unbind(); 
-				 this.remove();  
-				 Backbone.View.prototype.remove.call(this);
+				var that = this;
+				require([ 'employees/views/lists' ],
+						function(Lists) {
+
+							var objLists = new Lists({
+								setting : that.app
+							});
+							that.$el.parent().html(objLists.$el);
+							Backbone.View.prototype.remove
+									.call(that);
+							that.undelegateEvents();
+							that.$el.remove();
+							that.$el.removeData().unbind();
+							that.remove();
+						})
 			},
 			getRoles:function(){
 				var URL = "api/allroles";
@@ -101,7 +106,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 		                console.log(str);
 		                that.services = str.split(',');
 		                that.getJobTypes();
-		                that.getServices();
+		                ///that.getServices();
 		                that.getRoles();
 				 });
 			},
@@ -112,7 +117,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				 var URL = "api/services";
 		            var that = this;
 		            var services = this.options.page.setting.services;
-		           console.log(this.services);
+		         //  console.log(this.services);
 		            if($.isEmptyObject(services) ){
 		            	 
 			            jQuery.getJSON(URL,{branchid:this.branchid},  function (tsv, state, xhr) {

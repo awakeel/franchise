@@ -1,5 +1,5 @@
-define(['jquery', 'backbone', 'underscore',  'text!templates/leftmenu.html','views/breadcrumb'],
-	function ($, Backbone, _,   template,BreadCrumb) {
+define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmenu.html','views/breadcrumb'],
+	function ($, Backbone,bootstrap, _,   template,BreadCrumb) {
 		'use strict';
 		return Backbone.View.extend({
 			 

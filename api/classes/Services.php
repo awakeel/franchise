@@ -94,7 +94,7 @@ class Services
     	$search = "";
     	if(@$_GET['search'] !=''){
     		$search = $_GET['search'];
-    		$search =  "  AND  (name LIKE '%". $search ."%' OR comments LIKE '%". $search ."%')";
+    		$search =  "  AND  (s.name LIKE '%". $search ."%' OR s.comments LIKE '%". $search ."%')";
     	}
     	$branchid = 0;
     	if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
@@ -103,7 +103,9 @@ class Services
     	}else{
     		$branchid = $this->branchId;
     	}
-       $sql = "select * from services where branchid = :branchid  $search order by id desc";
+       $sql = "select s.*, j.name as jobtype,j.id as jobtypeid from services s
+				left join jobtypes j on j.id = s.jobtypeid
+       			where s.branchid = :branchid  $search order by id desc";
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
@@ -127,14 +129,20 @@ class Services
     function saveService($request){
     
     	$params = json_decode($request->getBody());
-    	if(@$params->id){
-    		$sql = "update services ";
+    		if(isset($params->id) && !empty($params->id)){
+    		$sql = "update services set name=:name, type=:type,comments=:comments,jobtypeid=:jobtypeid,time=:time,price=:price ";
     		$sql .=" where id=:id";
     		try {
     			$db = getConnection();
     			$stmt = $db->prepare($sql);
     				
     			$stmt->bindParam("id", $params->id);
+    			$stmt->bindParam("name", $params->name);
+    			$stmt->bindParam("comments", $params->comments); 
+    			$stmt->bindParam("jobtypeid", $params->jobtypeid);
+    			$stmt->bindParam("price", $params->price);
+    			$stmt->bindParam("type", $params->type);
+    			$stmt->bindParam("time", $params->time);
     			$stmt->execute();
     				
     			$db = null;
@@ -144,14 +152,16 @@ class Services
     			echo '{"error":{"text":'. $e->getMessage() .'}}';
     		}
     	}else{
-    		$sql = "INSERT INTO services (name, comments,branchid,time,price) ";
-    		$sql .="VALUES (:name, :comments , :branchid,:time,:price)";
+    		$sql = "INSERT INTO services (name, comments,jobtypeid,branchid,time,price,type) ";
+    		$sql .="VALUES (:name, :comments , :jobtypeid,:branchid,:time,:price,:type)";
     		try {
     			$db = getConnection();
     			$stmt = $db->prepare($sql);
     			$stmt->bindParam("name", $params->name);
     			$stmt->bindParam("comments", $params->comments);
     			$stmt->bindParam("branchid", $params->branchid);
+    			$stmt->bindParam("jobtypeid", $params->jobtypeid);
+    			$stmt->bindParam("type", $params->type);
     			$stmt->bindParam("price", $params->price);
     			$stmt->bindParam("time", $params->time);
     			$stmt->execute();

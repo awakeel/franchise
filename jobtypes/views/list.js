@@ -22,26 +22,45 @@ define(['text!jobtypes/tpl/list.html','app'],
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deletejobtypes";
-                $.get(URL, {id:id})
-                        .done(function(data) {
-                             var _json = jQuery.parseJSON(data);
-                            if (_json[0] !== 'err') {
-                            	that.setting.successMessage();
-                            	that.model.destroy({
-                            	      success: function() { 
-                            	      }
-                            	  });  
-                            }
-                            else {
-                            	that.setting.errorMessage();
-                            }
-                        });
+			    swal({
+			      title: "Are you sure?",
+			      text: "You will not be able to recover this record!",
+			      type: "error",
+			      showCancelButton: true,
+			      confirmButtonClass: 'btn-danger',
+			      confirmButtonText: 'Danger!'
+			    },
+			    function(isConfirm) {
+			    	    if (isConfirm) {
+			    	    	 $.get(URL, {id:id})
+		                        .done(function(data) {
+		                             var _json = jQuery.parseJSON(data);
+		                            if (_json[0] !== 'err') {
+		                            	that.setting.successMessage();
+		                            	that.model.destroy({
+		                            	      success: function() { 
+		                            	    	  swal("Deleted!", "Job type has been deleted.", "success");
+		                            	      }
+		                            	  });  
+		                            }
+		                            else {
+		                            	swal("Error", "There is problem while deleting :)", "error");
+		                            }
+		                        });
+			    		    
+			    		  } else {
+			    		    
+			    		  }
+			    });
+			
+               
                  },
                  updateToken:function(ev){
                 	 var that = this;
                 	 var id =$(ev.target).data('id');
                 	 require(['jobtypes/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.append(new addupdate({id:id,title:that.model.get('title'),languagetitle:that.model.get('languagetitle'),page:that}).$el);
+                		 	 that.options.page.$el.append(new addupdate({model:that.model,page:that}).$el);
+                		 	 $("#newjobtypes").modal('show');
                 	})
                  },
                  

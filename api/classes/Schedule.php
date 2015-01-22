@@ -11,7 +11,7 @@ class Schedule
 	    	});
     		$app->post('/schedules', function () {
     			$request = Slim::getInstance()->request();
-    			$this->saveBranches($request);
+    			$this->saveSchedule($request);
     		});
     }
     function getAll( ) {  
@@ -35,8 +35,22 @@ class Schedule
             }
     }
     function getAllByFranchise($franchiseid) { 
-          
-        $sql = "SELECT * from schedule s where branchid = :branchid";
+          $jobtypeid = 0;
+          $employeeid = 0;
+          if(isset($_GET['jobtypeid']) && !empty($_GET['jobtypeid'])){
+          	$jobtypeid = $_GET['jobtypeid'];
+          	$sql = "SELECT concat(s.datefrom ,'T',s.start) as start,'Time slot scheduled ' AS title, concat(s.dateto ,'T',s.end) as end  ,j.id as resourceId  from schedule s
+        		left join jobtypes j on j.id = s.jobtypeid
+        		where s.branchid = :branchid and j.id is not null";
+          	
+          }
+          if(isset($_GET['employeeid']) && !empty($_GET['employeeid'])){
+          	$employeeid = $_GET['employeeid'];
+          	$sql = "SELECT concat(s.datefrom ,'T',s.start) as start,'Time slot scheduled ' AS title, concat(s.dateto ,'T',s.end) as end  ,e.id as resourceId  from schedule s
+        		left join employees e on e.id = s.employeeid
+        		where s.branchid = :branchid and e.id is not null";
+          	
+          }
             try {
                     $db = getConnection();
                     $stmt = $db->prepare($sql);
@@ -58,10 +72,17 @@ class Schedule
             }
     }
      
-    function saveBranches($request){
+    function saveSchedule($request){
     	 
     		$params = json_decode($request->getBody());
-    		if(@$params->id){
+    		$branchid = 0;
+    		if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
+    			$branchid = $_GET['branchid'];
+    			 
+    		}else{
+    			$branchid = $this->branchid;
+    		}
+    		if(isset($params->id) && !empty($params->id)){
     			$sql = "update branches set languageid=:l, currencyid=:c,countryid=:ct";
     			$sql .=" where id=:id";
     			try {
@@ -80,14 +101,18 @@ class Schedule
     				echo '{"error":{"text":'. $e->getMessage() .'}}';
     			}
     		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid) ";
-		    		$sql .="VALUES (:name, :notes , 1)";
+		    		$sql = "INSERT INTO schedule (start, end,dateto,datefrom,jobtypeid,employeeid,branchid) ";
+		    		$sql .="VALUES (:start, :end , :dateto,:datefrom,:jobtypeid,:employeeid,:branchid)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
-		    			$stmt->bindParam("name", $params->name);
-		    			$stmt->bindParam("notes", $params->notes); 
-		    	
+		    			$stmt->bindParam("start", $params->timefrom);
+		    			$stmt->bindParam("end", $params->timeto); 
+		    			$stmt->bindParam("dateto",$params->dateto );
+		    			$stmt->bindParam("datefrom",$params->datefrom);
+		    			$stmt->bindParam("jobtypeid", $params->jobtypeid);
+		    			$stmt->bindParam("employeeid", $params->employeeid);
+		    			$stmt->bindParam("branchid", $branchid); 
 		    			$stmt->execute();
 		    			$params->id = $db->lastInsertId();
 		    			$db = null;

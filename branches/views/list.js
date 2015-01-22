@@ -23,22 +23,39 @@ define(['text!branches/tpl/list.html','app'],
 			},
 			deleteBranch:function(ev){
 				var that = this;
-            	var id = $(ev.target).data('id'); 
+            	var id = that.model.get('id'); 
                 var URL = "api/deletebranch";
-                $.get(URL, {id:id})
-                        .done(function(data) {
-                             var _json = jQuery.parseJSON(data);
-                            if (_json[0] !== 'err') {
-                            	that.setting.successMessage();
-                            	that.model.destroy({
-                            	      success: function() { 
-                            	      }
-                            	  });  
-                            }
-                            else {
-                            	that.setting.errorMessage();
-                            }
-                        });
+                swal({
+  			      title: "Are you sure?",
+  			      text: "You will not be able to recover this record!",
+  			      type: "error",
+  			      showCancelButton: true,
+  			      confirmButtonClass: 'btn-danger',
+  			      confirmButtonText: 'Danger!'
+  			    },
+  			    function(isConfirm) {
+  			    	    if (isConfirm) {
+  			    	    	 $.get(URL, {id:id})
+  		                        .done(function(data) {
+  		                             var _json = jQuery.parseJSON(data);
+  		                            if (_json[0] !== 'err') {
+  		                            	that.setting.successMessage();
+  		                            	that.model.destroy({
+  		                            	      success: function() { 
+  		                            	    	  swal("Deleted!", "Record has been deleted.", "success");
+  		                            	      }
+  		                            	  });  
+  		                            }
+  		                            else {
+  		                            	swal("Error", "There is problem while deleting :)", "error");
+  		                            }
+  		                        });
+  			    		    
+  			    		  } else {
+  			    		    
+  			    		  }
+  			    });
+  			 
                  },
                  updateToken:function(ev){
                 	 var that = this;

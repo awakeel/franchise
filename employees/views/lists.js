@@ -3,7 +3,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
-			className:"col-lg-12",
+			className:"col-lg-12 ",
 			events:{
 				"keyup #txtsearchemployees":"searchEmployees",
 				"click .close-p":"closePopup",
@@ -47,9 +47,10 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
-				 that.$el.find('tbody').empty();
+				 
 				 if(this.request)
 	                    this.request.abort();
+				 that.$el.find('tbody').empty();
 				 this.request = this.objEmployees.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objEmployee = new Employee({model:model,page:that,setting:that.setting});
@@ -64,7 +65,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                          
                     //} 
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
 						trNoRecord +='<button type="button" class=" add-new" data-toggle="modal" data-target="#newservice">';
 						trNoRecord +=' <span class="a-a"><i class="fa fa-add"></i></span> ';
 						trNoRecord += 'add new';
@@ -82,8 +83,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				var that = this;
 				require(['employees/views/addupdate'],function(AddUpdate){
 					var objAddUpdate = new AddUpdate({id:123,page:that});
-					that.$el.find('.employees').append(objAddUpdate.$el);
-					that.$el.find('#employees').modal('show');
+					that.$el .html(objAddUpdate.$el); 
 				})
 			},
 			fillJobTypes:function(){

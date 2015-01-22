@@ -102,14 +102,16 @@ class JobTypes
     function saveJobTypes($request){
     	 
     		$params = json_decode($request->getBody());
-    		if(@$params->id){
-    			$sql = "update branches ";
+    		if(isset($params->id) && !empty($params->id)){
+    			$sql = "update jobtypes set name=:name, comments = :comments ";
     			$sql .=" where id=:id";
     			try {
     				$db = getConnection();
     				$stmt = $db->prepare($sql);
     				 
     				$stmt->bindParam("id", $params->id);
+    				$stmt->bindParam("name", $params->name);
+    				$stmt->bindParam("comments", $params->comments); 
     				$stmt->execute();
     				 
     				$db = null;
@@ -120,12 +122,12 @@ class JobTypes
     			}
     		}else{
 		    		$sql = "INSERT INTO jobtypes (name, comments,branchid) ";
-		    		$sql .="VALUES (:name, :comments , :branchid)";
+		    		$sql .="VALUES (:name,  :comments , :branchid)";
 		    		try {
 		    			$db = getConnection();
 		    			$stmt = $db->prepare($sql);
 		    			$stmt->bindParam("name", $params->name);
-		    			$stmt->bindParam("comments", $params->comments);
+		    			$stmt->bindParam("comments", $params->comments); 
 		    			$stmt->bindParam("branchid", $params->branchid); 
 		    	
 		    			$stmt->execute();

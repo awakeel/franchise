@@ -22,27 +22,44 @@ define(['text!employees/tpl/list.html','app'],
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deleteemployees";
-                $.get(URL, {id:id})
-                        .done(function(data) {
-                             var _json = jQuery.parseJSON(data);
-                            if (_json[0] !== 'err') {
-                            	that.setting.successMessage();
-                            	that.model.destroy({
-                            	      success: function() { 
-                            	      }
-                            	  });  
-                            }
-                            else {
-                            	that.setting.errorMessage();
-                            }
-                        });
+                swal({
+    			      title: "Are you sure?",
+    			      text: "You will not be able to recover this record!",
+    			      type: "error",
+    			      showCancelButton: true,
+    			      confirmButtonClass: 'btn-danger',
+    			      confirmButtonText: 'Danger!'
+    			    },
+    			    function(isConfirm) {
+    			    	    if (isConfirm) {
+    			    	    	 $.get(URL, {id:id})
+    		                        .done(function(data) {
+    		                             var _json = jQuery.parseJSON(data);
+    		                            if (_json[0] !== 'err') {
+    		                            	that.setting.successMessage();
+    		                            	that.model.destroy({
+    		                            	      success: function() { 
+    		                            	    	  swal("Deleted!", "Record has been deleted.", "success");
+    		                            	      }
+    		                            	  });  
+    		                            }
+    		                            else {
+    		                            	swal("Error", "There is problem while deleting :)", "error");
+    		                            }
+    		                        });
+    			    		    
+    			    		  } else {
+    			    		    
+    			    		  }
+    			    });
+                
                  },
                  update:function(){
      				var that = this;
      				require(['employees/views/addupdate'],function(AddUpdate){
      					var objAddUpdate = new AddUpdate({page:that,model:that.model});
-     					that.options.page.$el.find('.employees').append(objAddUpdate.$el);
-     					that.options.page.$el.find('#employees').modal('show');
+     					that.options.page.$el.html(objAddUpdate.$el);
+     					
      				})
      			},
                  

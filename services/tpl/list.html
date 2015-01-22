@@ -1,12 +1,13 @@
                                  
                                                 <td><%=this.model.get('name')%></td> 
+                                                <td><%=this.model.get('jobtype')%></td> 
                                                <td><%=this.model.get('time')%></td> 
                                                  <td><%=this.model.get('price')%></td> 
                                                  <td><%=this.model.get('type')%></td> 
                                                  
                                                 <td width="25%">
                                                 	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info activate-token"><%=this.setting.language['edit']%></button>
+                                                	<button class="btn btn-info edit"><%=this.setting.language['edit']%></button>
                                                  </td>
                                            
                                            

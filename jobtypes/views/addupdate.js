@@ -11,26 +11,29 @@ define(
 						},
 						initialize : function() {
 							this.template = _.template(template);
-
+							this.name = "";
+							this.comments = "";
+							this.objjobtype = new JobTypeModel();
 							this.app = this.options.page.setting;
-
 							this.branchid = this.app.users.branchid;
-							if (typeof this.options.page.branchid != "undefined")
-								this.branchid = this.options.page.branchid;
-
-							this.render();
-							console.log(this.app.globaljobtypes);
+							if (typeof this.options.page.branchid != "undefined" && this.options.page.branchid)
+								this.branchid = this.options.page.branchid; 
+							this.render(); 
 						},
 						render : function() {
 							this.$el.html(this.template());
 							var that = this;
 							that.$el.find("#txtname").typeahead({
-								  hint: true,
-								  
-								  
-								 
+								  hint: true, 
 								  local: that.app.globaljobtypes
 								}); 
+							if(typeof this.options.id == "undefined"){
+								this.objjobtype = this.options.model;  
+								this.name = this.options.model.get('name');
+								this.comments = this.options.model.get('comments');
+								that.$el.find("#txtname").val(this.options.model.get('name'));
+								this.$el.find('#txtcomments').val(this.options.model.get('comments'));
+							}
 						},
 						closeView : function() {
 							this.$el.find('.modal').modal('hide');
@@ -43,6 +46,7 @@ define(
 						clearErrorFilter : function() {
 							this.$el.find('.name-error').addClass('hide');
 						},
+						
 						save : function() {
 							var name = this.$el.find('#txtname').val();
 							var comments = this.$el.find('#txtcomments').val()
@@ -52,17 +56,17 @@ define(
 								return false;
 							}
 							this.app.showLoading('Wait a moment....', this.$el);
-							var objjobtype = new JobTypeModel();
-							objjobtype.set('branchid', this.branchid);
-							objjobtype.set('name', name);
-							objjobtype.set('comments', comments);
-							var model = objjobtype.save();
-							this.options.page.objJobTypes.add(objjobtype);
+							
+							this.objjobtype.set('branchid', this.branchid);
+							this.objjobtype.set('name', name);
+							this.objjobtype.set('comments', comments);
+							var model = this.objjobtype.save();
+							this.options.page.objJobTypes.add(this.objjobtype);
 							var last_model = this.options.page.objJobTypes
 									.last();
 							// this.closePopup();
 							var objjobtype = new JobType({
-								model : objjobtype,
+								model : this.objjobtype,
 								page : this.options.page,
 								setting : this.options.page.setting
 							});

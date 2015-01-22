@@ -1,0 +1,95 @@
+<div class='row'>
+			<h4>Create time plan for period </h4>
+					<div id="scheduledate">
+						<input class="form-control" type="text" id="txtscheduledates" style="width: 276px;" />
+					</div>
+					</div>
+					<div class='row schedule-row'>
+					<div class="col-lg-4 clone" id='clonearea' style="display:none;">
+                        <div class="portlet portlet-default">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <input type="hidden" value=""> 
+                                    <h4><strong>1 Hair Dresser</strong> <button class="btn btn-sm btn-info changearea_a#1">Change</button></h4>
+                                    
+                                </div>
+                                <div class="portlet-widgets"> 
+                                    <a id="area_1" class='hyper areas change-header'><i class="fa fa-chevron-down"></i></a>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="area_a1" class='change-body'>
+                                <div class="portlet-body">
+                                  	<h4>Time from</h4>
+									<div class="  ">
+									   <input class="form-control timepicker timefrom" type="text" style="width: 176px;">
+									     <h4>Time to</h4>
+										<div class="  ">
+										   <input  class="form-control timepicker timeto" type="text" style="width: 176px;">
+										    
+										</div>
+									</div>
+                                </div>
+                            </div>
+                            <div class="portlet-footer">
+                                <h4>Employees</h4>
+				    			 <input type="text"  class="form-control employees"  placeholder="Start typing..." />
+                     
+                            </div>
+                        </div>
+                    </div>
+				 	<div class="col-lg-4">
+                        <div class="portlet portlet-default">
+                            <div>
+                                <div class="portlet-widgets">
+                                     
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div id="area_1a" class='area' style="position:relative;">
+                                <div >
+                                 <div class="col-lg-4">
+    <a class="btn btn-purple" href="#primary" data-toggle="modal">Add schedule for job types</a>
+      					 	
+</div>   
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+				 	
+				 	
+				
+
+				   
+					<!-- /input-group -->
+			 </div>	     
+			   
+			 <div class="row">
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default close-p"
+						data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-green save-p">Save
+						changes</button>
+				</div>
+			</div>
+			
+    <div class="modal fade" id="primary" tabindex="-1" role="dialog" aria-labelledby="newarea" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header modal-header-primary">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h4>  Add new schedule</h4>
+                </div>
+                <div class="modal-body">
+                	<h4>Select job Type</h4>
+        			<input type="text" class="form-control" id="txtjobtypes" value="" placeholder="Start Typing..." />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default " data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success add-new-box" data-dismiss="modal">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	

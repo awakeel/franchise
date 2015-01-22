@@ -1,162 +1,167 @@
-define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','fullcalendar','timepick','daterangepicker','typeahead','tokenfield'],
-	function (template,Schedules,calendar,timepicker,daterangepicker,typeahead,tokenfield) {
+define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','fullcalendar','timepick','daterangepicker','typeahead','datepicker'],
+	function (template,Schedules,calendar,timepicker,daterangepicker,typeahead,datepicker) {
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
 			 	"click .delete-token":"deleteToken",
 			 	"click .edit-token":"updateToken",
 			 	"click .add-new":'addNewSchedule',
-			 	"click .close-p":"closeSchedule"
+			 	"click .close-p":"closeSchedule",
+			  
+			 	"change #ddlscheduletype":"changeCalenderView"
 			},
             initialize: function () {
 				this.template = _.template(template);
 				//this.listenTo(this.model, 'change', this.render);
 			   // this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
+			    this.app = this.setting;
 			    this.objSchedules = new Schedules();
 			    this.render();
-			    this.fillEmployees();
-			    this.fillJobTypes();
+				
+			},
+			changeCalenderView:function(ev){
+				var res;
+				var that = this;
+				this.app.showLoading('Loading schedule...',this.$el);
+				if($(ev.target).val() == "1"){
+					this.fetchJobTypes(); 
+					 
+				}else{
+					  
+					this.fetchEmployees();
+					 
+				}
+				this.app.showLoading(false,this.$el);
 			},
 			render: function () {
-				this.$el.html(this.template({id:1123,name:'wakeel'}));
+				this.$el.html(this.template( ));
+				this.app.showLoading('Loading schedule...',this.$el);
 				
-				this.$el.find('#timefrom').timepicker();
-				this.$el.find('#timeto').timepicker();
-				this.$el.find('#scheduledate input').daterangepicker({
-				  
-					 
-				});
 				var that = this;
-				this.objSchedules.fetch({data:{},success:function(data){
-					that.initScheduleCalander(that.objSchedules.toJSON());
-				}})
+				 this.$el.find('#txtdate').datepicker({ todayBtn: true,
+					    clearBtn: true,
+					    autoclose: true,
+					    todayHighlight: true
+					});
+				///);
+				 this.$el.find('#txtdate').datepicker()
+				    .on('changeDate', function(e){
+				    	that.$el.find('#calendar').fullCalendar('gotoDate',e.date)
+				    });
+				    this.fetchJobTypes();  
 				
-				
-			} ,
+				 this.app.showLoading(false,this.$el);
+			}  ,
 			addNewSchedule:function(){
 				
-				this.$el.find("#popup").show();
+				var that = this;
+				require(['schedule/views/createschedule'],function(AddUpdate){
+					var objAddUpdate = new AddUpdate({id:1,page:that});
+					that.$el .html(objAddUpdate.$el);
+				})
 				
 			},
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(models){
-				console.log(models)
-				 this.$el.find('#calendar').fullCalendar({
-			            header: {
-			                left: 'prev,next today',
-			                center: 'title',
-			                right: 'month,agendaWeek,agendaDay'
-			            },
-			            defaultDate: 'agendaDay',
-			            editable: true,
-			            allDaySlot: false,
-			            selectable: true,
-			            slotMinutes: 15,
-			            events:models,
-			            eventClick: function (calEvent, jsEvent, view) {
-			                alert('You clicked on event id: ' + calEvent.id
-			                    + "\nSpecial ID: " + calEvent.someKey
-			                    + "\nAnd the title is: " + calEvent.title);
-
-			            }
-			 
-				 });
-			},
-			fillEmployees:function(){
-				var url = "api/employees";
-				 var that = this;
-				 var employees ;
-				 var names = new Array();
-                 var ids = new Object(); 
-                  jQuery.getJSON(url, function(tsv, state, xhr) {
-                   var employees = jQuery.parseJSON(xhr.responseText);
-                   		_.each( employees, function ( employee, index )
-                               {   names.push( employee.firstname + '  ' + employee.lastname );
-                                   ids[employee.firstname + '  ' + employee.lastname] = employee.id;
-                               } );  
-                               that.$el.find("#txtemployees").tokenfield({
-                            	   
-                            	    typeahead:{
-                            		    source: names,
-                            		    local:names
-                            		} 
-                            	});
-                  		 
-                   
-                   });
-			 },
-			fillJobTypes:function(){
+			initScheduleCalander:function(models,resource){
+					console.log(resource);
+				 var date = new Date();
+	                var d = date.getDate();
+	                var m = date.getMonth();
+	                var y = date.getFullYear();
+			        var that = this;
+			        this.$el.find('#calendar').empty();
+	                var calendar = this.$el.find('#calendar').fullCalendar({
+	                    header: {
+	                        left: 'prev,next today',
+	                        center: 'title',
+	                        right: ' '
+	                    },
+	                    titleFormat: 'ddd, MMM dd, yyyy',
+	                    defaultView: 'resourceDay',
+	                    //selectable: true,
+	                    formatDate:(new Date()).toISOString().slice(0, 10),
+	                    selectHelper: true,
+	                    allDayDefault:false,
+	                   /* select: function(start, end, allDay, event, resourceId) {
+	                        var title = prompt('Event Title:');
+	                        if (title) {
+	                            console.log("@@ adding event " + title + ", start " + start + ", end " + end + ", allDay " + allDay + ", resource " + resourceId);
+	                            calendar.fullCalendar('renderEvent',
+	                            {
+	                                title: title,
+	                                start: start,
+	                                end: end,
+	                                allDay: false,
+	                                resourceId: resourceId
+	                            },
+	                            true // make the event "stick"
+	                        );
+	                        }
+	                        calendar.fullCalendar('unselect');
+	                    },*/
+	                    eventResize: function(event, dayDelta, minuteDelta) {
+	                        console.log("@@ resize event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
+	                    },
+	                    eventDrop: function( event, dayDelta, minuteDelta, allDay) {
+	                        console.log("@@ drag/drop event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
+	                    },
+	                    editable: true,
+	                    resources: resource,
+	                    events:  models
+	                     
+	                });
+ 
 				 
-				var url = "api/jobtypes";
-				 var that = this;
-				 var employees ;
-				 var names = new Array();
-                 var ids = new Object(); 
-                  jQuery.getJSON(url, function(tsv, state, xhr) {
-                   var employees = jQuery.parseJSON(xhr.responseText);
-                   		_.each( employees, function ( employee, index )
-                               {
-                                   names.push( employee.name );
-                                   ids[employee.name] = employee.id;
-                               } ); 
-		                   	  that.$el.find("#txtjobtypes").tokenfield({
-		                   	   
-		                  	    typeahead:{
-		                  		    source: names,
-		                  		    local:names
-		                  		} 
-		                  	});
-        		 
-                   
-                   });
 			},
-			eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) {
-			                if (confirm("Confirm move?")) {
-			                   // UpdateEvent(event.id, event.start);
-			                }
-			                else {
-			                   // revertFunc();
-			                }
-			            },
-
-			            eventResize: function (event, dayDelta, minuteDelta, revertFunc) {
-
-			                if (confirm("Confirm change appointment length?")) {
-			                    //UpdateEvent(event.id, event.start, event.end);
-			                }
-			                else {
-			                   // revertFunc();
-			                }
-			            },
-
-
-
-			            dayClick: function (date, allDay, jsEvent, view) {
-			                $('#eventTitle').val("");
-			                $('#eventDate').val($.fullCalendar.formatDate(date, 'dd/MM/yyyy'));
-			                $('#eventTime').val($.fullCalendar.formatDate(date, 'HH:mm'));
-			               // ShowEventPopup(date);
-			            },
-
-			            viewRender: function (view, element) {
-
-			                if (!CalLoading) {
-			                    if (view.name == 'month') {
-			                        $('#calendar').fullCalendar('removeEventSource', sourceFullView);
-			                        $('#calendar').fullCalendar('removeEvents');
-			                        $('#calendar').fullCalendar('addEventSource', sourceSummaryView);
-			                    }
-			                    else {
-			                        $('#calendar').fullCalendar('removeEventSource', sourceSummaryView);
-			                        $('#calendar').fullCalendar('removeEvents');
-			                        $('#calendar').fullCalendar('addEventSource', sourceFullView);
-			                    }
-			                }
-			            }
-
+		      
+			 fetchJobTypes:function(){
+				 var URL = "api/jobtypes";
+		         var that = this;
+		         var str = "";  
+		         this.jobtypes = null;
+	            jQuery.getJSON(URL,{branchid:this.branchid},  function (tsv, state, xhr) {
+	                var _json = jQuery.parseJSON(xhr.responseText);
+	                var jobtypes = _json;
+	                that.jobtypes = jobtypes;
+	            	that.objSchedules.fetch({data:{jobtypeid:1},success:function(data){
+						 that.initScheduleCalander(that.objSchedules.toJSON(),jobtypes);
+					 }})
+	                _.each(jobtypes,function(value,key,list){ 
+	                	var check = "";
+	                	 
+						str+='<li>';
+						str+='<label> <input type="checkbox" value="'+value.id+'" '+check+'>'+value.name;
+							str+='</label>';
+								str+='</li>';
+					});
+	               
+	                that.$el.find('.selection-box ul ').html(str);
+	            }); 
+		     },
+		     fetchEmployees:function(id,clone){
+					var url = "api/employeesgetall";
+					 var that = this;
+					 var str = "";
+	                  jQuery.getJSON(url,{ branchid:this.branchid}, function(tsv, state, xhr) {
+	                   var employees = jQuery.parseJSON(xhr.responseText);
+	                   	that.employees = employees; 
+	                   	that.objSchedules.fetch({data:{employeeid:1},success:function(data){
+							 that.initScheduleCalander(that.objSchedules.toJSON(),employees);
+						 }})
+	                   	_.each(employees,function(value,key,list){ 
+		                	var check = "";
+		                	 
+							str+='<li><img style="width: 100px; height: 100px;" src="userimages/'+value.picture+'">';
+							str+='<label> <input type="checkbox" value="'+value.id+'" '+check+'>'+value.name;
+								str+='</label>';
+									str+='</li>';
+						});
+		                that.$el.find('.selection-box ul ').html(str);
+	                   });
+				 }        
 			        
 /*
 

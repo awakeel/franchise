@@ -3,7 +3,7 @@
 	require.config({
 		deps : [ 'main' ],
 		waitSeconds : 400,
-		urlArgs : "v=22",// + new Date().getTime(),
+		urlArgs : "v=3",// + new Date().getTime(),
 		paths : {
 			jquery : 'libs/jquery',
 			underscore : 'libs/underscore',
@@ -20,7 +20,8 @@
 			'daterangepicker':"libs/daterangepicker",
 			'typeahead':'libs/typeahead.min',
 			'tokenfield':"libs/bootstrap-tokenfield.min", 
-			'spin':'libs/spin'
+			'spin':'libs/spin',
+			'swal':'libs/sweetalert',
 		},
 		shim : {
 			jquery : {
@@ -45,12 +46,16 @@
 				deps : [ 'jquery' ],
 				exports : 'fullcalendar'
 			},
-
-			bootstrap : [ 'jquery' ]
+		
+			bootstrap : [ 'jquery' ],
+			swal  : {
+				deps : [ 'jquery','bootstrap' ],
+				exports : 'swal'
+			},
 		}
 	});
 
-	require([ 'jquery', 'bootstrap', 'backbone','router' ], function($,bootstrap,Backbone,router) {
+	require([ 'jquery', 'bootstrap', 'backbone','router' ,'swal'], function($,bootstrap,Backbone,router,swal ) {
 		var mainRouter = new router();
 			Backbone.history.start({
 				pushState : true
