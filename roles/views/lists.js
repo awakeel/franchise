@@ -1,5 +1,5 @@
-define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list','roles/models/role'],
-	function (template,Roles,Role,RoleModel) {
+define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list','roles/models/role','swal'],
+	function (template,Roles,Role,RoleModel,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
@@ -17,6 +17,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 				this.searchText = '';
 				this.setting = this.options.setting;
 				this.app = this.options.setting;
+				this.franchiseid = this.app.user_franchise_id;
 				this.offsetLength = 10;
 				this.objRoles = new Roles();
 				this.render();
@@ -25,8 +26,8 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 			render: function () { 
 				this.$el.html(this.template({}));
 				this.app.showLoading('Loading roles...',this.$el);
-				$(window).scroll(_.bind(this.lazyLoading, this));
-                $(window).resize(_.bind(this.lazyLoading, this));
+				//$(window).scroll(_.bind(this.lazyLoading, this));
+                //$(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchRoles();
                 //this.fillJobTypes();
                 var that = this;
@@ -39,6 +40,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
 				var that = this;
 				var _data = {}; 
 				 _data['search'] = this.searchText;
+				 _data['franchiseid'] = this.franchiseid;
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
@@ -127,7 +129,7 @@ define(['text!roles/tpl/lists.html','roles/collections/roles','roles/views/list'
                      var that = this;
                      var text = $(ev.target).val(); 
                      var code = ev.keyCode ? ev.keyCode : ev.which;
-                     var nonKey =[17, 40 , 38 , 37 , 39 , 16,8,46];
+                     var nonKey =[17, 40 , 38 , 37 , 39 , 16, 46];
                      if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
                            return;
                      }

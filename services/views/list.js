@@ -12,6 +12,7 @@ define(['text!services/tpl/list.html','app'],
 				this.listenTo(this.model, 'change', this.render);
 			    this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
+			    this.branchid = this.options.page.branchid;
 				this.render();
 			},
 			render: function () {
@@ -28,14 +29,14 @@ define(['text!services/tpl/list.html','app'],
   			      type: "error",
   			      showCancelButton: true,
   			      confirmButtonClass: 'btn-danger',
-  			      confirmButtonText: 'Danger!'
+  			      confirmButtonText: 'Yes, Delete'
   			    },
   			    function(isConfirm) {
   			    	    if (isConfirm) {
   			    	    	 $.get(URL, {id:id})
   		                        .done(function(data) {
   		                             var _json = jQuery.parseJSON(data);
-  		                            if (_json[0] !== 'err') {
+  		                           if (typeof _json.error == "undefined") {
   		                            	that.setting.successMessage();
   		                            	that.model.destroy({
   		                            	      success: function() { 
@@ -56,7 +57,7 @@ define(['text!services/tpl/list.html','app'],
                  updateToken:function(ev){
                 	 var that = this; 
                 	 require(['services/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.html(new addupdate({model:that.model,page:that}).$el);
+                		 	 that.options.page.$el.html(new addupdate({model:that.model,page:that,branchid:that.options.branchid}).$el);
                 	})
                  },
                  

@@ -1,28 +1,9 @@
 
 <td width="40%"><a href="#00"><strong><%=this.model.get('name')%></strong>
-<ul class="list-inline">
-                                                 
-                        <li>
-                            <span class="   "><%=this.model.get('language')%>  , </span>
-                             <span class="   "><%=this.model.get('currency')%>  ,</span>
-                              <span class="   "><%=this.model.get('country')%></span>
-                        </li>
-                                                
-               </ul>
-</a>
-</td>
-<td width="30%"> 
-                        <ul class="list-inline list-employee">
-                                                 
-                        <li>
-                          <%=this.employeeList()%>
-                        </li>
-                                                
-               </ul>
-                                                
-              </td>
 
-<td width="5%"><span class="label label-success">Active</span></td>
+</a></td>
+ 
+<td width="5%"><span class="label label-success"><%=this.getStatus()%></span></td>
 <td width="10%"><%=this.setting.getFormatedDate(this.model.get('createdon'))%></td>
 <td width="	15%"><a class="btn btn-danger delete-branch btn-sm"
 	style="color: #fff" data-id="<%=this.model.get('id')%>">

@@ -29,51 +29,46 @@ class Roles {
 				
 	}
 	function getRoles( ){
-				$search = "";
-				 
-				$sql = "select  * from role
-				";
-			
-				try {
-				$db = getConnection();
-				$stmt = $db->prepare($sql);
-			
-				$stmt->execute();
-				$roles = $stmt->fetchAll(PDO::FETCH_OBJ);
-				$db = null;
+			   $search = "";
+			   try {
+				
+				$roles =  R::getAll( 'SELECT * FROM role WHERE franchiseid = :franchiseid',
+				 [':franchiseid' => $_GET['franchiseid']]
+				 );
 				// Include support for JSONP requests
 				if (!isset($_GET['callback'])) {
-				echo json_encode($roles);
+						echo json_encode($roles);
 				} else {
-				echo $_GET['callback'] . '(' . json_encode($roles) . ');';
+					echo $_GET['callback'] . '(' . json_encode($roles) . ');';
 				}
 			
 				} catch(PDOException $e) {
-				$error = array("error"=> array("text"=>$e->getMessage()));
-				echo json_encode($error);
+					$error = array("error"=> array("text"=>$e->getMessage()));
+					echo json_encode($error);
 				}
 		}
 	function getModules( ){
 		$search = "";
-		if(@$_GET['search'] !=''){
+		if(isset($_GET['search']) && !empty($_GET['search']) !=''){
 			$search = $_GET['search'];
-			$search =  "  where  (r.name LIKE '%". $search ."%') ";
+			$search =  "  and  (r.name LIKE '%". $search ."%') ";
+		}
+		$franchiseid  = "";
+		if(isset($_GET['franchiseid']) && !empty($_GET['franchiseid'])){
+			$f = $_GET['franchiseid'];
+			$franchiseid = "where r.franchiseid = $f";
 		}
 		$sql = "select  r.*, GROUP_CONCAT(CONCAT(modules.id, '-', modules.name)  SEPARATOR ', ')
 				as modulename from role as r
 				left join rolemodules on rolemodules.roleid = r.id
 				left join modules on modules.id = rolemodules.moduleid
-				$search  
+				$franchiseid
+				 $search   
 				group by r.name
 				";
-
+		 
 		try {
-			$db = getConnection();
-			$stmt = $db->prepare($sql);
-
-			$stmt->execute();
-			$roles = $stmt->fetchAll(PDO::FETCH_OBJ);
-			$db = null;
+			$roles =  R::getAll( $sql);
 			// Include support for JSONP requests
 			if (!isset($_GET['callback'])) {
 				echo json_encode($roles);
@@ -109,14 +104,14 @@ class Roles {
 				echo '{"error":{"text":'. $e->getMessage() .'}}';
 			}
 		}else{
-			$sql = "INSERT INTO role (name,description,branchid) ";
-			$sql .="VALUES (:name,:desc,:branchid)";
+			$sql = "INSERT INTO role (name,description,franchiseid) ";
+			$sql .="VALUES (:name,:desc,:franchiseid)";
 			try {
 				$db = getConnection();
 				$stmt = $db->prepare($sql);
 				$stmt->bindParam("desc", $params->description);
 				$stmt->bindParam("name", $params->name);
-				$stmt->bindParam("branchid", $_SESSION['branchid'] );
+				$stmt->bindParam("franchiseid", $_SESSION['franchiseid'] );
 				$exec = $stmt->execute();
 			
 				echo json_encode($db->lastInsertId()  );
@@ -133,17 +128,17 @@ class Roles {
 		$modules = $_POST['modules'];
 		$roleid = $_POST['roleid'];
 		$modules = explode(",",$modules);
-		$this->deleteRolePermission($roleid,$_SESSION['branchid'] );
+		$this->deleteRolePermission($roleid,$_SESSION['franchiseid'] );
 		foreach($modules as $mod){
 			
-			$sql = "INSERT INTO rolemodules (roleid, moduleid,isallow,branchid) ";
-			$sql .="VALUES (:roleid, :moduleid , 1,:branchid)";
+			$sql = "INSERT INTO rolemodules (roleid, moduleid,isallow,franchiseid) ";
+			$sql .="VALUES (:roleid, :moduleid , 1,:franchiseid)";
 			try {
 				$db = getConnection();
 				$stmt = $db->prepare($sql);
 				$stmt->bindParam("moduleid", $mod);
 				$history = $stmt->bindParam("roleid", $roleid);
-				$history = $stmt->bindParam("branchid", $_SESSION['branchid'] );
+				$history = $stmt->bindParam("franchiseid", $_SESSION['franchiseid'] );
 				$stmt->execute();
 				$db = null;
 				 
@@ -156,17 +151,15 @@ class Roles {
 	
 	
 	}
-	function deleteRolePermission($roleid,$branchid){
+	function deleteRolePermission($roleid,$franchiseid){
 		 
-		$sql = "delete from rolemodules where roleid = $roleid and branchid = $branchid";
+		$sql = "delete from rolemodules where roleid = $roleid and franchiseid = $franchiseid";
 	
 		try {
 			$db = getConnection();
-			$stmt = $db->prepare($sql);
-			$stmt->bindParam("id", $id);
+			$stmt = $db->prepare($sql); 
 			$stmt->execute();
-			$db = null;
-			echo json_encode($id);
+			$db = null; 
 		} catch(PDOException $e) {
 			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
 			echo '{"error":{"text":'. $e->getMessage() .'}}';
@@ -185,7 +178,7 @@ class Roles {
 			echo json_encode($id);
 		} catch(PDOException $e) {
 			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-			echo '{"error":{"text":'. $e->getMessage() .'}}';
+			echo json_encode(['error'=>'Integrity constraint'] );
 		}
 	}
 

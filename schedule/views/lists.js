@@ -3,9 +3,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
-			 	"click .delete-token":"deleteToken",
-			 	"click .edit-token":"updateToken",
-			 	"click .add-new":'addNewSchedule',
+			  
 			 	"click .close-p":"closeSchedule",
 			  
 			 	"change #ddlscheduletype":"changeCalenderView"
@@ -17,6 +15,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			    this.setting = this.options.setting;
 			    this.app = this.setting;
 			    this.objSchedules = new Schedules();
+			    console.log(this.app);
 			    this.render();
 				
 			},
@@ -36,16 +35,14 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			},
 			render: function () {
 				this.$el.html(this.template( ));
-				this.app.showLoading('Loading schedule...',this.$el);
-				
+				this.app.showLoading('Loading schedule...',this.$el); 
 				var that = this;
 				 this.$el.find('#txtdate').datepicker({ todayBtn: true,
 					    clearBtn: true,
 					    autoclose: true,
 					    todayHighlight: true
-					});
-				///);
-				 this.$el.find('#txtdate').datepicker()
+					}); 
+				 this.$el.find('#txtdate').datepicker({})
 				    .on('changeDate', function(e){
 				    	that.$el.find('#calendar').fullCalendar('gotoDate',e.date)
 				    });
@@ -53,20 +50,12 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 				
 				 this.app.showLoading(false,this.$el);
 			}  ,
-			addNewSchedule:function(){
-				
-				var that = this;
-				require(['schedule/views/createschedule'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({id:1,page:that});
-					that.$el .html(objAddUpdate.$el);
-				})
-				
-			},
+		 
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(models,resource){
-					console.log(resource);
+			initScheduleCalander:function(models,resource){ 
+				console.log(resource);
 				 var date = new Date();
 	                var d = date.getDate();
 	                var m = date.getMonth();
@@ -108,6 +97,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    eventDrop: function( event, dayDelta, minuteDelta, allDay) {
 	                        console.log("@@ drag/drop event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
 	                    },
+	                    eventBackgroundColor:'#fff',
 	                    editable: true,
 	                    resources: resource,
 	                    events:  models
@@ -122,46 +112,96 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 		         var that = this;
 		         var str = "";  
 		         this.jobtypes = null;
-	            jQuery.getJSON(URL,{branchid:this.branchid},  function (tsv, state, xhr) {
+	            jQuery.getJSON(URL,{franchiseid:this.app.user_franchise_id},  function (tsv, state, xhr) {
 	                var _json = jQuery.parseJSON(xhr.responseText);
 	                var jobtypes = _json;
 	                that.jobtypes = jobtypes;
-	            	that.objSchedules.fetch({data:{jobtypeid:1},success:function(data){
-						 that.initScheduleCalander(that.objSchedules.toJSON(),jobtypes);
-					 }})
+	            	var ids = "";
 	                _.each(jobtypes,function(value,key,list){ 
 	                	var check = "";
-	                	 
-						str+='<li>';
-						str+='<label> <input type="checkbox" value="'+value.id+'" '+check+'>'+value.name;
-							str+='</label>';
-								str+='</li>';
+	                	ids +=value.id+",";
+	                	str+='<div class="user_container">';
+						str+='<label> <input type="checkbox" checked value="'+value.id+'" '+check+'>'+value.name+'</label></div>';
 					});
-	               
-	                that.$el.find('.selection-box ul ').html(str);
+	                that.fetchData(ids,"jobtypes",jobtypes);
+	            	that.$el.find('.selection-box  ').html(str);
+	            	var oldjobs = that.jobtypes;
+	            	that.$el.find('.selection-box input[type=checkbox]').change(function(ev){
+	            		var ids = "";
+            			that.$el.find('.selection-box input[type=checkbox]:checked').each(function(ev){
+            				ids += $(this).val()+",";
+            			});
+            			var id = $(this).val().trim();
+            			ids+=id+",";
+	            		if(this.checked){
+	             			 oldjobs = that.jobtypes.filter(function (el) { 
+	            				 return $.inArray(el.id , ids.split(',')) > -1;
+	                         }); 
+	            		}else{
+	            			 oldjobs = oldjobs.filter(function (el) { 
+	            				 return el.id !== id;
+	                         }); 
+	            		 }
+	            		that.fetchData(ids,"jobtypes",oldjobs);
+	            	})
 	            }); 
+		     }, 
+		     fetchData:function(ids, type,resource){ 
+		    	 this.app.showLoading('Loading schedule...',this.$el); 
+		    	 var data = {branchid:this.app.user_branch_id};
+		    	 if(type=="employees"){
+		    	  data['employeeid'] = ids;
+		    	 }else{
+		    		 data['jobtypeid'] = ids;
+		    	 }
+		    	 var that = this;
+		    	 that.objSchedules.fetch({data:data ,success:function(data){
+					 that.initScheduleCalander(that.objSchedules.toJSON(),resource);
+				 }})
+				 this.app.showLoading(false,this.$el); 
 		     },
 		     fetchEmployees:function(id,clone){
 					var url = "api/employeesgetall";
 					 var that = this;
 					 var str = "";
-	                  jQuery.getJSON(url,{ branchid:this.branchid}, function(tsv, state, xhr) {
+	                  jQuery.getJSON(url,{ branchid:this.app.user_branch_id}, function(tsv, state, xhr) {
 	                   var employees = jQuery.parseJSON(xhr.responseText);
 	                   	that.employees = employees; 
-	                   	that.objSchedules.fetch({data:{employeeid:1},success:function(data){
-							 that.initScheduleCalander(that.objSchedules.toJSON(),employees);
-						 }})
-	                   	_.each(employees,function(value,key,list){ 
-		                	var check = "";
-		                	 
-							str+='<li><img style="width: 100px; height: 100px;" src="userimages/'+value.picture+'">';
-							str+='<label> <input type="checkbox" value="'+value.id+'" '+check+'>'+value.name;
-								str+='</label>';
-									str+='</li>';
-						});
-		                that.$el.find('.selection-box ul ').html(str);
+	                   	var ids = "";
+	                    	_.each(employees,function(value,key,list){ 
+			                	 var check = "";
+			                	 ids +=value.id+",";
+			                	 var pic = value.picture;
+			                	 if(!pic || pic == "undefined")
+			                		 pic = "3.jpg";
+								  if(typeof value.name !="undefined"){
+									  str+='<div class="user_container"> <span class="circle_border"><div class=" "><img  src="userimages/'+pic+'"></div></span><label> <input type="checkbox" checked value="'+value.id+'" '+check+'>'+value.name+'</label></div>'; 
+								  }
+						     });
+	                    	that.fetchData(ids,"employees",employees);
+	                    	that.$el.find('.selection-box  ').html(str);
+	                    	var oldemployees = that.employees;
+	    	            	that.$el.find('.selection-box input[type=checkbox]').change(function(ev){
+	    	            		var ids = "";
+	                			that.$el.find('.selection-box input[type=checkbox]:checked').each(function(ev){
+	                				ids += $(this).val()+",";
+	                			});
+	                			var id = $(this).val().trim();
+	                			ids+=id+",";
+	    	            		if(this.checked){
+	    	            			oldemployees = that.employees.filter(function (el) { 
+	    	            				 return $.inArray(el.id , ids.split(',')) > -1;
+	    	                         }); 
+	    	            		}else{
+	    	            			oldemployees = oldemployees.filter(function (el) { 
+	    	            				 return el.id !== id;
+	    	                         }); 
+	    	            		 }
+	    	            		that.fetchData(ids,"employees",oldemployees);
+	    	            	})
 	                   });
-				 }        
+				 }   
+                        
 			        
 /*
 

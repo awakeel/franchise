@@ -1,5 +1,5 @@
-define(['text!branches/tpl/lists.html','branches/collections/branches','branches/views/list','branches/models/branch'],
-	function (template,Branches,Branch,LanguageModel) {
+define(['text!branches/tpl/lists.html','branches/collections/branches','branches/views/list','branches/models/branch','swal'],
+	function (template,Branches,Branch,LanguageModel,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
@@ -16,25 +16,25 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.template = _.template(template);
 				this.request = null;
 				this.fetched = 0;
-				 this.searchText = '';
+				this.searchText = '';
 				this.app = this.options.setting;
-				this.offsetLength = 10;
-				
+				this.franchiseid = this.app.user_franchise_id;
+				this.offsetLength = 10; 
 				this.objBranches = new Branches();
 				this.render();
 				
 			},
 			addNew:function(){
 				var that = this;
-			  	 require(['branches/views/addupdate'],function(addupdate){
+			  	 require(['branches/views/editdepartment'],function(addupdate){
       		 	 	that.$el.html(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.app}).$el);
 				 })
 			 
 		     },
 			render: function () { 
 				this.$el.html(this.template({}));
-				$(window).scroll(_.bind(this.lazyLoading, this));
-                $(window).resize(_.bind(this.lazyLoading, this));
+				//$(window).scroll(_.bind(this.lazyLoading, this));
+               // $(window).resize(_.bind(this.lazyLoading, this));
                 
                 this.fetchBranches();
                 var that = this;
@@ -48,6 +48,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				var _data = {}; 
 				this.app.showLoading('Loading department...',this.$el.find('.table-responsive'));
 				 _data['search'] = this.searchText;
+				 _data['franchiseid'] = this.franchiseid;
 				 that.$el.find("table tbody").html('');
 				 if(this.request)
 	                    this.request.abort();

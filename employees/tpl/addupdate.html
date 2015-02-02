@@ -1,88 +1,92 @@
- 
-				<div class="tab-pane fade in active" id="basicInformation">
-					<form role="form">
-						<h4 class="page-header">Personal Information:</h4>
-						<div class="form-group col-md-4 col-sm-4">
-							<label>Phone Number</label> <input type="tel"
-								placeholder="555-2039" id="txtphone" class="form-control">
-							<span class="help-block phone-error hide"><i
-								class="fa fa-warning"></i>Please enter phone eg 0123456789!</span> <label>First
-								Name</label> <input type="text" placeholder="John" class="form-control"
-								id="txtfirstname"> <span
-								class="help-block firsname-error hide"><i
-								class="fa fa-warning"></i>Please enter first name eg Peter!</span> <label>Last
-								Name</label> <input type="text" placeholder="Smith" class="form-control"
-								id="txtlastname"> <span
-								class="help-block lastname-error hide"><i
-								class="fa fa-warning"></i>Please enter last name eg Waignright!</span>
-							<label>Address</label> <input type="text"
-								placeholder="8516 Market St." class="form-control"
-								id="txtaddress"> <label><i
-								class="fa fa-envelope-o fa-fw"></i> Email Address</label> <input
-								type="email" id="txtemail" placeholder="email"
-								class="form-control"> <label>Password</label> <input
-								type="password" placeholder="8516 Market St."
-								class="form-control" id="txtpassword">
+
+<div class="tab-pane fade in active" id="basicInformation">
+	<form role="form">
+		<h4 class="page-header">Personal Information:</h4>
+		<div class="form-group col-md-4 col-sm-4">
+			<label>Phone Number</label> <input type="tel" placeholder="555-2039"
+				id="txtphone" class="form-control" required> <span
+				class="help-block phone-error hide"><i class="fa fa-warning"></i>Please
+				enter phone eg 0123456789!</span> <label>First Name</label> <input
+				type="text" placeholder="John" class="form-control"
+				id="txtfirstname"> <span
+				class="help-block firsname-error hide"><i
+				class="fa fa-warning"></i>Please enter first name eg Peter!</span> <label>Last
+				Name</label> <input type="text" placeholder="Smith" class="form-control"
+				id="txtlastname"> <span
+				class="help-block lastname-error hide"><i
+				class="fa fa-warning"></i>Please enter last name eg Waignright!</span> <label>Address</label>
+			<input type="text" placeholder="8516 Market St." class="form-control"
+				id="txtaddress"> <label><i
+				class="fa fa-envelope-o fa-fw"></i> Email Address</label> <input
+				type="email" id="txtemail" placeholder="email" class="form-control">
+			<label>Password</label> <input type="password"
+				placeholder="" class="form-control" id="txtpassword">
 
 
-						</div>
-						<div class="form-group col-md-8 col-sm-8">
-							<div class="col-md-3 col-sm-3">
-								<label class="control-label">Work Type</label>
+		</div>
+		<div class="form-group col-md-8 col-sm-8">
+			<div class="col-md-8 col-sm-8" style="position:relative;">
+			           <div class="btn-group role-area" style="display:none; position:absolute; background:#fff;">
 
-
-								<div class="radio">
-									<label> <input type="radio" checked=""
-										value="Full Time" id="optionfulltime" name="optionstype">Full
-										Time
-									</label>
-								</div>
-								<div class="radio">
-									<label> <input type="radio" value="Hourly"
-										id="optionvisiting" name="optionstype">Visiting
-									</label>
-								</div>
-								<div class="radio">
-									<label> <input type="radio" value="Other" id="optionnone"
-										name="optionstype">Other
-									</label>
-								</div>
-								
-
-							</div>
-							<div class="form-group col-sm-4 col-md-4">
-							<div class="   ">
-								<label class="control-label">Roles</label>
-							 
-								 <div class="clearfix"></div>
 								 
-								<div class="role-area"> </div>
+								 
 							</div>
-						   </div>
-							<div class="col-md-5 col-sm-5">
-								<div class="service_box jobtypes-box">
-									<label class="control-label">Job Type</label>
-									<div class="input-group">
-										<input type="text" placeholder="Search Your Service"
-											class="form-control"> <span class="input-group-btn">
-											<button class="btn btn-default" type="button">Go!</button>
-										</span>
-									</div> 
-								</div>
-							</div>
-						</div>
-					
+				<label class="control-label">Assign Department</label>
+				<div class="departments"></div>
+				<label class="control-label">Work Type</label>
 
 
-
-					</form>
+				<div class="radio">
+					<label> <input type="radio" checked="" value="Full Time"
+						id="optionfulltime" name="optionstype">Full Time
+					</label>
 				</div>
+				<div class="radio">
+					<label> <input type="radio" value="Hourly"
+						id="optionvisiting" name="optionstype">Visiting
+					</label>
+				</div>
+				<div class="radio">
+					<label> <input type="radio" value="Other" id="optionnone"
+						name="optionstype">Other
+					</label>
+				</div>
+				
+ 			 </div>
 		 
-			<div class="clearfix"></div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default close-p">Close</button>
-				<button type="button" class="btn btn-green save-p">Save
-					changes</button>
+
+				 
+					 
+							
+					 
+					 
+			 
+			 
+			<div class="col-md-4 col-sm-4">
+				<div class="service_box jobtypes-box">
+					<label class="control-label">Job Type</label> <span
+						class="help-block jobtype-error hide "><i
+						class="fa fa-warning"></i> Select job type</span>
+					<div class="input-group">
+						<input type="text" placeholder="Search Your Service"
+							class="form-control"> <span class="input-group-btn">
+							<button class="btn btn-default" type="button">Go!</button>
+						</span>
+					</div>
+				</div>
 			</div>
-	 
-	 
+		</div>
+
+
+
+
+	</form>
+</div>
+
+<div class="clearfix"></div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default close-p">Close</button>
+	<button type="button" class="btn btn-green save-p">Save
+		changes</button>
+</div>
+

@@ -3,12 +3,14 @@ define(['text!authorize/tpl/login.html','authorize/models/login'],
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
-				"click .btn-login":"login"
+				"click .btn-login":"login",
+				"keyup #txtpassword":"enterLogin"
 			}, 
 			initialize: function () {
 				this.app = this.options.app;
 				this.app.showLoading('Loading Login....',this.$el.find('.login-area'));
 				this.template = _.template(template);
+				this.app.users = {};
 				$('body').addClass('login');
 				///var objAuthentication = new Authentication();
 				this.render();
@@ -22,6 +24,11 @@ define(['text!authorize/tpl/login.html','authorize/models/login'],
 				this.$el.find('.password-error').addClass('hide');
 				this.$el.find('.phone-error-empty').addClass('hide');
 				this.$el.find('.password-error-empty').addClass('hide');
+			},
+			enterLogin:function(ev){
+				if(ev.which == 13) {
+					this.login();
+				}
 			},
 			login:function(){
 				this.app.showLoading('Wait, We checking our database...',this.$el.find('.login-area'));
@@ -54,6 +61,7 @@ define(['text!authorize/tpl/login.html','authorize/models/login'],
                       	return;
                       }
                     if(_json.is_logged_in){
+                    	that.app.destroy();
                     	require([ 'app' ], function(app) {
                     		// var mainRouter = new router({user:_json[0]});
                     		Backbone.History.started = false;

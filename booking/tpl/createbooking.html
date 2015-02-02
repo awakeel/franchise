@@ -1,0 +1,131 @@
+<div class='row'>
+
+
+	<div class="col-lg-6 col-md-6 col-sm-8">
+		<h4>Create time plan for period</h4>
+		<br>
+		<div id="scheduledate">
+			<div class="row">
+				<div class="col-md-7 col-sm-7">
+					<div class="input-append bootstrap-timepicker input-group">
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default add-on">
+								<i class="fa fa-clock-o"></i>
+							</button>
+						</span> <input type="text" class="form-control" id="timepicker1">
+					</div>
+				</div>
+
+				<a class="btn btn-green navbar-right" href="#primary"
+					data-toggle="modal"> <i class="fa fa-briefcase"
+					style="margin-right: 8px;"> </i>Add Job types
+				</a>
+			</div>
+		</div>
+	</div>
+
+	 
+</div>
+<div class='row schedule-row'>
+	<div class="col-lg-4 clone schedule-div" id="clonearea" style="display:none;">
+		<div class="portlet portlet-default">
+			<div class="portlet-heading">
+				<div class="portlet-title">
+					<input type="hidden" value="">
+					<h4>
+						<strong style="margin-right: 20px;"><span class='jobquantity'>1</span> x   Dresser</strong>
+						<button class="btn btn-sm btn-red btn-remove changearea_a#1">
+							<i class="fa fa-trash"></i> remove
+						</button>
+					</h4>
+
+				</div>
+				<div class="portlet-widgets">
+					<a id="area_2" class="hyper areas change-header"><i
+						class="fa fa-chevron-down"></i></a>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div id="area_a2" class="change-body" style="display: block;">
+				<div class="portlet-body">
+					<div class="row">
+						<div class=" col-lg-6 col-md-6 col-sm-6">
+							<h4>From :</h4>
+							<input
+								class="form-control timepicker timefrom ui-timepicker-input"
+								type="text" autocomplete="off">
+						</div>
+						<div class=" col-lg-6 col-md-6 col-sm-6">
+							<h4>To :</h4>
+							<input class="form-control timepicker timeto ui-timepicker-input"
+								type="text" autocomplete="off">
+						</div>
+						<div class="col-md-7">
+							<h4>Employees</h4>
+							 <select class="ddlemployees">
+							 </select>
+						</div>
+						 
+					</div>
+				</div>
+			</div>
+
+		</div>
+		<div class="clearfix"></div>
+		<div class="portlet-footer"></div>
+	</div>
+</div>
+
+
+
+
+<div class="row">
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default close-pp"
+			data-dismiss="modal">Close</button>
+		<button type="button" class="btn btn-green save-p">Save
+			changes</button>
+	</div>
+</div>
+
+<div class="modal fade" id="primary" tabindex="-1" role="dialog"
+	aria-labelledby="newarea" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header modal-header-primary">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">×</button>
+				<h4>Add new schedule</h4>
+			</div>
+			<div class="modal-body">
+			    <div class="col-md-5">
+				<h4>Select job Type</h4>
+				
+				<select id="ddljobtypes" >
+				</select>
+				</div>
+				<div class="col-lg-5">
+				<h4>Select Quantity</h4>
+				
+				<select id="ddlquantity" >
+				 <option value="1">1</option>
+				 <option value="2">2</option>
+				 <option value="3">3</option>
+				 <option value="4">4</option>
+				 <option value="5">5</option>
+				</select>
+				</div>
+				<div class="row">&nbsp;</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default  " data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-success add-new-box"
+					data-dismiss="modal">Save</button>
+			</div>
+			
+		</div>
+		<!-- /.modal-content -->
+	</div>
+	<!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->

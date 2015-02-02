@@ -1,5 +1,5 @@
-define(['text!jobtypes/tpl/list.html','app'],
-	function (template,app) {
+define(['text!jobtypes/tpl/list.html','app','swal'],
+	function (template,app,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:'tr',
@@ -22,21 +22,22 @@ define(['text!jobtypes/tpl/list.html','app'],
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deletejobtypes";
+                
 			    swal({
 			      title: "Are you sure?",
 			      text: "You will not be able to recover this record!",
 			      type: "error",
 			      showCancelButton: true,
 			      confirmButtonClass: 'btn-danger',
-			      confirmButtonText: 'Danger!'
+			      confirmButtonText: 'Yes, Delete!'
 			    },
 			    function(isConfirm) {
 			    	    if (isConfirm) {
 			    	    	 $.get(URL, {id:id})
 		                        .done(function(data) {
 		                             var _json = jQuery.parseJSON(data);
-		                            if (_json[0] !== 'err') {
-		                            	that.setting.successMessage();
+		                             if (typeof _json.error == "undefined") {
+		                            	 
 		                            	that.model.destroy({
 		                            	      success: function() { 
 		                            	    	  swal("Deleted!", "Job type has been deleted.", "success");
@@ -56,8 +57,8 @@ define(['text!jobtypes/tpl/list.html','app'],
                
                  },
                  updateToken:function(ev){
-                	 var that = this;
-                	 var id =$(ev.target).data('id');
+                	 var that = this; 
+                	 $("#newjobtypes").remove();
                 	 require(['jobtypes/views/addupdate'],function(addupdate){
                 		 	 that.options.page.$el.append(new addupdate({model:that.model,page:that}).$el);
                 		 	 $("#newjobtypes").modal('show');

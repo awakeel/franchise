@@ -19,18 +19,35 @@ class Permission {
         		});
       }   
 function getModules( ){
-	 
-	$sql = "select modules.id,modules.name ,modules.text ,modules.childof from modules
-			inner join   rolemodules on rolemodules.moduleid = modules.id
-			where rolemodules.isallow = '1' and rolemodules.roleid = '".$this->auth->getRoleId()."' order by modules.childof desc ";
-	 
+	  
+	 if(isset($_SESSION['isfranchise']) && !empty($_SESSION['isfranchise']) && $_SESSION['isfranchise'] == "1" && empty($_SESSION['branches'][0]['id']) && !isset($_GET['branchid'])){
+		$sql = " select * from modules  order by sortorder
+			";
+	  }else{
+		$b = "";
+		if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
+			$branchid = $_GET['branchid'];
+			$b = " and ed.branchid = $branchid";
+		}
+		if(isset( $_SESSION['employeeid']))
+		$employeeid = $_SESSION['employeeid'];
+		$roleid= $_SESSION['roleid'];
+		if(isset($_SESSION['isfranchise']) && !empty($_SESSION['isfranchise'])){
+			$sql = " select * from modules  order by sortorder
+			";
+			
+		}else{
+		$sql = "SELECT modules.id,modules.name ,modules.text ,modules.childof,ed.`branchid`    FROM modules
+		         INNER JOIN   rolemodules ON rolemodules.moduleid = modules.id
+				 INNER JOIN role r ON r.id = rolemodules.`roleid`
+				 LEFT JOIN employeedepartments ed ON ed.`roleid` = r.id
+				  WHERE ed.`employeeid` = $employeeid.$b
+				  group by modules.name
+				 ORDER BY modules.sortorder ";
+		}
+	}
 	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);
-	 
-		$stmt->execute();
-		$modules = $stmt->fetchAll(PDO::FETCH_OBJ);
-		$db = null; 
+		$modules = R::getAll($sql);
 		// Include support for JSONP requests
 		if (!isset($_GET['callback'])) {
 			echo json_encode($modules);

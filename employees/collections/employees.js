@@ -9,13 +9,12 @@
 define(['backbone',  'employees/models/employee'], function (Backbone, ModelEmployee) {
 	'use strict';
 	return Backbone.Collection.extend({
-           urlRoot: '/api/employees',
-           
+         
             model:ModelEmployee,
-            url: function () {
-                return 'api/employees';
-            },
-           
+            url:  'api/employees'   ,
+            parse: function(data){
+            	 return data 
+            }
              
 	});
 });

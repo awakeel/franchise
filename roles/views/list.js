@@ -38,20 +38,39 @@ define(['text!roles/tpl/list.html','app'],
 				var that = this;
             	var id = $(ev.target).data('id'); 
                 var URL = "api/deleterole";
-                $.get(URL, {id:id})
-                        .done(function(data) {
-                             var _json = jQuery.parseJSON(data);
-                            if (_json[0] !== 'err') {
-                            	that.setting.successMessage();
-                            	that.model.destroy({
-                            	      success: function() { 
-                            	      }
-                            	  });  
-                            }
-                            else {
-                            	that.setting.errorMessage();
-                            }
-                        });
+                 
+                swal({
+  			      title: "Are you sure?",
+  			      text: "You will not be able to recover this record!",
+  			      type: "error",
+  			      showCancelButton: true,
+  			      confirmButtonClass: 'btn-danger',
+  			      confirmButtonText: 'Delete!'
+  			    },
+  			    function(isConfirm) {
+  			    	    if (isConfirm) {
+  			    	    	 $.get(URL, {id:id})
+  		                        .done(function(data) {
+  		                            var _json = jQuery.parseJSON(data);
+  		                           console.log(_json);
+  		                            if (typeof _json.error == "undefined") {
+  		                            	that.setting.successMessage();
+  		                            	that.model.destroy({
+  		                            	      success: function() { 
+  		                            	    	  swal("Deleted!", "Recrod has been deleted.", "success");
+  		                            	      }
+  		                            	  });  
+  		                            }
+  		                            else {
+  		                            	swal("Error", "There is problem while deleting :)", "error");
+  		                            }
+  		                        });
+  			    		    
+  			    		  } else {
+  			    		    
+  			    		  }
+  			    });
+  			
                  },
                  closeView:function(){
      				this.$el.find('.modal').modal('toggle'); 

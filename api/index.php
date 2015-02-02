@@ -1,7 +1,10 @@
 <?php
-session_start();
+session_start();  
 $path =  dirname(__FILE__) ;
- 
+require $path .'/rb.php';  
+R::setup('mysql:host=localhost;dbname=franchise',
+'root',''); // 
+    // R::debug( TRUE );
 require $path .'/Slim/Slim.php'; 
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
@@ -13,10 +16,11 @@ require $path .'/classes/Authorize.php';
 require $path .'/classes/Permission.php';
 require $path .'/classes/Schedule.php';
 require $path .'/classes/Roles.php';
+require $path .'/classes/Leaves.php';
 $app = new Slim(); 
 $auth = new Authorize($app);
 $permission = new Permission($app,$auth);
- 
+
 //$app->add(new \ContentTypes());
 //$app->add(new \Slim\Middleware\ContentTypes());
 $objCommon = new Common($app);
@@ -27,6 +31,7 @@ $objEmployees = new Employees($app);
 $objBranches = new Branches($app,$auth);
 $objSchedule = new Schedule($app);
 $objRoles = new Roles($app,$auth);
+$objLeaves = new Leaves($app,$auth);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){
@@ -256,8 +261,7 @@ function getModifiedEmployees($modifiedSince) {
 function getConnection() {
 	$dbhost="localhost";
 	$dbuser="root";
-	$dbpass="";
-	
+	$dbpass=""; 
 	$dbname="franchise";
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);	
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);

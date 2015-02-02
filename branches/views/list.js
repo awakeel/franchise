@@ -35,12 +35,11 @@ define(['text!branches/tpl/list.html','app'],
   			    },
   			    function(isConfirm) {
   			    	    if (isConfirm) {
-  			    	    	 $.get(URL, {id:id})
-  		                        .done(function(data) {
-  		                             var _json = jQuery.parseJSON(data);
-  		                            if (_json[0] !== 'err') {
+  			    	    	$.getJSON(URL, {id:id}, function (tsv, state, xhr) {
+				                var _json = jQuery.parseJSON(xhr.responseText);
+				                if (typeof _json.error == "undefined") {
   		                            	that.setting.successMessage();
-  		                            	that.model.destroy({
+  		                            that.model.destroy({
   		                            	      success: function() { 
   		                            	    	  swal("Deleted!", "Record has been deleted.", "success");
   		                            	      }
@@ -49,6 +48,8 @@ define(['text!branches/tpl/list.html','app'],
   		                            else {
   		                            	swal("Error", "There is problem while deleting :)", "error");
   		                            }
+  		                      	that.options.page.render();
+	                            	
   		                        });
   			    		    
   			    		  } else {
@@ -60,13 +61,19 @@ define(['text!branches/tpl/list.html','app'],
                  updateToken:function(ev){
                 	 var that = this;
                 	 var id =$(ev.target).data('id');
-                	 require(['branches/views/addupdate'],function(addupdate){
+                	 require(['branches/views/editdepartment'],function(addupdate){
                		 	 	that.options.page.$el.html(new addupdate({model:that.model,page:that,setting:that.setting}).$el);
          			 })
          			 
          		     
                  },
-                 
+                 getStatus:function(){
+                	 var status = this.model.get('isactivated');
+                	 if(status)
+                		 return "Active";
+                	 else
+                		 return "Inactive";
+                 },
                  saveToken:function(id,title,translate,view){
                 	  	this.model.set('languageid',this.options.page.languageFilter);
 	                 	this.model.set('title',title);

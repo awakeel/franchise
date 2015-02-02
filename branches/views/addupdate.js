@@ -1,9 +1,9 @@
-define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','timepick'],
-	function (template,wizard,ModelBranch,timepick) {
+define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','timepick','swal'],
+	function (template,wizard,ModelBranch,timepick,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close-p':"closeView", 
+				/// 'click .close-p':"closeView", 
 				 "click .save-p":"save",
 				 "click .btn-save":"saveSteps",
 				 "keyup #txtname":'changeDepartmentName'
@@ -14,9 +14,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.name = "";
 				this.desc = "";
 				this.id = 0;
-				this.languageid = 0;
-				this.countryid = 0;
-				this.currencyid = 0;
+				this.zip = '';
+				this.city = '';
+				this.address = '';
 				this.departmentName = 'Department';
 				
 				this.template = _.template(template);
@@ -29,7 +29,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			changeDepartmentName:function(ev){
 				var text = $(ev.target).val();  
 				if(text)
-				this.$el.find('.department-name').html(text);
+					this.$el.find('.department-name').html(text);
 				else
 					this.$el.find('.department-name').html('newly created department');
 			},
@@ -46,17 +46,20 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						this.currencyid = this.model.get('currencyid');
 						this.countryid = this.model.get('countryid');
 						this.id = this.model.get('id');
-
+						this.city = this.model.get('city');
+						this.address = this.model.get('address');
+						this.zip = this.model.get('zip');
 						that.$el.find('.first-text').attr('disabled',false);
 						that.$el.find('.end-text').attr('disabled',false);
 						this.fillTimings();
 						this.objModelBranch = this.model;
 						this.objModelBranch.set({id:this.model.get('id')});
-						this.fillServices();
-						this.fillEmployees();
-						this.fillJobTypes();
+						
 						this.addSchedule();
 					}
+				 this.fillServices();
+					this.fillEmployees();
+					this.fillJobTypes();
 				this.startWizard();
 				this.fillLanguages();
 			
@@ -66,6 +69,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			
 				
 				this.$el.find('#txtname').val(this.name);
+				this.$el.find('#txtcity').val(this.name);
+				this.$el.find('#txtzip').val(this.name);
+				this.$el.find('#txtaddress').val(this.name);
 				this.$el.find("#txtdescription").text(this.desc);
 				 this.app.showLoading(false,this.$el);
 				
@@ -141,11 +147,11 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						 break;
 					 
 					case 2:
-						that.changeText('Add a few <strong>Job types</strong> eg <em> Hair Dresser </em>, if you leave this empty, than no problem, you can add this later. but remember each department must have job type.');
+						that.changeText('Add a few <strong>Job types</strong> eg <em> Hair Dresser </em>, if you leave this empty, than no problem, you can add this later.');
 					 	break;
 				 
 					case 3:
-						that.changeText('Add a few <strong>Services</strong>, if you leave this empty, than no problem, you can add this later. but remember each department must have Service eg Cleaner.');
+						that.changeText('Add a few <strong>Services</strong>, if you leave this empty, than no problem, you can add this later. ');
 					 break;
 					case 4:
 						that.changeText('You almost done, We would not bother you more, Simply add <strong>Employees</strong>, Who is working with you in this department, if you leave this empty, you can add back later.');
@@ -199,13 +205,14 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				
 				
 				this.objModelBranch.set({name:name,notes:desc});
-				var countryid = this.$el.find('#ddlcountries').val();
-				var currencyid = this.$el.find('#ddlcurrencies').val();
-				var languageid = this.$el.find("#ddllanguage").val();
+				var city = this.$el.find('#txtcity').val();
+				var address = this.$el.find('#txtaddress').val();
+				var zip = this.$el.find("#txtzip").val();
 				if(!name){
 					
 				}
-				this.objModelBranch.set({id:this.objModelBranch.get('id'),countryid:countryid,currencyid:currencyid,languageid:languageid});
+				
+				this.objModelBranch.set({id:this.objModelBranch.get('id'),city:city,address:address,zip:zip});
 				return this.saveTiming(this.id);
 				
 			},
@@ -259,9 +266,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
  				  $.when(this.objModelBranch.save({id:this.id})).done(function(data){
  					   var d = jQuery.parseJSON(data);
  					    that.id = d.id;
- 					   that.fillJobTypes();
- 						that.fillServices();
- 						that.fillEmployees();
+ 					   
  						that.addSchedule();
  						 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
  						that.app.showLoading(false,that.$el);
@@ -279,18 +284,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 		         
 		         return hours;
 		     },
-			showMessage:function(text,id){
-				  
-			},
-			saveJobTypes:function(){
-				
-			},
-			saveServices:function(){
-				
-			},
-			saveEmployees:function(){
-				
-			},
+		 
 			fillCountries:function(){
 				var url = "api/countries";
 				 var that = this;
@@ -381,7 +375,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			fillEmployees:function(){
 				var that = this;
 				require(['employees/views/lists'],function(Employees){
-					var objEmployees = new Employees({setting:that.setting,id:that.id});
+					var objEmployees = new Employees({setting:that.setting,id:that.id,from:'department'});
 					that.$el.find(".table-employees").html(objEmployees.$el);
 				})
 			}

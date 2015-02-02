@@ -7,7 +7,7 @@ class Language
     public $branchId;
     function __construct($app){
     	// Section language
-    	 $this->branchId = @$_SESSION['branchid'];
+    	 $this->branchId = @$_SESSION['franchiseid'];
     	$app->get('/languages', function () {
             if(authorize('abc')){
                 $this->getLanguages(1);

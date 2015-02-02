@@ -1,5 +1,5 @@
-define(['text!services/tpl/lists.html','services/collections/services','services/views/list','services/models/service','typeahead'],
-	function (template,Services,Service,ServiceModel) {
+define(['text!services/tpl/lists.html','services/collections/services','services/views/list','services/models/service','typeahead','swal'],
+	function (template,Services,Service,ServiceModel,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
@@ -21,17 +21,15 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				this.app = this.options.setting;
 				this.offsetLength = 10;
 				this.branchid = null;
-				if(typeof this.options.id != "undefined"){
-					this.branchid = this.options.id;
-				}
+				this.franchiseid = this.app.user_franchise_id;
 				this.objServices = new Services();
 				this.render(); 
 				
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
-				$(window).scroll(_.bind(this.lazyLoading, this));
-                $(window).resize(_.bind(this.lazyLoading, this));
+				//$(window).scroll(_.bind(this.lazyLoading, this));
+               // $(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchServices();
                 //this.fillJobTypes();
                 var that = this;
@@ -45,11 +43,8 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				var _data = {}; 
 				this.app.showLoading('Loading services...',this.$el);
 				 _data['search'] = this.searchText;
-				 _data['branchid'] = this.branchid;
-				// _data['specific'] = 0;
-				// _data['jobtypeid'] = that.jobtypeFilter;
-				// this.objjobtypes.reset();
-				 
+				 _data['franchiseid'] = this.franchiseid;
+			 
 				 this.setting.services = {};
 				 if(this.request)
 	                    this.request.abort();
@@ -63,11 +58,8 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
-						trNoRecord +='<button type="button" class=" add-new" data-toggle="modal" data-target="#newservice">';
-						trNoRecord +=' <span class="a-a"><i class="fa fa-add"></i></span> ';
-						trNoRecord += 'add new';
-						trNoRecord += '</button> ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="7">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+					 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
@@ -142,16 +134,16 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                      var that = this;
                      var text = $(ev.target).val(); 
                      var code = ev.keyCode ? ev.keyCode : ev.which;
-                     var nonKey =[17, 40 , 38 , 37 , 39 , 16,8,46];
+                     var nonKey =[17, 40 , 38 , 37 , 39 , 16, 46];
                      if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
                            return;
                      }
                      if($.inArray(code, nonKey)!==-1) return;
                           if(code == 8 || code == 46){
-                                 if(text){ 
+                                  
 		                        	 that.searchText = text;
 			                          that.fetchServices();
-		                         }
+		                       
                            }else{
 		                   
 		                        this.searchText = text;

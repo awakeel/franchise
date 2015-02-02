@@ -1,7 +1,5 @@
 <?php
-
 class Authorize {
-
     public $offset = 0;
     public $errormsg;
     public $successmsg;
@@ -14,13 +12,13 @@ class Authorize {
         		echo json_encode('Logout');
         		//$app->redirect('/#login');
         	});
-        		
-
-        		$app->get('/getsession', function () use ($app) {
+        	$app->get('/getsession', function () use ($app) {
         			echo json_encode($_SESSION);
-        		});
-
-        			$app->post('/process', function () use ($app) {
+        	});
+        	$app->post("/switchdepartment",function() use ($app){
+        		$this->changeDepartment();
+        	});
+        	$app->post('/process', function () use ($app) {
         			 	if ( isset($_POST['phone']) ) {
         					$phone = $_POST['phone'];
         				} else {
@@ -31,14 +29,21 @@ class Authorize {
         						'password' =>  $_POST['password'] ,
         				);
         				$cursor = $this->Login($phone,$_POST['password'] );
-        			
-        				if($data['password'] != @$cursor[0]->password){
-        					echo json_encode(['password'=>false]);
-        					return false;
-        				}else if($data['phone'] != @$cursor[0]->phone){
+        				if(!isset($cursor[0]->phone)){
         					echo json_encode(['phone'=>false]);
         					return false;
         				}
+        				if( $data['password'] !=  $cursor[0]->password){
+        					echo json_encode(['password'=>false]);
+        					return false;
+        				}else if( $data['phone'] !=  $cursor[0]->phone){
+        					echo json_encode(['phone'=>false]);
+        					return false;
+        				}else{
+        					
+        					
+        				}
+        				
         				if ($cursor == NULL || count($cursor) < 1 ){
         					////$collection->insert($data);
         					$_SESSION['is_logged_in'] = false; 
@@ -51,7 +56,10 @@ class Authorize {
         						$_SESSION['since'] = date("F j, Y, g:i a"); 
         						$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
         						$_SESSION['login_failure'] = false;
+        						$_SESSION['employeeid'] =  $cursor[0]->id;
         						$_SESSION['branchid'] =  $cursor[0]->branchid;
+        						$_SESSION['franchiseid'] = $cursor[0]->franchiseid;
+        						$_SESSION['isfranchise'] = $cursor[0]->isfranchise;
         						$_SESSION['roleid'] = $cursor[0]->roleid;
         						$basic['ip'] =  $_SERVER['REMOTE_ADDR'];
         						$basic['since'] = date("F j, Y, g:i a");
@@ -118,22 +126,28 @@ function getLoginType($branchid = 0, $useAsFranchise = false){
 }
 function Login($phone,$password){
 	 
-	$sql = "select * from employees where phone = :phone and password = :password";
+	
 	try {
+		$sql = "select * from employees where phone = :phone and password = :password and isactivated = 1";
+	 
 		$db = getConnection();
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam("phone", $phone);
 		$stmt->bindParam("password", $password);
 		$stmt->execute();
 		$employees = $stmt->fetchAll(PDO::FETCH_OBJ);
-		$db = null;
-		return $employees;
-		// Include support for JSONP requests
-		if (!isset($_GET['callback'])) {
-			echo json_encode($departments);
-		} else {
-			echo $_GET['callback'] . '(' . json_encode($departments) . ');';
+		$branches; 
+		if(isset($employees[0]->id) && !empty($employees[0]->id)){
+		$sql = "select b.* from branches b 
+				inner join employeedepartments ed on ed.branchid = b.id
+				where ed.employeeid = ".$employees[0]->id;
+			$branches = R::getAll($sql);
+			$_SESSION['branches'] = $branches;
 		}
+		  
+		 return  $employees;
+		// Include support for JSONP requests
+		 
 	
 	} catch(PDOException $e) {
 		$error = array("error"=> array("text"=>$e->getMessage()));
@@ -172,9 +186,19 @@ function updateIsNew($employeeid){
 	} catch(PDOException $e) {
 		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
 		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	} 
+}
+function changeDepartment(){
+	$params = json_decode($request->getBody()); 
+	$branches;
+	if(isset($employees[0]->id) && !empty($employees[0]->id)){
+		$sql = "select b.* from branches b
+				inner join employeedepartments ed on ed.branchid = b.id
+				where ed.employeeid = ".$employees[0]->id;
+		$branches = R::getAll($sql);
+		$_SESSION['branches'] = $branches;
 	}
-
-
+	$types = R::getAll($sql);
 }
 }
 ?>

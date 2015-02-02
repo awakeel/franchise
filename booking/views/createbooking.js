@@ -1,19 +1,19 @@
-define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
-		function(template ,ScheduleModel) {
+define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timepick','daterangepicker'],
+		function(template ,BookingModel,timepick,daterangepicker) {
 			'use strict';
 			return Backbone.View
 					.extend({
 						events : {
 							'click .close-pp' : "closeView",
 							"click .save-p" : "save",
-							"click .add-new-box":"cloneFirstOne"
+							"click .add-new-box":"clone"
 						},
 						initialize : function() {
 							this.template = _.template(template); 
 							this.app = this.options.page.setting;
 							this.cloneId = 1;
-							this.branchid = this.app.users.branchid;
-							 
+							this.branchid = this.app.user_branch_id;
+							 console.log(this.app);
 							this.parent = this.options.page;
 							 if(typeof this.options.page.branchid !="undefined" && this.options.page.branchid)
 								this.branchid = this.options.page.branchid;
@@ -28,8 +28,11 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 							//	  hint: true, 
 							//	  local: that.app.globaljobtypes
 							// }); 
-							
-							this.$el.find('#scheduledate input').daterangepicker({format: 'YYYY-MM-DD'
+							var startDate = new Date(); startDate.setDate( startDate.getDate() + 1 );
+							this.$el.find('#scheduledate input').daterangepicker({
+								format: 'YYYY-MM-DD',
+							    startDate:startDate,
+							    minDate: new Date()
 							 } ,function(start, end, label) {
 								 console.log(label + ' start ' +  start + ' end ' + end);
 								that.startdate =  start.format('YYYY-MM-DD') ;
@@ -42,13 +45,22 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 							if(typeof this.options.id == "undefined"){ 
 							}
 						},
+						clone:function(){
+							var quantity = this.$el.find("#ddlquantity").val();
+							for(var i = 0; i<=quantity-1; i++){
+								this.cloneFirstOne();
+							}
+						},
 						cloneFirstOne:function(){
+							
 							this.app.showLoading('Loading Setting...',this.$el);
 							this.cloneId= this.cloneId + 1;
 							var count = this.cloneId ;
 						 
 							var clone = this.$el.find('.schedule-row div:first').clone();
 							this.$el.find('.schedule-row div:first').removeClass('clone');
+							clone.addClass('removable-clone'+this.cloneId);
+							
 							clone.find('.change-header').attr('id','area_'+count);
 							clone.find('.change-body').attr('id','area_a'+count);
 							var that = this;
@@ -58,13 +70,17 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 								var id = $(this).attr('id').split('_')[1];
 								that.$el.find('#area_a'+id).slideToggle( "slow" );
 							});
-							var text  = this.$el.find('#txtjobtypes').val().trim();
-							var id = that.jobtypes[text] ;
+							var text  = this.$el.find('#ddljobtypes option:selected').text().trim();
+							var id = this.$el.find('#ddljobtypes').val();
 							clone.find('input[type=hidden]').val(id);
-							clone.find('.portlet-title h4 strong').text("1 " +text);
-							this.$el.find('.schedule-row').prepend(clone);
-						
+							clone.find('.portlet-title h4 strong').text('1  x ' +text);
+							 this.$el.find('.schedule-row').prepend(clone);
+							
 							clone.show();
+							clone.find('.btn-remove').on('click',function(){
+								clone. remove();
+							 
+							});
 							this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
 							this.fillEmployees(id,clone);
 							this.app.showLoading(false,this.$el);
@@ -72,7 +88,7 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 						closeView : function() { 
 							var that = this;
 
-							require([ 'schedule/views/lists' ],
+							require([ 'schedulelist/views/lists' ],
 									function(Lists) {
 
 										var objLists = new Lists({
@@ -95,12 +111,12 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 							var that = this;
 							this.app.showLoading('Wait a moment....', this.$el);
 							 
-							this.$el.find('.clone').each(function(){
+							this.$el.find('.schedule-div:not(:last-child)').each(function(){
 								var timeto = $(this).find('.timeto').val();
 								var timefrom = $(this).find('.timefrom').val();
 								var jobtypeid = $(this).find('input[type=hidden]').val();
-								var text  = $(this).find('.employees').val().trim();
-								var employeeid = that.employees[text] ;
+								var employeeid  = $(this).find('.ddlemployees').val();
+							    console.log($(this).find('.ddlemployees').val());
 								var objScheduleModel = new ScheduleModel();
 								objScheduleModel.set('timefrom',timefrom);
 								objScheduleModel.set('timeto',timeto)
@@ -122,19 +138,23 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 							 var employees ;
 							 var names = new Array();
 			                 var ids = new Object(); 
+			                 var str = "<option value='0' selected> None <option>";
 			                  jQuery.getJSON(url,{jobtypeid:id,branchid:this.branchid}, function(tsv, state, xhr) {
 			                   var employees = jQuery.parseJSON(xhr.responseText);
-			                   		_.each( employees, function ( employee, index )
-			                               {   names.push( employee.firstname + '  ' + employee.lastname );
-			                                   ids[employee.firstname + '  ' + employee.lastname] = employee.id;
-			                               } );  
-			                              that.employees = ids;
-			                              clone.find(".employees") .
-				                      	   
-			                       	    typeahead({
-			                       		  
-			                       		    local:names
-			                       		} );	 
+			                   		_.each( employees, function ( value, key,list ) {
+			                   			if(value.id){
+			                   			  str+="<option value='"+value.id+"'> "+value.firstname + '' + value.lastname + " </option>";
+			                   			  
+			                   			}
+			                         });  
+			                              clone.find(".ddlemployees") .html(str);
+			                              clone.find(".ddlemployees  option")
+			                              .filter(function() {
+			                                  return !this.value || $.trim(this.value).length == 0;
+			                               })
+			                              .remove();
+
+			                       	   	 
 			                  		 
 			                   
 			                   });
@@ -142,22 +162,15 @@ define( [ 'text!schedule/tpl/createschedule.html','schedule/models/schedule' ],
 						fillJobTypes:function(){
 							 
 							var url = "api/jobtypes";
-							 var that = this;
-							 this.jobtypes = null;
-							 var names = new Array();
-			                 var ids = new Object(); 
-			                  jQuery.getJSON(url, function(tsv, state, xhr) {
+							var that = this;
+							var str = "";
+							jQuery.getJSON(url, {franchiseid:this.app.user_franchise_id},function(tsv, state, xhr) {
 			                   var employees = jQuery.parseJSON(xhr.responseText);
-			                   		_.each( employees, function ( j, index )
+			                   		_.each( employees, function (value,key,list)
 			                               {
-			                                   names.push( j.name );
-			                                   ids[j.name] = j.id;
+			                                 str+= "<option value='"+value.id+"'>"+ value.name +"</option>";
 			                               } ); 
-					                   	  that.$el.find("#txtjobtypes").typeahead({
-					                  		    
-					                  		    local:names
-					                  	});
-					                   	 that.jobtypes = ids;
+					                   	  that.$el.find("#ddljobtypes").html(str);
 					                   	 
 			                   
 			                   });

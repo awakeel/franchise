@@ -9,6 +9,9 @@ class Branches
 	    	$app->get('/branches', function () {
 	    		$this->getAllByFranchise();
 	    	});
+	    		$app->get('/getemployeedepartments', function () {
+	    			$this->getEmployeeDepartments();
+	    		});
     		$app->post('/branches', function () {
     			$request = Slim::getInstance()->request();
     			$this->saveBranches($request);
@@ -20,7 +23,7 @@ class Branches
     			});
     				$app->get('/gettimings',function(){
     					$request = Slim::getInstance()->request();
-    					$branchid;
+    					$branchid = 0;
     					if(isset($_GET['branchid']))
     							$branchid = $_GET['branchid'];
     					$this->getTimings($branchid);
@@ -33,17 +36,40 @@ class Branches
 		        });
  
     }
-    function getAll( $franchiseid) {  
+    function getEmployeeDepartments(  ) {  
     	if($this->auth->getLoggedInMessages() == false){
     		return false;
     	}
-        $sql = "select * from branches where franchiseid = $franchiseid";
-            try {
-                    $db = getConnection();
-                    $stmt = $db->query($sql);
-                    $branches = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    $db = null;
-
+             try {	
+             	$employeeid = $_GET['employeeid'];
+             	if(empty($employeeid))
+             		$employeeid = 0;
+		             	$sql = "  
+	  SELECT * FROM (SELECT  b.*,
+      IF(r.branchid IS NULL, '', 'checked') AS selected,
+      IF(r.roleid IS NULL, 0, r.roleid) AS role,
+      role.name AS rolename 
+      FROM  branches b 
+      INNER JOIN employeedepartments r  ON r.branchid = b.id 
+      INNER JOIN role  ON role.id = r.roleid 
+      WHERE r.employeeid = $employeeid
+      GROUP BY b.NAME
+   UNION
+      SELECT w.*, '' AS selected, 0 AS role, '' AS rolename  FROM branches w  
+      
+      
+ WHERE franchiseid = :franchiseid
+ ) AS v
+ GROUP BY NAME
+             			";
+            	$branches =  R::getAll( $sql,
+				 [':franchiseid' => $_GET['franchiseid']]
+				 );
+                    if (!isset($_GET['callback'])) {
+                    	echo json_encode($branches);
+                    } else {
+                    	echo $_GET['callback'] . '(' . json_encode($branches) . ');';
+                    }
                  return $branches;
             } catch(PDOException $e) {
                     $error = array("error"=> array("text"=>$e->getMessage()));
@@ -54,7 +80,7 @@ class Branches
     	if($this->auth->getLoggedInMessages() == false){
     		return false;
     	}
-    	$sql = "select * from branches where id = $branchid";
+    	$sql = "select * from branches where franchiseid = $this->auth->getFranchiseId()";
     	try {
     		$db = getConnection();
     		$stmt = $db->query($sql);
@@ -71,35 +97,22 @@ class Branches
     	if($this->auth ->getLoggedInMessages() == false){
     		return false;
     	}  
-    	$search = "";
+    	$search = ""; 
     	if(@$_GET['search'] !=''){
     		$search = $_GET['search'];
     		$search =  "  and  (b.name LIKE '%". $search ."%') ";
     	}
-        $sql = "SELECT b.*,GROUP_CONCAT(CONCAT(emp.firstname, '-', emp.lastname)  SEPARATOR ', ') as employeename,l.title as language,c.name as country,cu.`name` as currency FROM  branches b 
-				left JOIN languages l ON l.id = b.`languageid`
-				LEFT JOIN countries c ON  c.id = b.`countryid`
-				LEFT JOIN currencies cu ON cu.id = b.`currencyid`
-        		left join employees emp on emp.branchid = b.id
-				   WHERE  b.franchiseid =  ".$this->auth->getFranchiseId()."
-				   		
-				   		$search
-				   		
-				   		group by b.name
-				   		order by id desc
-				   		";
+    	  $sql = "SELECT b.*, '' as employeename from branches b
+				   WHERE  b.franchiseid =  ".$_GET['franchiseid']." 
+				   		$search ";
+    	  
             try {
-                    $db = getConnection();
-                    $stmt = $db->prepare($sql); 
-                    $stmt->execute();
-                    $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    $db = null;
-
-            // Include support for JSONP requests
+                  	$branches =  R::getAll(  $sql );
+ 		    // Include support for JSONP requests
             if (!isset($_GET['callback'])) {
-                echo json_encode($departments);
+                echo json_encode($branches);
             } else {
-                echo $_GET['callback'] . '(' . json_encode($departments) . ');';
+                echo $_GET['callback'] . '(' . json_encode($branches) . ');';
             }
 
             } catch(PDOException $e) {
@@ -113,59 +126,31 @@ class Branches
 	    		return false;
 	    	}
     		$params = json_decode($request->getBody());
+    		$branch = R::dispense( 'branches' );
     		if(isset($params->id) && !empty($params->id)){
-    			
-    			$sql = "update branches set name=:name,notes=:notes, languageid=:l, currencyid=:c,countryid=:ct";
-    			$sql .=" where id=:id";
-    			try {
-    				$db = getConnection();
-    				$stmt = $db->prepare($sql);
-    				$stmt->bindParam("l", $params->languageid);
-    				$stmt->bindParam("c", $params->currencyid);
-    				$stmt->bindParam("ct", $params->countryid);
-    				$stmt->bindParam("name", $params->name);
-    				$stmt->bindParam("notes", $params->notes);
-    				$stmt->bindParam("id", $params->id);
-    				$stmt->execute();
-    				 
-    				$db = null;
-    				if(isset($params->timing)){
-    					$this->doLogic($params->timing,$params->id);
-    						
-    				} 
-    			 } catch(PDOException $e) {
-    				//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    				echo '{"error":{"text":'. $e->getMessage() .'}}';
-    			}
+    			$branch->name = $params->name;
+    			$branch->city = $params->city;
+    			$branch->zip = $params->zip;
+    			$branch->address = $params->address;
+    			$branch->notes = $params->notes;
+    			$branch->id = $params->id;
     		}else{
-		    		$sql = "INSERT INTO branches (name, notes,franchiseid,languageid,currencyid,countryid) ";
-		    		$sql .="VALUES (:name, :notes ,  ".$this->auth->getFranchiseId().", :l, :c, :ct)";
-		    		try {
-		    			$db = getConnection();
-		    			$stmt = $db->prepare($sql);
-		    			$stmt->bindParam("name", $params->name);
-		    			$stmt->bindParam("notes", $params->notes); 
-		    			$stmt->bindParam("l", $params->languageid);
-		    			$stmt->bindParam("c", $params->currencyid);
-		    			$stmt->bindParam("ct", $params->countryid);
-		    			$stmt->bindParam("ct", $params->countryid);
-		    		 
 		    			
-		    			$stmt->execute();
-		    			$params->id = $db->lastInsertId();
+		    			$branch->name = $params->name;
+		    			$branch->city = $params->city;
+		    			$branch->zip = $params->zip;
+		    			$branch->address = $params->address;
+		    			$branch->notes = $params->notes;
+		    			$branch->createdon = R::isoDate();
+		    			$branch->createdby = $this->auth->getFranchiseId();
+		    			$branch->franchiseid = $this->auth->getFranchiseId();
+		    			$branch->isactivated = 1;
+		    			$branch->isdeleted = 0;
 		    			
-		    			 echo json_encode('{"id":'.$db->lastInsertId().'}');
-		    			 $db = null;
-		    				$this->doLogic($params->timing,$params->id);
-		    			 
 		    			
-		    			 
-		    		} catch(PDOException $e) {
-		    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-		    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-		    		}
-    		}
-    	 
+		   	}
+		   	$id = R::store( $branch );
+		   	$this->doLogic($params->timing,$id);
     }
     function doLogic($timing,$branchid){ 
     	 $data = explode('||', $timing);
@@ -185,16 +170,15 @@ class Branches
     }
     function dbSaveTiming($day,$open,$close,$branchid){
     	 
-    	$sql = "INSERT INTO timings (day, opened,closed,branchid) ";
-    	$sql .="VALUES (:day, :opened,:closed,:branchid)";
-    	try {
-    		$db = getConnection();
-    		$stmt = $db->prepare($sql);
-    		$stmt->bindParam("day", $day);
-    		$stmt->bindParam("opened", $open);
-    		$stmt->bindParam("closed", $close);
-    		$stmt->bindParam("branchid", $branchid);
-    		$stmt = $stmt->execute();
+    	 try {
+    		$timings = R::dispense( 'timings' );
+    		$timings->day = $day;
+    		$timings->opened = $open;
+    		$timings->closed = $close;
+    		$timings->createdon = R::isoDate();
+    		$timings->isdeleted = 0;
+    		$timings->branchid = $branchid;
+    		$id = R::store( $timings ); 
     		$db = null; 
     	} catch(PDOException $e) {
     		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
@@ -202,58 +186,45 @@ class Branches
     	}
     }
     function deleteTimings($branchid){
-    	 
-    	$sql = "delete from timings where branchid=:id ";
-    
-    	try {
-    		$db = getConnection();
-    		$stmt = $db->prepare($sql);
-    		$stmt->bindParam("id", $branchid);
-    		$stmt->execute();
-    		$db = null; 
+     try {
+    		R::exec('delete from timings where branchid = '.$branchid);  
     	} catch(PDOException $e) {
     		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
     		echo '{"error":{"text":'. $e->getMessage() .'}}';
     	}
-    } function getTimings( $branchid) {  
-    	if($this->auth->getLoggedInMessages() == false){
-    		return false;
-    	}
-        $sql = "select * from timings where branchid=:id ";
+    } 
+    function getTimings( $branchid) {  
+	    	if($this->auth->getLoggedInMessages() == false){
+	    		return false;
+	    	} 
             try {
-                    $db = getConnection();
-                    $stmt = $db->prepare($sql);
-    				$stmt->bindParam("id", $branchid);
-    				$stmt->execute();
-                    $branches = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    $db = null;
-
+			   $sql = 'SELECT * FROM timings 
+			    	   WHERE branchid = "'.$branchid.'" order by opened asc';
+			    $rows = R::getAll($sql);
+			   // $authors = R::convertToBeans('timings',$rows);
                 if (!isset($_GET['callback'])) {
-                echo json_encode($branches);
-            } else {
-                echo $_GET['callback'] . '(' . json_encode($branches) . ');';
-            }
+                	echo json_encode($rows);
+           		 } else {
+                	echo $_GET['callback'] . '(' . json_encode($rows) . ');';
+            	}
 
-            } catch(PDOException $e) {
+             } catch(PDOException $e) {
                     $error = array("error"=> array("text"=>$e->getMessage()));
                     echo json_encode($error);
-            }
+             }
     }
     function deleteBranch(){
     	 $id = $_GET['id'];
-    	$sql = "delete from branches where id=:id ";
     	 
-    	try {
-    		$db = getConnection();
-    		$stmt = $db->prepare($sql);
-    		$stmt->bindParam("id", $id);
-    		$stmt->execute(); 
-    		$db = null;
-    		echo json_encode($id);
-    	} catch(PDOException $e) {
-    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    		echo '{"error":{"text":'. $e->getMessage() .'}}';
-    	}
+    	 $this->deleteTimings($id);
+    			try {
+    				R::exec('delete from branches where id = '.$id);  
+    				 
+    			} catch(Exception $e) {
+    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    				echo json_encode(['error'=>'Integrity constraint'] );
+    			}
+    			
     }
 }
 ?>

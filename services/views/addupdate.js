@@ -12,12 +12,10 @@ define(
 						initialize : function() {
 							this.template = _.template(template);
 							this.app = this.options.page.setting;
-							this.branchid = this.app.users.branchid;
+							this.franchiseid = this.app.user_franchise_id;
 							this.objService = new ServiceModel();
 							this.jobtypeid = 0;
-							if (typeof this.options.page.branchid != "undefined"
-									&& this.options.page.branchid)
-								this.branchid = this.options.page.branchid;
+						 
 							if(typeof this.options.id  == "undefined"){
 								this.parent = this.options.page.options.page;
 							}else{
@@ -92,14 +90,13 @@ define(
 							var that = this;
 
 							require([ 'services/views/lists' ],
-									function(Lists) {
-
+									function(Lists) { 
 										var objLists = new Lists({
-											setting : that.app
+											setting : that.app,
+											id:that.branchid
 										});
 										that.$el.parent().html(objLists.$el);
-										Backbone.View.prototype.remove
-												.call(that);
+										Backbone.View.prototype.remove.call(that);
 										that.undelegateEvents();
 										that.$el.remove();
 										that.$el.removeData().unbind();
@@ -142,7 +139,7 @@ define(
 							}
 							this.app.showLoading('Saving Info...', this.$el);
 							
-							this.objService.set('branchid', this.branchid);
+							this.objService.set('franchiseid', this.franchiseid);
 							this.objService.set('name', name);
 							this.objService.set('type', type);
 							this.objService.set('comments', comments);
@@ -172,7 +169,7 @@ define(
 							var that = this;
 							var options = "";
 							jQuery.getJSON(URL, {
-								branchid : this.branchid
+								franchiseid : this.franchiseid
 							}, function(tsv, state, xhr) {
 								var _json = jQuery.parseJSON(xhr.responseText);
 

@@ -1,5 +1,5 @@
-define(['text!employees/tpl/lists.html','employees/collections/employees','employees/views/list'],
-	function (template,Employees,Employee) {
+define(['text!employees/tpl/lists.html','employees/collections/employees','employees/views/list','swal'],
+	function (template,Employees,Employee,swal) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
@@ -19,8 +19,11 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				this.setting = this.options.setting;
 				this.offsetLength = 10;
 				this.branchid = null;
-				if(typeof this.options.id != "undefined"){
+				console.log(this.options);
+				if(typeof this.options.id != "undefined" &&  this.options.id){
 					this.branchid = this.options.id;
+				}else{
+					this.branchid = this.options.branchid;
 				}
 				this.objEmployees = new Employees();
 				this.render();
@@ -28,8 +31,8 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
-				$(window).scroll(_.bind(this.lazyLoading, this));
-                $(window).resize(_.bind(this.lazyLoading, this));
+				//$(window).scroll(_.bind(this.lazyLoading, this));
+                //$(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchEmployees();
                 //this.fillJobTypes();
                 var that = this;
@@ -47,14 +50,14 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
-				 
+				 this.$el.find('.employees-table tbody').empty();
 				 if(this.request)
 	                    this.request.abort();
-				 that.$el.find('tbody').empty();
-				 this.request = this.objEmployees.fetch({data: _data, success: function(data) {
+				 
+				 this.request = this.objEmployees.fetch({data: _data,reset: true, success: function(data) {
 					_.each(data.models,function(model){
 						var objEmployee = new Employee({model:model,page:that,setting:that.setting});
-						that.$el.find('tbody').append(objEmployee.$el);
+						that.$el.find('.employees-table tbody').append(objEmployee.$el);
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
@@ -122,16 +125,16 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                 if (inview.length && inview.attr("data-load") && this.$el.height() > 0) {
                     inview.removeAttr("data-load"); 
                     this.$el.find("#tr_loading").remove();
-                    this.fetchJobTypes(this.offsetLength);
+                    //.fetchJobTypes(this.offsetLength);
                 }
             },
-            searchEmployees:function(ev){ 
+            searchEmployees:function(ev){  
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
                      var text = $(ev.target).val(); 
                      var code = ev.keyCode ? ev.keyCode : ev.which;
-                     var nonKey =[17, 40 , 38 , 37 , 39 , 16,8,46];
+                     var nonKey =[17, 40 , 38 , 37 , 39 , 16, 46];
                      if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
                            return;
                      }

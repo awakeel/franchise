@@ -18,6 +18,7 @@ define([ 'text!dashboard/tpl/quickstats.html'],
 				this.$el.html(this.template({}));
 			}, 
 			quickstats:function(){
+			 
 				    var URL = "api/dashboard/quickstats";
 		            var that = this;
 		            jQuery.getJSON(URL,  function (tsv, state, xhr) {

@@ -42,18 +42,10 @@ define(['jquery', 'backbone', 'underscore','text!templates/header.html'],
                     'click .analytics_forms-li': function(obj) {
                         app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
                     },
-                    'click .analytics_segments-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    }
+                    'click .logout':  'logout',
 
                     ,
-                    'click .list-management-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: 'wizard',
-                            title: "List Management",
-                            url: 'list',
-                            wizard: {steps: 4, active_step: 1, step_text: []}
-                        });
-                    },
+                    
                     'click .automation-li': function(obj) {
 
                     }
@@ -76,7 +68,20 @@ define(['jquery', 'backbone', 'underscore','text!templates/header.html'],
                 },
                 render: function() {
                     this.$el.html(this.template({}));
-                },
+                },logout:function(){
+                	this.app.users = {};
+    				Backbone.history.length = 0;
+    				 var URL = "api/logout";
+    		            var that = this;
+    		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+    		                var _json = jQuery.parseJSON(xhr.responseText);
+    		                	console.log(_json);
+    		                    require(['authorize/views/login'],function(login){
+    	                        	$('body').html(new login({app:that.app}).$el);
+    	                        })
+    		            }); 
+    				
+    			},
                 getTitle: function(obj) {
                     var title = $(obj.target).parent("li").find("a").text();
                     return title;

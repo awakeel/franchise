@@ -9,7 +9,7 @@ define([ 'jquery', 'bootstrap', 'backbone', 'app', 'flex',
 				this.dashboard();
 			},
 			dashboard : function() { 
-				var settings = app.load(this.loadPages);
+				var settings = app.load();
 			} 
 			
 

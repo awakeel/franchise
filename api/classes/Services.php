@@ -90,35 +90,58 @@ class Services
     		echo json_encode($error);
     	}
     }
+    function saveService($request){
+    
+    	$params = json_decode($request->getBody());
+    	$services = R::dispense( 'services');
+    	if(isset($params->id) && !empty($params->id)){
+    		$services->id = $params->id;
+    		$services->name = $params->name;
+    		$services->comments = $params->comments;
+    		$services->createdby = $params->franchiseid;
+    		$services->isdeleted = 0;
+    		$services->price = $params->price;
+    		$services->time = $params->time;
+    		$services->jobtypeid = $params->jobtypeid;
+    		$services->isactivated  = 1;
+    		$services->createdon = R::isoDate();
+    		
+    
+    	}else{
+    		$services->name = $params->name;
+    		$services->comments = $params->comments;
+    		$services->createdby = $params->franchiseid;
+    		$services->isdeleted = 0;
+    		$services->price = $params->price;
+    		$services->time = $params->time;
+    		$services->jobtypeid = $params->jobtypeid;
+    		$services->isactivated  =1;
+    		$services->createdon = R::isoDate();
+    		$services->franchiseid = $params->franchiseid;
+    	}
+    	$id = R::store($services);
+    	 
+    }
     function getAllByBranchId( ) { 
     	$search = "";
-    	if(@$_GET['search'] !=''){
+    	  if(@$_GET['search'] !=''){
     		$search = $_GET['search'];
     		$search =  "  AND  (s.name LIKE '%". $search ."%' OR s.comments LIKE '%". $search ."%')";
-    	}
-    	$branchid = 0;
-    	if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
-    		$branchid = $_GET['branchid'];
-    	
-    	}else{
-    		$branchid = $this->branchId;
-    	}
-       $sql = "select s.*, j.name as jobtype,j.id as jobtypeid from services s
+    	   }
+    	  $franchiseid = 0;
+    	  if(isset($_GET['franchiseid']) && !empty($_GET['franchiseid'])){
+    		$franchiseid = $_GET['franchiseid'];
+    	 } 
+         $sql = "select s.*, j.name as jobtype,j.id as jobtypeid from services s
 				left join jobtypes j on j.id = s.jobtypeid
-       			where s.branchid = :branchid  $search order by id desc";
+       			where s.franchiseid = $franchiseid  $search order by id desc";
             try {
-                    $db = getConnection();
-                    $stmt = $db->prepare($sql);
-                    $stmt->bindParam("branchid", $branchid);
-                    $stmt->execute();
-                    $departments = $stmt->fetchAll(PDO::FETCH_OBJ);
-                    $db = null;
-
-            // Include support for JSONP requests
+            	$services = R::getAll($sql);
+ 		    // Include support for JSONP requests
             if (!isset($_GET['callback'])) {
-                echo json_encode($departments);
+                echo json_encode($services);
             } else {
-                echo $_GET['callback'] . '(' . json_encode($departments) . ');';
+                echo $_GET['callback'] . '(' . json_encode($services) . ');';
             }
 
             } catch(PDOException $e) {
@@ -126,55 +149,7 @@ class Services
                     echo json_encode($error);
             }
     }
-    function saveService($request){
-    
-    	$params = json_decode($request->getBody());
-    		if(isset($params->id) && !empty($params->id)){
-    		$sql = "update services set name=:name, type=:type,comments=:comments,jobtypeid=:jobtypeid,time=:time,price=:price ";
-    		$sql .=" where id=:id";
-    		try {
-    			$db = getConnection();
-    			$stmt = $db->prepare($sql);
-    				
-    			$stmt->bindParam("id", $params->id);
-    			$stmt->bindParam("name", $params->name);
-    			$stmt->bindParam("comments", $params->comments); 
-    			$stmt->bindParam("jobtypeid", $params->jobtypeid);
-    			$stmt->bindParam("price", $params->price);
-    			$stmt->bindParam("type", $params->type);
-    			$stmt->bindParam("time", $params->time);
-    			$stmt->execute();
-    				
-    			$db = null;
-    			echo json_encode($params);
-    		} catch(PDOException $e) {
-    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-    		}
-    	}else{
-    		$sql = "INSERT INTO services (name, comments,jobtypeid,branchid,time,price,type) ";
-    		$sql .="VALUES (:name, :comments , :jobtypeid,:branchid,:time,:price,:type)";
-    		try {
-    			$db = getConnection();
-    			$stmt = $db->prepare($sql);
-    			$stmt->bindParam("name", $params->name);
-    			$stmt->bindParam("comments", $params->comments);
-    			$stmt->bindParam("branchid", $params->branchid);
-    			$stmt->bindParam("jobtypeid", $params->jobtypeid);
-    			$stmt->bindParam("type", $params->type);
-    			$stmt->bindParam("price", $params->price);
-    			$stmt->bindParam("time", $params->time);
-    			$stmt->execute();
-    			$params->id = $db->lastInsertId();
-    			$db = null;
-    			echo json_encode($params);
-    		} catch(PDOException $e) {
-    			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    			echo '{"error":{"text":'. $e->getMessage() .'}}';
-    		}
-    	}
-    
-    }
+   
     function deleteService(){
     	$id = $_GET['id'];
     	$sql = "delete from services where id=:id ";
@@ -188,7 +163,7 @@ class Services
     		echo json_encode($id);
     	} catch(PDOException $e) {
     		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
-    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    		echo json_encode(['error'=>'Integrity constraint'] );
     	}
     }
 }

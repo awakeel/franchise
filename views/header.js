@@ -5,82 +5,53 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                 tagName: 'div',
                 
                 events: {
-                    'click .overlay-notification':'hideMessageDialog',
-                    'click .closebtn-gray':'closeAnnouncement',
-                    'click .dropdown-menu li': function(obj) {
-                        app.openModule(obj);
-                    },
-                    /*Menues*/
-                    'click .campaigns-li': function(obj) {
-                        //app.mainContainer.openCampaign();
-                        app.mainContainer.addWorkSpace({type: '', title: 'Campaigns', sub_title: 'Listing', url: 'campaigns/campaigns', workspace_id: 'campaigns', 'addAction': true, tab_icon: 'campaignlisting'});
-                    }
-                    ,
-                    'click .contacts-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'Contacts', sub_title: 'Listing', url: 'contacts/contacts', workspace_id: 'contacts', 'addAction': true, tab_icon: 'contactlisting'});
-                    },
-                    'click .reports-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'Reports', sub_title: 'Analytic', url: 'reports/campaign_report', workspace_id: 'camp_reports', tab_icon: 'reports', single_row: true});
-                    }
-                    ,
-                    'click .csv-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'CSV Upload', sub_title: 'Add Contacts', url: 'listupload/csvupload', workspace_id: 'csv_upload', tab_icon: 'csvupload', single_row: true});
-                    },
-                    'click .crm-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'Connections', sub_title: 'CRM', url: 'crm/crm', workspace_id: 'crm', tab_icon: 'crm', single_row: true});
-                    }
-                    ,
-                    'click .studio_add-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    },
-                    'click .analytics_reports-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    },
-                    'click .add-template-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'Template Gallery', sub_title: 'Gallery', url: 'bmstemplates/mytemplates', workspace_id: 'mytemplates', 'addAction': true, tab_icon: 'mytemplates'});
-                    },
-                    'click .image-gallery-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: 'Images', sub_title: 'Gallery', url: 'userimages/userimages', workspace_id: 'userimages', tab_icon: 'graphiclisting'});
-                    },
-                    'click .analytics_add-list-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    },
-                    'click .analytics_forms-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    },
-                    'click .analytics_segments-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: this.getTitle(obj)});
-                    }
-
-                    ,
-                    'click .list-management-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: 'wizard',
-                            title: "List Management",
-                            url: 'list',
-                            wizard: {steps: 4, active_step: 1, step_text: []}
-                        });
-                    },
-                    'click .automation-li': function(obj) {
-
-                    }
-                    ,
-                    'click .account-li': function(obj) {
-                        app.mainContainer.addWorkSpace({type: '', title: "My Account"});
-                    },
-                    //'click .sc-links span.ddicon':'scDropdown',
-                    //'click .new-campaign': 'createNewCampaign',
-                    'click .csv-upload': 'csvUpload',
-                    'click .new-nurturetrack': 'addNurtureTrack',
-                    'click .messagesbtn': 'loadNotifications',
-                    "click .announcementbtn":"toggleAnnouncement",
+                    
+                    'click .dep-change':'changeDepartment',
+                    'click .logout_open': 'logout', 
                     //"click ":"quickAdd"
                 },
                 initialize: function() { 
                     this.template = _.template(template);
+                    this.app = this.options.setting;
                     this.render();
                     
                     
-                },
+                },logout:function(){
+                	this.app.users = {};
+    				Backbone.history.length = 0;
+    				 var URL = "api/logout";
+    		            var that = this;
+    		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+    		                var _json = jQuery.parseJSON(xhr.responseText);
+    		                	 
+    		                    require(['authorize/views/login'],function(login){
+    	                        	$('body').html(new login({app:that.app}).$el);
+    	                        })
+    		            }); 
+    				
+    			},
+    			changeDepartment:function(ev){
+    			 var branchid = $(ev.target).data('id');
+    			 var data = this.app.data;
+    			 Backbone.history.length = 0;
+    			 if(typeof this.app.branches !="undefined")
+    			     var branch = this.app.branches.filter(function(el){
+    				 return el.id == branchid;
+    			 });
+    			
+    			 require([ 'app' ], function(app) {
+                        		// var mainRouter = new router({user:_json[0]});
+    				              var settings = app.load(data,branch[0].name);
+                        		   app.getUser(branchid);
+                        		   //console.log(branch + "branch");
+                        		  //app.loadPages('khan department ' +branch[0].name);
+                        		  
+                        		
+                 });
+    			 
+    			 
+    				
+    			},
                 render: function() {
                     this.$el.html(this.template({}));
                     $("#sidebar-toggle").click(function(e) {
@@ -95,6 +66,43 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                     	});
                      
                   
+                },
+                getDepartments:function(id){
+                	var that = this;
+                	var str = "";
+                	var login = "";
+                	var check_id = false;
+                	if(this.app.user_branch_id){
+                		check_id = true;
+                		id = this.app.user_branch_id;
+                	}
+                	var name = "";
+                	if(typeof that.options.setting.branches[0] !="undefined"){
+                		name = that.options.setting.branches[0].name;
+                	}
+                	_.each(this.app.branches,function(value,key,list){
+                	     if(check_id == true && id == value.id){
+                	    	 login  ='(<small  data-id="'+value.id+'" style="cursor:pointer"> Currently Logged In</small>)';
+                	     }else if(check_id == false && name == value.name){
+                			 login  ='(<small  data-id="'+value.id+'" style="cursor:pointer"> Currently Logged In</small>)';
+                		 }else{
+                			 login  ='(<small class="dep-change" data-id="'+value.id+'" style="cursor:pointer"> Auto Login</small>)';
+                		 }
+                		 
+                		          str+='<li   data-id="'+value.id+'"> <a> <div class="row"> <div class="col-xs-2">  </div>';
+                		          str+='<div class="col-xs-10">  <p> <strong>'+value.name+'</strong>: '+login+' </p>  </div>';
+                		          str+='</div> </a> </li>';
+                	});
+                	return str;
+                },
+                getUserName:function(){
+                	if(this.app.current_branch !=""){
+    					return this.app.current_branch;
+    				}else if(typeof this.app.branches[0] !="undefined"){
+                		return this.app.branches[0].name;
+                	}else if(this.app.users.isfranchise == "1"){
+                		return "Main Franchise";
+                	}
                 },
                 getTitle: function(obj) {
                     var title = $(obj.target).parent("li").find("a").text();

@@ -2,15 +2,23 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 		'views/main_container'], function (jquery,Language,Spinner,moment,flex,Container) {
     'use strict'; 
     var app = Backbone.Model.extend({
-        load: function (users) {
+        load: function (users,name) {
         	 this.language = {};
         	 var that = this;
-        	 this.selectedLanguage = 1;
+        	 this.selectedLanguage = 2;
+        	 this.branches = {};
+        	 this.current_branch = name ||  "";
+        	 this.data = {};
         	 this.jobTypes = {};
         	 this.modules = {};
         	 this.globaljobtypes = [];
         	 this.globalservices = [];
         	 this.services = {};
+        	 this.timings = {};
+        	 	// Branches ID
+        	 this.user_branch_id =  null;
+        	 this.user_franchise_id = 0;
+        	 	// End BranchId 
         	 this.users = users || {};
              this.set(_.extend({
                 env: 'TEST',
@@ -24,9 +32,10 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 cache_data: {}
             }, window.sz_config || {}));
 			  this.objLanguage = new Language();
+			   
 			  var that = this;
 			  this.getModules();
-			    this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
+			  this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
                                     //alert(key.languagetitle);
 			    		that.checkError('err');
 			    	  _.each(data.toJSON(), function( key, value ) {
@@ -37,7 +46,8 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			    }}); 
         },
         
-        loadPages : function() {
+        loadPages : function( ) {
+        	
 			var objContainer = new Container({
 				setting : this
 			}); 
@@ -47,11 +57,10 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			$('#wrapper').append(objContainer.$el);
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
-			if( this.users.isnew == "1"){ 
-				console.log('I am in new one please insert ');
+			if( this.users.isnew == "1" && this.users.isfranchise == "1"){ 
 				var that = this;
 			  	 require(['branches/views/addupdate'],function(addupdate){
-			  		$('#page-wrapper').find('.page-content').append(new addupdate({id:0,model:{title:'',languagetitle:''},page:that,setting:that.setting}).$el);
+			  		$('#page-wrapper').find('.page-content').append(new addupdate({model:{},id:1,page:that,setting:that}).$el);
 				 }) 
 			}else{
 				$('body').removeClass('login');
@@ -59,38 +68,63 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 						objContainer.objDashboard.$el);
 			}
 			$('#wrapper').append(objContainer.objFooter.$el);
-			console.log('I am here at the dashboard')
 		},
-        getUser: function () {
+		getTiming:function(branchid){
+		 
+				var url = "api/gettimings";
+				 var that = this;
+				  
+                jQuery.getJSON(url,{branchid:branchid}, function(tsv, state, xhr) {
+                    var timings = jQuery.parseJSON(xhr.responseText);
+                     that.timings = timings;
+                });
+			 
+		},
+        getUser: function (branchid) {
             var URL = "api/getsession";
             var that = this;
             jQuery.getJSON(URL,  function (tsv, state, xhr) {
                 var _json = jQuery.parseJSON(xhr.responseText);
                 that.users = _json.user;
-                 
-                var allowedAdmin = ['admin', 'jayadams', 'demo'];
+                that.data = _json;
+                var allowedAdmin = ['admin', 'ad', 'demo'];
+                
                 if(typeof that.users !="undefined" && that.users.setting.is_logged_in){
-                	console.log(that.users)
+                	///that.user_branch_id = that.users.branchid;
+                	that.user_franchise_id = that.users.franchiseid;
+                	that.branches = _json.branches;
+                	if(!that.user_branch_id && typeof that.branches[0] !='undefined')
+                		that.user_branch_id = that.branches[0].id;
+                	
                 	that.loadPages( );
                 }else{
-                	    require(['authorize/views/login'],function(login){
-                        	$('body').html(new login({app:that}).$el);
-                        })
+	        	    require(['authorize/views/login'],function(login){
+	                	$('body').html(new login({app:that}).$el);
+	                })
                      
+                }
+                if(branchid){
+                	that.user_branch_id = branchid;
                 }
                 return that.users;
                
 
             } ); 
          }, 
-         getModules: function () {
+         getModules: function ( ) {
              var URL = "api/modules";
              var that = this;
-             jQuery.getJSON(URL,  function (tsv, state, xhr) {
+             var data = {};
+             if(this.user_branch_id){
+            	 data = {branchid:this.user_branch_id}
+            	 
+             }
+             jQuery.getJSON(URL,data,  function (tsv, state, xhr) {
                  var _json = jQuery.parseJSON(xhr.responseText);
                  that.modules = _json;
                 
-             } ); 
+             } );
+             this.getTiming(this.user_branch_id);
           }, 
          getFormatedDate:function(date){
              if(date) 
@@ -100,6 +134,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);
          },
          checkError: function (result) {
+        	 console.log('usrs ' + this.users);
             var isError = true; 
             if(typeof this.users !="undefined"){
 	            console.log(this.users.is_logged_in)

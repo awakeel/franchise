@@ -19,14 +19,14 @@ class Common
     				});
     }
     function getQuickStats( ) {
-    
+    	$franchiseid = $_SESSION['franchiseid'];
 		 $sql = "SELECT * 
 					FROM
-					(SELECT COUNT(employees.id) AS emp FROM employees   WHERE branchid = $this->branchId ) AS T1,  
-					(SELECT COUNT(services.id) AS ser FROM services   WHERE branchid = $this->branchId ) AS T2, 
-					(SELECT COUNT(jobtypes.id) AS job  FROM jobtypes   WHERE branchid = $this->branchId ) AS T3,
-					(SELECT COUNT(schedule.id) AS sch FROM SCHEDULE   WHERE branchid = $this->branchId ) AS T4 ,
-		 		    (SELECT COUNT(branches.id) AS dep FROM branches   WHERE id = $this->branchId ) AS t5  
+					 
+					(SELECT COUNT(services.id) AS ser FROM services   WHERE franchiseid = $franchiseid ) AS T2, 
+					(SELECT COUNT(jobtypes.id) AS job  FROM jobtypes   WHERE franchiseid = $franchiseid ) AS T3,
+					(SELECT COUNT(schedule.id) AS sch FROM schedule   WHERE branchid = $this->branchId ) AS T4 ,
+		 		    (SELECT COUNT(branches.id) AS dep FROM branches   WHERE franchiseid =$franchiseid ) AS t5  
 		 		 ";
     	try {
     		$db = getConnection();

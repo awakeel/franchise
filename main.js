@@ -3,7 +3,7 @@
 	require.config({
 		deps : [ 'main' ],
 		waitSeconds : 400,
-		urlArgs : "v=3",// + new Date().getTime(),
+		urlArgs : "v=4"  + new Date().getTime(),
 		paths : {
 			jquery : 'libs/jquery',
 			underscore : 'libs/underscore',
@@ -22,6 +22,7 @@
 			'tokenfield':"libs/bootstrap-tokenfield.min", 
 			'spin':'libs/spin',
 			'swal':'libs/sweetalert',
+			
 		},
 		shim : {
 			jquery : {
@@ -55,11 +56,12 @@
 		}
 	});
 
-	require([ 'jquery', 'bootstrap', 'backbone','router' ,'swal'], function($,bootstrap,Backbone,router,swal ) {
+	require([ 'jquery', 'bootstrap', 'backbone','router'], function($,bootstrap,Backbone,router  ) {
 		var mainRouter = new router();
 			Backbone.history.start({
 				pushState : true
 			}); //Start routing
+			/// what is going wrong with this
 		})
 
 })();
