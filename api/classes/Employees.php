@@ -123,7 +123,7 @@ class Employees
              	left join role on role.id = ed.roleid
 				left join employeejobtypes ej on ej.employeeid = e.id
 				left join jobtypes j on j.id = ej.jobtypeid
-        		where e.isfranchise is null and e.franchiseid = ".$_SESSION['franchiseid']. $branchid.$search."
+        		where  e.franchiseid = ".$_SESSION['franchiseid']. $branchid.$search."
         	 	group by e.id 
         		order by id desc ";
             try {

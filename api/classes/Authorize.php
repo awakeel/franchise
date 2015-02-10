@@ -72,7 +72,7 @@ class Authorize {
         						$_SESSION['user'] = $cursor[0];
         						
         						$this->saveLoginHistory($_SERVER['REMOTE_ADDR'],$cursor[0]->id);
-        						$this->updateIsNew($cursor[0]->id);
+        						//$this->updateIsNew($cursor[0]->id);
         					} else {
         						$_SESSION['login_failure'] = true;
         						$_SESSION['is_logged_in'] = false;
@@ -238,7 +238,7 @@ function updateIsNew($employeeid){
 function changePassword(){
 	$employeeid = $_POST['employeeid'];
 	$password = $_POST['password1'];
-   $sql = "update employees set password = $password, passwordchanged = '1' where id=$employeeid "; 
+   $sql = "update employees set password ='".$password."', passwordchanged = '1' where id=$employeeid "; 
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql); 

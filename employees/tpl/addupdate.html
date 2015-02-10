@@ -1,4 +1,8 @@
-
+<div class="modal-footer">
+	<button type="button" class="btn btn-default close-p">Close</button>
+	<button type="button" class="btn btn-green save-p">Save
+		changes</button>
+</div>
 <div class="tab-pane fade in active" id="basicInformation">
 	<form role="form">
 		<h4 class="page-header">Personal Information:</h4>
@@ -14,13 +18,17 @@
 				Name *</label> <input type="text" placeholder="Smith" class="form-control"
 				id="txtlastname"> <span
 				class="help-block lastname-error hide"><i
-				class="fa fa-warning"></i>Please enter last name eg Waignright!</span> <label>Address</label>
-			<input type="text" placeholder="8516 Market St." class="form-control"
-				id="txtaddress"> <label><i
+				class="fa fa-warning"></i>Please enter last name eg Waignright!</span>
+				<label><i
 				class="fa fa-envelope-o fa-fw"></i> Email Address</label> <input
 				type="email" id="txtemail" placeholder="email" class="form-control">
-			<label>Password</label> <input type="password" placeholder=""
-				class="form-control" id="txtpassword">
+			<label>Password *</label> <input type="password" placeholder=""
+				class="form-control" id="txtpassword"><span
+				class="help-block password-error hide"><i
+				class="fa fa-warning"></i>Please enter password!</span>
+				 <label>Address</label>
+			<input type="text" placeholder="8516 Market St." class="form-control"
+				id="txtaddress"> 
 
 
 		</div>

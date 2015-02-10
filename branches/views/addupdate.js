@@ -55,8 +55,9 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						this.objModelBranch = this.model;
 						this.objModelBranch.set({id:this.model.get('id')});
 						
-						this.addSchedule();
 					}
+					this.addSchedule();
+					
 				 this.fillDepartments();
 				 this.fillServices();
 					this.fillEmployees();
@@ -134,7 +135,18 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					if($current >= $total) {
 						that.$el.find('.pagerw .next').hide();
 						that.$el.find('.pagerw .finish').show().on('click',function(){
-							console.log('some one clicked me');
+							 swal({
+							      title: "Create Schedule?",
+							      text: "Create your first schedule, click on schedule list and add new!",
+							      type: "info" 
+							   
+							    });
+							 require(['dashboard/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
+								   	var objLists = new Lists({setting:that.app});
+							    	var objBreadCrumb = new BreadCrumb({title:'dashboard',setting:that.app,show:''});
+							    	$('#page-wrapper').find('.page-content').html(objLists.$el);
+							    	$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
+							    })
 						});
 						that.$el.find('.pagerw .finish').removeClass('disabled');
 					} else {
@@ -358,7 +370,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			},
 			addSchedule:function(){
 				var that = this;
-				require(['schedule/views/lists'],function(Services){
+				require(['schedulelist/views/lists'],function(Services){
 					var objServices = new Services({setting:that.setting,id:that.id});
 					that.$el.find(".table-schedule").html(objServices.$el);
 				})

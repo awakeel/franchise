@@ -1,59 +1,82 @@
 <div class="row">
-	<div class="col-lg-12">
-		<div class="portlet portlet-orange">
-			<div class="portlet-heading">
-				<div class="portlet-title">
-					<h4>Welcome</h4>
-				</div>
-				<div class="clearfix"></div>
-			</div>
-			<div class="portlet-body">
-				<h3>Profile Setting</h3>
-				<div class="row">
-					<div class="col-md-6">
-						<div class="portlet portlet-blue">
-							<div class="portlet-heading">
-								<div class="portlet-title">
-									<h4>Change Password</h4>
-								</div>
-								<div class="portlet-widgets"></div>
-								<div class="clearfix"></div>
-							</div>
-							<div id="horizontalFormExample"
-								class="panel-collapse collapse in">
-								<div class="portlet-body">
+
+
+<div class="col-lg-12">
+                        <div class="portlet portlet-blue">
+                            <div class="portlet-heading">
+                                <div class="portlet-title">
+                                    <h4>Welcome 
+                            <%=this.options.setting.users.firstname%>
+						                <%=this.options.setting.users.lastname%></h4>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <h3>Basic Instruction</h3>
+            <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Change your password
+</button> 
+                                   </div>
+                                   <% if(this.options.setting.users.isfranchise=="1"){%>
+                                    <div class="col-md-4">
+                                        <h3>Setting</h3>
+                                        <button class="btn btn-default department-wizard" id="bottom-right-message-demo ">Launch Setting</button>
+                                        
+                                    </div>
+                                    <%}%>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+ </div>
+	
+	<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+      </div>
+      <div class="modal-body">
+          
+         
 									<form class="form-horizontal" role="form">
 										<div class="form-group">
-											<label for="inputEmail3" class="col-sm-2 control-label">New Password</label>
-											<div class="col-sm-10">
+											<label for="inputEmail3" class="col-sm-4 control-label">New Password</label>
+											<div class="col-sm-8">
 												<input type="password" class="form-control" id="txtpassword1"
 													placeholder="Password">
 													        <span class="help-block hide password1-error hide"><i class="fa fa-warning"></i>  Please enter password</span>
                                  			</div>
 										</div>
 										<div class="form-group">
-											<label for="inputPassword3" class="col-sm-2 control-label">Confirm
+											<label for="inputPassword3" class="col-sm-4 control-label">Confirm
 												New Password</label>
-											<div class="col-sm-10">
+											<div class="col-sm-8">
 												<input type="password" class="form-control" id="txtpassword2"
 													placeholder="Confirm Password">
 													  <span class="help-block hide password2-error hide"><i class="fa fa-warning"></i>  Please enter confirm password</span>
 													   <span class="help-block hide password-confirm hide"><i class="fa fa-warning"></i> Password and confirm password not same.</span>
 											</div>
-										</div>
-										<div class="form-group">
-											<div class="col-sm-offset-2 col-sm-10">
-												<button type="button" class="btn btn-default btn-change">Change</button>
-											</div>
-										</div>
+										</div> 
 									</form>
-								</div>
-							</div>
-						</div>
-						 
-					 
-				</div>
-			</div>
-		</div>
-		<!-- /.col-lg-12 -->
-	</div>
+								 
+          
+          
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary btn-change">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+	
+						

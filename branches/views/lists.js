@@ -64,11 +64,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 					that.fetched = that.fetched + data.length;
 					if(data.length < 1){
 						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no department ';
-						trNoRecord +='<button type="button" class="btn btn-labeled btn-primary add-new-dep" data-toggle="modal" data-target="#newemployee">';
-						trNoRecord +=' <span class="btn-label"><i class="fa fa-add"></i></span>Click me to ';
-						trNoRecord += 'add new';
-						trNoRecord += '</button> ';
-						trNoRecord += '</div></td>';	
+					     trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
 					}

@@ -20,10 +20,11 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 							   this.branchid = this.options.page.branchid;
 							
 							this.render(); 
+							this.app.checkTiming();
 						},
 						
 						fetchAllData:function(groupid){
-							this.app.showLoading('Loading data...',this.$el);
+						this.app.showLoading('Loading data...',this.$el);
 							 var URL = "api/getschedulebygroupid"; 
 							 var that = this;
 							 $.getJSON(URL,{groupid:groupid},  function (tsv, state, xhr) {

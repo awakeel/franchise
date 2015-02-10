@@ -113,5 +113,27 @@ class Common
     		echo json_encode($error);
     	}
     }
+    function getCities( ) {
+    
+    	$sql = "select * from data_adres_city where branchid = $this->branchId ";
+    	try {
+    		$db = getConnection();
+    		$stmt = $db->prepare($sql);
+    		$stmt->execute();
+    		$timings = $stmt->fetchAll(PDO::FETCH_OBJ);
+    		$db = null;
+    
+    		// Include support for JSONP requests
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($timings);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($timings) . ');';
+    		}
+    
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
 }
 ?>

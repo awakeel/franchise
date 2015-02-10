@@ -68,11 +68,8 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                          
                     //} 
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
-						trNoRecord +='<button type="button" class=" add-new" data-toggle="modal" data-target="#newservice">';
-						trNoRecord +=' <span class="a-a"><i class="fa fa-add"></i></span> ';
-						trNoRecord += 'add new';
-						trNoRecord += '</button> ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P> Boo... You have no employee ';
+ 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);

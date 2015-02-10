@@ -158,6 +158,7 @@ class Branches
 		    			
 		   	}
 		   	$id = R::store( $branch );
+		   	$this->updateIsNew(@$_SESSION['employeeid']);
 		   	$this->doLogic($params->timing,$id);
     }
     function doLogic($timing,$branchid){ 
@@ -175,6 +176,20 @@ class Branches
     	} 
     	 
     
+    } 
+    function updateIsNew($employeeid){
+    
+    	$sql = "update employees set isnew ='0' where id=$employeeid ";
+    	try {
+    		$db = getConnection();
+    		$stmt = $db->prepare($sql);
+    		$stmt->execute();
+    		$db = null;
+    		return true;
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
     }
     function dbSaveTiming($day,$open,$close,$branchid){
     	 

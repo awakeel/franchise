@@ -134,8 +134,8 @@ define(
 									return false;
 								}
 
-							 
-							this.app.showLoading('Saving Info...', this.$el);
+							 var that = this;
+							
 							
 							this.objService.set('franchiseid', this.franchiseid);
 							this.objService.set('name', name);
@@ -145,23 +145,23 @@ define(
 							this.objService.set('price', price);
 							this.objService.set('color', color);
 							this.objService.set('jobtypeid', jobtypeid);
-							var model = this.objService.save();
-							this.parent.objServices.add(this.objService);
-							var last_model = this.parent.objServices
-									.last();
+							this.app.showLoading('Saving Info...', this.$el);
+							 this.objService.save(null,{success:function(){
+								 console.log('err');
+								 that.app.showLoading(false, that.$el);
+
+									that.app.successMessage();
+									
+									$("#tr_norecord").remove();
+								that.app.services[that.options.page.setting.services.length - 1] = name;
+								
+								that.closeView();
+							}}); 
+							 
 							// this.closePopup();
-							var objService = new Service({
-								model : this.objService,
-								page : this,
-								setting : this.app
-							});
-							this.parent.$el.find('tbody').prepend(
-									objService.$el);
-							this.app.services[this.options.page.setting.services.length - 1] = name;
-							this.closeView();
-							this.app.successMessage();
-							this.app.showLoading(false, this.$el);
-							$("#tr_norecord").remove();
+							 
+							 
+						
 						},
 						getJobTypes : function() {
 							var URL = "api/jobtypes";

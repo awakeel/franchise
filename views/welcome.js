@@ -4,8 +4,8 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/welcome.html'],
 		return Backbone.View.extend({
 			 
                          events: {
-                            'click .btn-change':'changePassword'
-                        	 
+                            'click .btn-change':'changePassword',
+                        	'click .department-wizard':"departmentWizard"
                          },
 
 			initialize: function () {
@@ -30,6 +30,13 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/welcome.html'],
 				this.$el.find('.password1-error').addClass('hide');
 				this.$el.find('.password2-error').addClass('hide');
 				this.$el.find('.password-confirm').addClass('hide');
+			},
+			departmentWizard:function(){
+				var that = this;
+				console.log('click me')
+				 require(['branches/views/addupdate'],function(add){
+					 $('#page-wrapper').find('.page-content').html(new add({model:{},id:1,page:that.options.page,setting:that.app}).$el);
+   				 })	
 			},
 			changePassword:function(){
 				
@@ -65,10 +72,11 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/welcome.html'],
 	            jQuery.getJSON(URL,{employeeid:that.app.user_employee_id},  function (tsv, state, xhr) {
 	                var _json = jQuery.parseJSON(xhr.responseText);
 	                that.options.page.users = _json.user;
+	                that.$el.find("#myModal").modal("hide");
 	                that.app.successMessage();
-      			  	 require(['branches/views/addupdate'],function(add){
-      			  		$('#page-wrapper').html(new add({model:{},id:1,page:that.options.page,setting:that.app}).$el);
-      				 })	
+      			  	/// require(['branches/views/addupdate'],function(add){
+      			  		///$('#page-wrapper').html(new add({model:{},id:1,page:that.options.page,setting:that.app}).$el);
+      				/// })	
 	            });
 	                
 	              

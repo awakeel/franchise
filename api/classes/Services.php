@@ -124,7 +124,7 @@ class Services
     		$services->franchiseid = $params->franchiseid;
     	}
     	$id = R::store($services);
-    	 
+    	echo json_encode($params);
     }
     function getAllByBranchId( ) { 
     	$search = "";

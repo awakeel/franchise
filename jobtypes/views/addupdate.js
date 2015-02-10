@@ -78,17 +78,21 @@ define(
 							this.objjobtype.set('name', name);
 							this.objjobtype.set('color', color);
 							this.objjobtype.set('comments', comments);
-							var model = this.objjobtype.save();
-							this.closeView();
+							var that = this;
+							 this.objjobtype.save(null,{success:function(){
+								that.options.page.setting.jobTypes[that.options.page.setting.jobTypes.length - 1] = name;
+								
+								that.options.page.setting.successMessage();
+								that.$el.find('#txtname').val('');
+								that.$el.find('#txtcomments').val('');
+								that.app.showLoading(false, that.$el);
+								that.closeView();
+								$("#tr_norecord").remove();
+							}});
+							 
 							// this.closePopup();
-							this.parent.render();
-							this.options.page.setting.jobTypes[this.options.page.setting.jobTypes.length - 1] = name;
-							this.closeView();
-							this.options.page.setting.successMessage();
-							this.$el.find('#txtname').val('');
-							this.$el.find('#txtcomments').val('');
-							this.app.showLoading(false, this.$el);
-							$("#tr_norecord").remove();
+							
+							
 						}
 
 					});

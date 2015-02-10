@@ -52,10 +52,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 					})
 					if(data.length < 1){
 						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
-						trNoRecord +='<button type="button" class="   add-new" data-toggle="modal" data-target="#newjobtypes">';
-						trNoRecord +=' <span class=" "><i class="fa fa-add"></i></span> ';
-						trNoRecord += 'add new';
-						trNoRecord += '</button> ';
+						 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);

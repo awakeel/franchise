@@ -433,6 +433,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				this.$el.find('.lastname-error').addClass('hide');
 				this.$el.find('.role-error').addClass('hide');
 				this.$el.find('.jobtype-error').addClass('hide');
+				this.$el.find('.password-error').addClass('hide');
 			},
 			save:function(){
 					this.clearFields();
@@ -452,6 +453,10 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					}
 					if(!_l){
 						this.$el.find('.lastname-error').removeClass('hide');
+						return false;
+					}
+					if(!_pas){
+						this.$el.find('.password-error').removeClass('hide');
 						return false;
 					}
 					var jobtypes = "";
@@ -508,10 +513,16 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	   	            		 var URL = "api/saveemployeetiming"; 
 	   	            		 $.getJSON(URL,{id:response,employeeid:response,timings:that.data},  function (tsv, state, xhr) {
 	   	 		                var _json = jQuery.parseJSON(xhr.responseText);
-	   	 		               
+	   	 		           
 	   	 				     });
 	   	            		that.data = null;
 	   	            	    }  
+	            	    	 that.objModelEmployee.set('jobtypes',jtypes);
+	 	   	 		        that.parent.objEmployees.add(that.objModelEmployee);  
+	 		   		            	
+	 	   	 		    that.app.successMessage();
+	 		   			            $("#tr_norecord").remove();
+	 		   			         that.closeView();
 	            	    },
 	            	    error: function(model, error) {
 	            	        console.log(model.toJSON());
@@ -520,18 +531,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	            	}); 
 	       
 	            	
-	            	
-	             	this.objModelEmployee.set('jobtypes',jtypes);
-	            	this.parent.objEmployees.add(this.objModelEmployee);  
-	            	this.closeView();
-					this.app.successMessage();
-		            $("#tr_norecord").remove();
-	            	if(typeof this.options.id  == "undefined"){
-	            		this.parent.render();
-	            	}else{
-		            	
-	            		this.parent.render();
-		            } 
+	            	 
 	            	
 					
 			}

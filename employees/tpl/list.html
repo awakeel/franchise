@@ -10,7 +10,9 @@
                                   <a class="icon preview s-clr2" title="preview"><span>Preview</span></a> 
                                   <a title="delete" class="icon delete s-clr1"><span>Delete</span></a> </div>
                                 </div>
-                                                	<a class="btn btn-danger  btn-sm delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
+                                <%if(this.model.get('isfranchise') != "1"){%>
+                                    <a class="btn btn-danger  btn-sm delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
+                                <%}%>             	
                                                 	<button class="btn btn-info btn-sm edit-token"><%=this.setting.language['edit']%></button>
                                                 	<button class="btn btn-info btn-sm btn-schedule">schedule</button>
                                                        </td>

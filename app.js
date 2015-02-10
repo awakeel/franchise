@@ -60,15 +60,17 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
 			console.log(this.users);
-            if(this.users.isnew == "0" && this.users.passwordchanged !== "1"){
+            if(this.users.isnew == "1" && this.users.passwordchanged !== "1"){
             	var that = this;
+            	$('body').removeClass('login');
 			  	 require(['views/welcome'],function(welcome){
 			  		$('#page-wrapper').find('.page-content').html(new welcome({model:{},id:1,page:that,setting:that}).$el);
 				 })
-            }else if(this.users.isnew == "0" && this.users.isfranchise == "1"){
+            }else if(this.users.isnew == "1" && this.users.isfranchise == "1"){
             	var that = this;
-			  	 require(['branches/views/addupdate'],function(add){
-			  		$('#page-wrapper').find('.page-content').html(new add({model:{},id:1,page:that,setting:that}).$el);
+            	$('body').removeClass('login');
+			  	 require(['views/welcome'],function(welcome){
+			  		$('#page-wrapper').find('.page-content').html(new welcome({model:{},id:1,page:that,setting:that}).$el);
 				 })
             } else{
 				$('body').removeClass('login');
@@ -87,6 +89,16 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                      that.timings = timings;
                 });
 			 
+		},
+		checkTiming:function(){
+			if(typeof this.timings[0] === "undefined"){
+				   swal({
+					      title: "Choose department, You are logged in as a franchise?",
+					      text: "No timing, Please select department to add schedule!",
+					      type: "error" 
+					   
+					    });
+			}
 		},
         getUser: function (branchid) {
             var URL = "api/getsession";
