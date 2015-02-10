@@ -57,11 +57,10 @@ define(['text!jobtypes/tpl/list.html','app','swal'],
                
                  },
                  updateToken:function(ev){
-                	 var that = this; 
-                	 $("#newjobtypes").remove();
+                	 var that = this;  
                 	 require(['jobtypes/views/addupdate'],function(addupdate){
-                		 	 that.options.page.$el.append(new addupdate({model:that.model,page:that}).$el);
-                		 	 $("#newjobtypes").modal('show');
+                		 that.options.page.$el.html(new addupdate({model:that.model,page:that}).$el);
+                		 	// $("#newjobtypes").modal('show');
                 	})
                  },
                  

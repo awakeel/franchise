@@ -1,5 +1,5 @@
-define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','fullcalendar','timepick','daterangepicker','typeahead','datepicker'],
-	function (template,Schedules,calendar,timepicker,daterangepicker,typeahead,datepicker) {
+define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collections/bookingcalenders','fullcalendar','timepick','daterangepicker','typeahead','datepicker'],
+	function (template,BookingCalender,calendar,timepicker,daterangepicker,typeahead,datepicker) {
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
@@ -14,7 +14,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			   // this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
 			    this.app = this.setting;
-			    this.objSchedules = new Schedules();
+			    this.objBookingCalender = new BookingCalender();
 			    this.app.getTiming(this.app.user_branch_id);
 			    this.render();
 				
@@ -22,16 +22,10 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			changeCalenderView:function(ev){
 				var res;
 				var that = this;
-				this.app.showLoading('Loading schedule...',this.$el);
-				if($(ev.target).val() == "1"){
-					this.fetchJobTypes(); 
-					 
-				}else{
-					  
-					this.fetchEmployees();
-					 
-				}
-				this.app.showLoading(false,this.$el);
+				this.app.showLoading('Loading Booking...',this.$el);
+				 
+				
+			    this.app.showLoading(false,this.$el);
 			},
 			render: function () {
 				this.$el.html(this.template( ));
@@ -46,16 +40,18 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 				    .on('changeDate', function(e){
 				    	that.$el.find('#calendar').fullCalendar('gotoDate',e.date)
 				    });
-				    this.fetchJobTypes();  
-				
+				   var data = {branchid:this.app.user_branch_id};
+				   /// this.fetchJobTypes(); 
+				   that.objBookingCalender.fetch({data:data ,success:function(data){
+						 that.initBookingCalender( that.objBookingCalender.toJSON() );
+					  }})
 				 this.app.showLoading(false,this.$el);
 			}  ,
 		 
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(models,resource){ 
-				console.log(resource);
+			initBookingCalender:function(models ){  
 				 var date = new Date();
 	                var d = date.getDate();
 	                var m = date.getMonth();
@@ -66,35 +62,32 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    header: {
 	                        left: 'prev,next today',
 	                        center: 'title',
-	                        right: ' '
-	                    },
+	                        right: 'month,agendaWeek,agendaDay'
+	                    }, 
+	            		editable: true,
 	                    titleFormat: 'ddd, MMM dd, yyyy',
-	                    defaultView: 'resourceDay',
-	                    //selectable: true,
+	                    defaultView: 'basicWeek',
+	                     selectable: true,
 	                    formatDate:(new Date()).toISOString().slice(0, 10),
 	                    selectHelper: true,
-	                    minTime:this.app.timings[0].opened.split(':')[0],
+	                     minTime:this.app.timings[0].opened.split(':')[0],
 	                    maxTime:this.app.timings[0].closed.split(':')[0],
 	                   
 	                    slotMinutes:30, 
 	                    allDayDefault:false,
-	                   /* select: function(start, end, allDay, event, resourceId) {
-	                        var title = prompt('Event Title:');
-	                        if (title) {
-	                            console.log("@@ adding event " + title + ", start " + start + ", end " + end + ", allDay " + allDay + ", resource " + resourceId);
-	                            calendar.fullCalendar('renderEvent',
-	                            {
-	                                title: title,
-	                                start: start,
-	                                end: end,
-	                                allDay: false,
-	                                resourceId: resourceId
-	                            },
-	                            true // make the event "stick"
-	                        );
-	                        }
+	                     select: function(start, end, allDay, event, resourceId) {
+	                       // var title = prompt('Event Title:');
+	                        //if (title) {
+	                    	 var title = '';
+	                          //  console.log("@@ adding event " + title + ", start " + start + ", end " + end + ", allDay " + allDay + ", resource " + resourceId);
+	                               require(['booking/views/newbooking'],function(AddUpdate){
+	                					var objAddUpdate = new AddUpdate({id:1,page:that,app:that.app,start:start,end:end});
+	                					that.$el.append(objAddUpdate.$el);
+	                				})
+	                		///	} 
+	                         
 	                        calendar.fullCalendar('unselect');
-	                    },*/
+	                    }, 
 	                    eventResize: function(event, dayDelta, minuteDelta) {
 	                        console.log("@@ resize event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
 	                    },
@@ -103,8 +96,8 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    },
 	                    eventBackgroundColor:'#fff',
 	                    editable: false,
-	                    resources: resource,
-	                    events:  models
+	                  ///  resources: resource,
+	                    events: models
 	                     
 	                });
  

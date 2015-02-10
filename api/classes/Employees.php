@@ -15,6 +15,10 @@ class Employees
 	    		$request = Slim::getInstance()->request();
 	    		$this->saveEmployee($request);
 	    	});
+	    		$app->get('/saveemployeetiming',function(){
+	    		 
+	    			$this->doLogic();
+	    		});
     		$app->get('/deleteemployees',function(){
     			$request = Slim::getInstance()->request();
     			$this->deleteEmployee($request);
@@ -22,11 +26,18 @@ class Employees
     		$app->get('/employeebyid',function(){
     			$this->getEmployeesByJobTypeId();
     		});
+    		$app->get('/employeetimings',function(){
+    				$request = Slim::getInstance()->request();
+    				$employeeid = 0;
+    				if(isset($_GET['id']))
+    					$employeeid = $_GET['id'];
+    				$this->getTimings($employeeid);
+    		});
     }
     function getAll( ) {  
         $sql = "select concat(e.firstname , '   ' , e.lastname) as name ,e.id,e.picture from employees e
         		left join employeedepartments ed on ed.employeeid = e.id
-        		where ed.branchid =".$_GET['branchid'];
+        		where ed.branchid =".$_GET['branchid']." group by e.id";
             try {
                     $db = getConnection();
                     $stmt = $db->query($sql);
@@ -44,6 +55,24 @@ class Employees
                     $error = array("error"=> array("text"=>$e->getMessage()));
                     echo json_encode($error);
             }
+    }
+    function getTimings( $id) {
+    	 
+    	try {
+    		$sql = 'SELECT * FROM employeetimings
+			    	   WHERE employeeid = "'.$id.'" order by opened asc';
+    		$rows = R::getAll($sql);
+    		// $authors = R::convertToBeans('timings',$rows);
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($rows);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($rows) . ');';
+    		}
+    
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
     }
     function getEmployeesByJobTypeId( ) {
         if(isset($_GET['branchid']) && !empty($_GET['branchid'])){
@@ -94,7 +123,7 @@ class Employees
              	left join role on role.id = ed.roleid
 				left join employeejobtypes ej on ej.employeeid = e.id
 				left join jobtypes j on j.id = ej.jobtypeid
-        		where  e.franchiseid = ".$_SESSION['franchiseid']. $branchid.$search."
+        		where e.isfranchise is null and e.franchiseid = ".$_SESSION['franchiseid']. $branchid.$search."
         	 	group by e.id 
         		order by id desc ";
             try {
@@ -146,6 +175,7 @@ class Employees
     				$employees->franchiseid = $params->franchiseid;
     			 
     				$id = R::store($employees);
+    				echo json_encode($id);
     			}
     			$this->addAreas($params->services,$params->jobtypes,$id,$params->franchiseid, $params->branchesrole);
     		} catch(PDOException $e) {
@@ -155,7 +185,49 @@ class Employees
     	 
     	 
     }
-     
+    function doLogic(){
+    	$id = $_GET['id'];
+    	$timings = $_GET['timings'];
+    	$data = explode('||', $timings);
+    	$this->deleteTimings($id);
+    	//$branchid = $params->branchid;
+    	foreach($data as $d){
+    		if(!$d) continue;
+    		$split = explode("=",$d);
+    		$days = $split[0];
+    		$time = explode("##",@$split[1]);
+    		$open = $time[0];
+    		$close = @$time[1];
+    		$this->dbSaveTiming($days,$open,$close,$id);
+    	}
+    
+    
+    }
+    function deleteTimings($id){
+    	try {
+    		R::exec('delete from employeetimings where employeeid = '.$id);
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
+    }
+    function dbSaveTiming($day,$open,$close,$id){
+    
+    	try {
+    		$timings = R::dispense( 'employeetimings' );
+    		$timings->day = $day;
+    		$timings->opened = $open;
+    		$timings->closed = $close;
+    		$timings->createdon = R::isoDate();
+    		$timings->isdeleted = 0;
+    		$timings->employeeid = $id;
+    		$id = R::store( $timings );
+    		$db = null;
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
+    }
     function addAreas($services,$jobtypes,$eid,$franid, $roleid){
     	$services = rtrim($services, ',');
     	$jobtypes = rtrim($jobtypes, ',');

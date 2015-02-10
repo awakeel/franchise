@@ -57,6 +57,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 						
 						this.addSchedule();
 					}
+				 this.fillDepartments();
 				 this.fillServices();
 					this.fillEmployees();
 					this.fillJobTypes();
@@ -72,7 +73,6 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.$el.find('#txtcity').val(this.name);
 				this.$el.find('#txtzip').val(this.name);
 				this.$el.find('#txtaddress').val(this.name);
-				this.$el.find("#txtdescription").text(this.desc);
 				 this.app.showLoading(false,this.$el);
 				
 				this.$el.find('#chkall').on('click',function(ev){ 
@@ -98,7 +98,8 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					
 				}) 
 
-				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
+				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' ,
+							    'showDuration': true});
 				this.$el.find('.days').on('click',function(){
 					if($(this).prop('checked')!= true){
 						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',true);
@@ -188,31 +189,31 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.$el.find('.top-info').html(txt);
 			},
 			saveBasicInfo:function(id){
-				this.app.showLoading('Saving information....',this.$el);
-				this.clearFormInput();
-				var name = this.$el.find('#txtname').val();
-				if(!name){
-					this.app.showLoading(false,this.$el);
-					this.$el.find('.name-error').removeClass('hide');
-					return false;
-				}
-				var desc = this.$el.find('#txtdescription').val();
-				if(!desc){
-					this.$el.find('.desc-error').removeClass('hide');
-					this.app.showLoading(false,this.$el);
-					return false;
-				}
+				//this.app.showLoading('Saving information....',this.$el);
+				//this.clearFormInput();
+				//var name = this.$el.find('#txtname').val();
+				//if(!name){
+				//	this.app.showLoading(false,this.$el);
+				//	this.$el.find('.name-error').removeClass('hide');
+				//	return false;
+				//}
+				///var desc = "";// this.$el.find('#txtdescription').val();
+				//if(!desc){
+				//	this.$el.find('.desc-error').removeClass('hide');
+					//this.app.showLoading(false,this.$el);
+					//return false;
+				//}
 				
 				
-				this.objModelBranch.set({name:name,notes:desc});
-				var city = this.$el.find('#txtcity').val();
-				var address = this.$el.find('#txtaddress').val();
-				var zip = this.$el.find("#txtzip").val();
-				if(!name){
+				//this.objModelBranch.set({name:name,notes:desc});
+				///var city = this.$el.find('#txtcity').val();
+				//var address = this.$el.find('#txtaddress').val();
+				//var zip = this.$el.find("#txtzip").val();
+				//if(!name){
 					
-				}
+				//}
 				
-				this.objModelBranch.set({id:this.objModelBranch.get('id'),city:city,address:address,zip:zip});
+				//this.objModelBranch.set({id:this.objModelBranch.get('id'),city:city,address:address,zip:zip});
 				return this.saveTiming(this.id);
 				
 			},
@@ -223,57 +224,57 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 			},
 			saveTiming:function(id){
 				
-				 var days = [];
-				 this.days = days;
-				 var data = "";
+				// var days = [];
+				// this.days = days;
+				// var data = "";
 				 var that = this;
-			     $('.timings-div :checked').each(function() {
-			    	 days.push($(this).val());
-			     });
-			     var returnValue = true;
-			     if(days.length < 1){
-			    	 that.$el.find('.timing-error').removeClass('hide');
-			    	 this.app.showLoading(false,this.$el);
-						return false;
-			     }
-			     _.each(days,function(index){ 
-			    	 if(index){
-					    	 console.log(that.$el.find("#txte"+index).val()) 
-					    	 var start = that.$el.find("#txts"+index).val();
-					    	 var end = that.$el.find("#txte"+index).val()
+			    // $('.timings-div :checked').each(function() {
+			    	// days.push($(this).val());
+			    /// });
+			     //var returnValue = true;
+			    /// if(days.length < 1){
+			    	/// that.$el.find('.timing-error').removeClass('hide');
+			    	// this.app.showLoading(false,this.$el);
+					//	return false;
+			    // }
+			    // _.each(days,function(index){ 
+			    	// if(index){
+					 //   	 console.log(that.$el.find("#txte"+index).val()) 
+					   // 	 var start = that.$el.find("#txts"+index).val();
+					   // 	 var end = that.$el.find("#txte"+index).val()
 					    	
-					    	 var diff = that.calculate(start,end);
-					    	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
-					    	 if(diff < 1 ){
-					    		var span = '<span class="help-block"><i class="fa fa-warning"></i>  We opened '+that.$el.find('.department-name').html() + ' on ' + index +'</span>';
-					    		 that.$el.find("#txts"+index).after(span);
-					    		 var span = '<span class="help-block"><i class="fa fa-warning"></i> We closed '+that.$el.find('.department-name').html()+ ' on' + index +'</span>';
-					    		 that.$el.find("#txte"+index).after(span);
-					    		 returnValue = false;
-					    	 }
+					    //	 var diff = that.calculate(start,end);
+					    //	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
+					    //	 if(diff < 1 ){
+					    //		var span = '<span class="help-block"><i class="fa fa-warning"></i>  We opened '+that.$el.find('.department-name').html() + ' on ' + index +'</span>';
+					    	//	 that.$el.find("#txts"+index).after(span);
+					    	//	 var span = '<span class="help-block"><i class="fa fa-warning"></i> We closed '+that.$el.find('.department-name').html()+ ' on' + index +'</span>';
+					    	//	 that.$el.find("#txte"+index).after(span);
+					    	//	 returnValue = false;
+					    	// }
 					    	
-					    		 data += index+"="+start+"##"+end+'||';
-			    	 } 
-			     })
+					    	///	 data += index+"="+start+"##"+end+'||';
+			    	// } 
+			  //   })
 			     
-			     if(returnValue == false){
-			    	 this.app.showLoading(false,this.$el);
-			    	 return false;
-			     }
-	                 var that = this;
-	               this.objModelBranch.set({timing:data});
+			   //  if(returnValue == false){
+			    	// this.app.showLoading(false,this.$el);
+			    //	 return false;
+			   //  }
+	               //  var that = this;
+	              // this.objModelBranch.set({timing:data});
  				 
- 				  $.when(this.objModelBranch.save({id:this.id})).done(function(data){
- 					   var d = jQuery.parseJSON(data);
- 					    that.id = d.id;
+ 				///  $.when(this.objModelBranch.save({id:this.id})).done(function(data){
+ 					//   var d = jQuery.parseJSON(data);
+ 					//    that.id = d.id;
  					   
  						that.addSchedule();
- 						 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
+ 						// that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
  						that.app.showLoading(false,that.$el);
- 				  }).fail(function(){
- 					 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
-						that.app.showLoading(false,that.$el);
- 				   });
+ 				 // }).fail(function(){
+ 				//	 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly, go ahead and complete the wizard. ');
+					//	that.app.showLoading(false,that.$el);
+ 				 //  });
  				
  				
 			},
@@ -346,6 +347,13 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				require(['services/views/lists'],function(Services){
 					var objServices = new Services({setting:that.setting,id:that.id});
 					that.$el.find(".table-services").html(objServices.$el);
+				})
+			},
+			fillDepartments:function(){
+				var that = this;
+				require(['branches/views/lists'],function(Branches){
+					var objBranch = new Branches({setting:that.setting,id:that.id});
+					that.$el.find(".table-branches").html(objBranch.$el);
 				})
 			},
 			addSchedule:function(){

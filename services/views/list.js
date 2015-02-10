@@ -17,7 +17,6 @@ define(['text!services/tpl/list.html','app'],
 			},
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
-				
 			},
 			deleteToken:function(ev){
 				var that = this;

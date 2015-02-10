@@ -101,6 +101,8 @@ class Services
     		$services->createdby = $params->franchiseid;
     		$services->isdeleted = 0;
     		$services->price = $params->price;
+    		$services->type = $params->type;
+    		$services->color = $params->color;
     		$services->time = $params->time;
     		$services->jobtypeid = $params->jobtypeid;
     		$services->isactivated  = 1;
@@ -113,7 +115,9 @@ class Services
     		$services->createdby = $params->franchiseid;
     		$services->isdeleted = 0;
     		$services->price = $params->price;
+    		$services->type = $params->type;
     		$services->time = $params->time;
+    		$services->color = $params->color;
     		$services->jobtypeid = $params->jobtypeid;
     		$services->isactivated  =1;
     		$services->createdon = R::isoDate();

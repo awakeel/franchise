@@ -5,8 +5,10 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 			 
                 tagName: 'footer',
                 className:"clearfix",
+                
                 events: {
-                   'click .navbar-side li':'openWorkspace'
+                   'click .navbar-side li':'openWorkspace',
+                    "click .fa-sign-out":"logout"	   
                 },
 
 			initialize: function () {
@@ -17,6 +19,21 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				this.render();
 				 			
 			},
+			logout:function(){
+            	this.app.users = {};
+				Backbone.history.length = 0;
+				 var URL = "api/logout";
+		            var that = this;
+		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+		                var _json = jQuery.parseJSON(xhr.responseText);
+		                	 
+		                    require(['authorize/views/login'],function(login){
+	                        	$('body').html(new login({app:that.app}).$el);
+	                        })
+		            }); 
+				
+			},
+
 			openWorkspace:function(ev){
 				var that = this;
 				var title = $(ev.target).text();

@@ -1,10 +1,13 @@
-define(['text!employees/tpl/addupdate.html','employees/models/employee','employees/views/list'],
-	function (template,EmployeeModel,Employee) {
+define(['text!employees/tpl/addupdate.html','employees/models/employee','employees/views/list','timepick'],
+	function (template,EmployeeModel,Employee,timepick) {
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close-p':"closeView", 
-				 "click .save-p":"save"
+				 'click .close-t':"closeViewTiming", 
+				 "click .save-p":"save",
+				 "click .close-p":'closeView',
+				 "click .save-t":"saveEmployeeTimings"
+				 
 			 },
 			  id:'divnewemployee',
 			  initialize: function () {
@@ -12,6 +15,8 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				this.app = this.options.page.setting;
 				this.id = null;
 				this.services = null;
+				this.isEmptyRole = true;
+				this.data = null;
 				this.roleid = 0;
 				this.branchid =  this.app.user_branch_id;
 				this.franchiseid = this.app.user_franchise_id;
@@ -20,6 +25,10 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				this.objModelEmployee = new EmployeeModel(); 
 				this.render();
 				
+			},
+			closeViewTiming:function(){
+				console.log('I am logging');
+				this.$el.find('.modal').modal('hide');  
 			},
 			render: function () {   
 				this.$el.html(this.template( )); 
@@ -46,6 +55,10 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					this.$el.find('#txtemail').val(this.email);
 					this.$el.find('#txtpassword').val(this.password);
 					this.$el.find("input:radio[value='"+this.model.get('type')+"']").attr('checked', true);
+					if(this.model.get('type').trim()=="Hourly"){
+						this.$el.find('.visit-timing').removeClass('hide');
+					}
+				 
 				}else{
 					this.getJobTypes();
 					//this.getServices();
@@ -53,6 +66,61 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				}
 				this.getEmployeesRoles();
 				this.getEmployeesDepartments();
+				var that = this;
+				this.$el.find("#optionvisiting").on('click',function(){
+					if(this.checked){
+						that.$el.find('.visit-timing').removeClass('hide');
+					}else{
+						that.$el.find('.visit-timing').addClass('hide');
+					}
+				})
+				that.$el.find('.visit-timing').on('click',function(){
+					that.fillTimings();
+					that.$el.find('#newemployeetiming').modal('show');
+				})
+				this.$el.find('#chkall').on('click',function(ev){ 
+					
+					that.$el.find('.days').prop("checked", !that.$el.find('.days').prop("checked"));
+					var first = that.$el.find("#txtsm").val();
+					var end = that.$el.find("#txtem").val();
+					if(!first)
+						first = "9:00";
+					if(!end)
+						end = "17:00"; 
+					if($(ev.target).is(':checked')){
+						that.$el.find('.first-text').attr('disabled',false);
+						that.$el.find('.end-text').attr('disabled',false);
+						that.$el.find(".first-text").val(first)
+						that.$el.find(".end-text").val(end)
+					}else{
+						that.$el.find('.first-text').attr('disabled',true);
+						that.$el.find('.end-text').attr('disabled',true);
+						that.$el.find(".first-text").val('')
+						that.$el.find(".end-text").val('')
+					}
+					if(!this.checked){
+						 
+						that.$el.find('.first-text').attr('disabled',true);
+						that.$el.find('.end-text').attr('disabled',true);
+						that.$el.find(".first-text").val('')
+						that.$el.find(".end-text").val('')
+					 	that.$el.find('.days').prop("checked",false);
+						return;
+				}
+				}) 
+
+				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
+				this.$el.find('.days').on('click',function(){
+					if($(this).prop('checked')!= true){
+						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',true);
+						that.$el.find("#txte"+$(this).attr('id')).attr('disabled',true)
+						var first = that.$el.find("#txts"+$(this).attr('id')).val('');
+						var end = that.$el.find("#txte"+$(this).attr('id')).val('');
+					}else{
+						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',false);
+						that.$el.find("#txte"+$(this).attr('id')).attr('disabled',false)
+					}
+				})
 			},
 			closeView:function(){
 				var that = this;
@@ -67,6 +135,68 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 								 that.$el.parent().html(objLists.$el);
 								  })
 			},
+			saveEmployeeTimings:function(){
+				 var that = this;
+				this.app.showLoading('Saving...',that.$el.find('#newemplyeetimings'));
+				var days = [];
+				 this.days = days;
+				 var data = "";
+				
+			     $('.timings-div :checked').each(function() {
+			    	 days.push($(this).val());
+			     });
+			     var returnValue = true;
+			     if(days.length < 1){
+			    	 that.$el.find('.timing-error').removeClass('hide');
+			    	 this.app.showLoading(false,that.$el.find('#newemplyeetimings'));
+						return false;
+			     }
+			     _.each(days,function(index){ 
+			    	 if(index){
+					    	 console.log(that.$el.find("#txte"+index).val()) 
+					    	 var start = that.$el.find("#txts"+index).val();
+					    	 var end = that.$el.find("#txte"+index).val()
+					    	
+					    	 var diff = that.calculate(start,end);
+					    	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
+					    	 if(diff < 1 ){
+					    		var span = '<span class="help-block"><i class="fa fa-warning"></i>  We opened '+that.$el.find('.department-name').html() + ' on ' + index +'</span>';
+					    		 that.$el.find("#txts"+index).after(span);
+					    		 var span = '<span class="help-block"><i class="fa fa-warning"></i> We closed '+that.$el.find('.department-name').html()+ ' on' + index +'</span>';
+					    		 that.$el.find("#txte"+index).after(span);
+					    		 returnValue = false;
+					    	 }
+					    	
+					    		 data += index+"="+start+"##"+end+'||';
+			    	 } 
+			     })
+			     
+			     if(returnValue == false){
+			    	 this.app.showLoading(false,that.$el.find('#newemplyeetimings'));
+			    	 return false;
+			     } 
+			     var that = this;
+				 var URL = "api/saveemployeetiming";
+				 if(!this.id){
+					 this.data = data;
+					 this.app.showLoading(false,that.$el.find('#newemplyeetimings'));
+					 that.closeViewTiming();
+					 return;
+				 }
+				 jQuery.getJSON(URL,{id:this.id,timings:data},  function (tsv, state, xhr) {
+		                var _json = jQuery.parseJSON(xhr.responseText);
+		               
+				 });
+				 this.app.showLoading(false,that.$el.find('#newemplyeetimings'));
+				 that.closeViewTiming();
+			},
+			calculate:function(time1,time2) {
+				 if(time1 == 0 || time2 == 0) return 0;
+		         var hours = parseInt(time1.split(':')[0], 10) - parseInt(time2.split(':')[0], 10);
+		         if(hours < 0) hours = 24 + hours;
+		         
+		         return hours;
+		     },
 			getEmployeesRoles:function(){
 				var URL = "api/allroles";
 	            var that = this;
@@ -84,16 +214,18 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	                	str += '<label class="btn  btn-toggle">';
 	      	            str +='  <input type="radio" checked="" data-name="'+value.name+'"';
 	      	            str +='	value="'+value.id+'" name="optionsrole"> '+value.name;
-	      	         
+	      	          that.isEmptyRole = false;
 	      	            str +='</label>';
 	      	            str +=' ';
 	                }) 
+	                if(that.isEmptyRole == true){
+	                	that.addNewRoles();
+	                }
 	                that.app.showLoading(false,that.$el.find('.role-area'));
 	                that.$el.find('.role-area').append(str);
-	                that.$el.find('.role-area input[type=radio]').change(function(){
+	                that.$el.find('.role-area input[type=radio]').on('click',function(){
 	                	that.$el.find('.role-area').hide();
-	                	var department = that.$el.find('.role-area').data('id'); 
-	                	 console.log(department);
+	                	var department = that.$el.find('.role-area').data('id');  
 	                	if(this.checked){
 	                		that.$el.find('#label_'+department).removeClass('hide')
 		                	that.$el.find('#label_'+department).text(  $(this).data('name'));
@@ -106,6 +238,14 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	                })
 	            } );
 	         
+			},
+			addNewRoles:function(){
+				var that = this;
+				 swal({
+   			      title: "Role confirmation?",
+   			      text: "Please add few roles, so you can assign them to employees.!",
+   			      type: "info", 
+   			    });
 			},
 			getServiceByEmployeeId:function(){
 				 var that = this;
@@ -175,6 +315,21 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 			               
 		            }
 				 
+			},
+			fillTimings:function(){
+				var url = "api/employeetimings";
+				 var that = this;
+				  
+                jQuery.getJSON(url,{id:this.id}, function(tsv, state, xhr) {
+                    var timings = jQuery.parseJSON(xhr.responseText);
+                    _.each(timings,function(value,key,list){ 
+                    	that.$el.find("#txts"+value.day).val(value.opened).removeAttr('disabled');
+                    	that.$el.find("#txte"+value.day).val(value.closed).removeAttr('disabled');
+                    	that.$el.find(".timings-div #"+value.day+"").attr('checked',true);
+                    	that.$el.find('#chkall').attr('checked',true);
+                    }) 
+                    
+                });
 			},
 			getJobTypes:function(){
 				var str = "";
@@ -329,6 +484,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				 	$('.services-box :checked').each(function() {
 			    	  services +=$(this).val()+","
 			        }); 
+				 	var that = this;
 				 	
 	            	this.objModelEmployee.set('firstname',_f);
 	            	this.objModelEmployee.set('lastname',_l);
@@ -345,18 +501,39 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	            	this.objModelEmployee.set('franchiseid',this.franchiseid);
 	            	this.objModelEmployee.set('role',role);
 	            	this.objModelEmployee.set('branchids',branchesid);
-	            	var model = this.objModelEmployee.save(); 
-	            	this.objModelEmployee.set('jobtypes',jtypes);
+	            	var model = this.objModelEmployee.save({},{
+	            	    wait:true,
+	            	    success:function(model, response) {
+	            	    	if(that.data){
+	   	            		 var URL = "api/saveemployeetiming"; 
+	   	            		 $.getJSON(URL,{id:response,employeeid:response,timings:that.data},  function (tsv, state, xhr) {
+	   	 		                var _json = jQuery.parseJSON(xhr.responseText);
+	   	 		               
+	   	 				     });
+	   	            		that.data = null;
+	   	            	    }  
+	            	    },
+	            	    error: function(model, error) {
+	            	        console.log(model.toJSON());
+	            	        console.log('error.responseText');
+	            	    }
+	            	}); 
+	       
+	            	
+	            	
+	             	this.objModelEmployee.set('jobtypes',jtypes);
 	            	this.parent.objEmployees.add(this.objModelEmployee);  
+	            	this.closeView();
+					this.app.successMessage();
+		            $("#tr_norecord").remove();
 	            	if(typeof this.options.id  == "undefined"){
 	            		this.parent.render();
 	            	}else{
 		            	
 	            		this.parent.render();
-		            }
-					this.closeView();
-					this.app.successMessage();
-		            $("#tr_norecord").remove();
+		            } 
+	            	
+					
 			}
 		 
 		});

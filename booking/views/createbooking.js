@@ -10,7 +10,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						},
 						initialize : function() {
 							this.template = _.template(template); 
-							this.app = this.options.page.setting;
+							this.app = this.options.app;
 							this.cloneId = 1;
 							this.branchid = this.app.user_branch_id;
 							 console.log(this.app);
@@ -18,6 +18,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							 if(typeof this.options.page.branchid !="undefined" && this.options.page.branchid)
 								this.branchid = this.options.page.branchid;
 							this.render(); 
+							   console.log(this.app.timings);
 						},
 						render : function() {
 							this.$el.html(this.template());

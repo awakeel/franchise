@@ -1,18 +1,16 @@
 <?php
-class Schedule
+class BookingCalender
 { 
 
     // method declaration
     public $branchId; 
     function __construct($app){
     		$this->branchid = @$_SESSION['branchid'];
-	    	$app->get('/schedules', function () {
-	    		$this->getAllByFranchise(1);
+	    	$app->get('/bookingcalender', function () {
+	    		$this->getScheduleByGroupId(1);
 	    	});
-	    		$app->get('/schedulelists', function () {
-	    			$this->getAllSchedulelistByBranchId(1);
-	    		});
-    		$app->post('/schedules', function () {
+	    	 
+    		$app->post('/bookingcalender', function () {
     			$request = Slim::getInstance()->request();
     			$this->saveSchedule($request);
     		});
@@ -50,11 +48,10 @@ class Schedule
             }
     }
     function getScheduleByGroupId(){
-    	$groupid = @$_GET['groupid'];
-    	$sql = "select sc.*, j.name as jobtype,s.* ,s.id as sid from schedulegroup sc
-    			inner join schedule s on s.schedulegroupid = sc.id
-    				left join jobtypes j on j.id = s.jobtypeid
-    			where s.schedulegroupid ='".$groupid."'  ";
+    	 	$branchid = @$_GET['branchid'];
+	  	$sql = " SELECT concat(b.bookingdate,'T', b.timestart) as start, concat(b.bookingdate,'T', b.timeend) as end, s.name AS title FROM bookings b
+					INNER JOIN services s ON s.id = b.`serviceid`
+					WHERE b.branchid = $branchid order by b.createdon";
     	try {
     		$schedules = R::getAll($sql);
     		// Include support for JSONP requests

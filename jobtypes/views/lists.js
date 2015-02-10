@@ -7,6 +7,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			events:{
 				"keyup #txtsearchjobtype":"searchjobtypes", 
 				"click .delete-p":"deleteToken", 
+				'click .add-new-jobtype':'addNew',
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -41,8 +42,9 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 				 that.setting.jobTypes = {};
 				 if(this.request)
 	                    this.request.abort();
-				 that.$el.find('tbody').empty();
+				
 				 this.request = this.objJobTypes.fetch({data: _data, success: function(data) {
+					 that.$el.find('tbody').empty();
 					_.each(data.models,function(model){
 						var objJobType = new JobType({model:model,page:that,setting:that.setting});
 						that.$el.find('tbody').append(objJobType.$el);
@@ -71,7 +73,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 					 if($.isEmptyObject(that.app.globaljobtypes)){
 						 that.getGlobalJobTypes();
 					 }else{
-						 that.addNew();
+						// that.addNew();
 					 }
 					 that.app.showLoading(false,that.$el);
 				}}) 
@@ -79,10 +81,13 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 			},
 			addNew:function(){
 				var that = this;
+				this.app.showLoading('Wait...',this.$el);
 				require(['jobtypes/views/addupdate'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({id:1,page:that});
-					that.$el.append(objAddUpdate.$el);
+					var objAddUpdate = new AddUpdate({page:that,id:123});
+					that.$el.html(objAddUpdate.$el);
 				})
+				this.app.showLoading(false,this.$el);
+				 
 			},
 			 
 			lazyLoading: function() {
@@ -117,7 +122,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                      
                      if($.inArray(code, nonKey)!==-1) return;  
                            if(code == 8 || code == 46){
-                             if(text){ 
+                             if(!text || text.length > 3){ 
 	                        	 that.searchText = text;
 		                          that.fetchJobTypes();
 	                         }
@@ -125,7 +130,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 	                          this.searchText = text;
 	                          clearTimeout(that.timer); // Clear the timer so we don't end up with dupes.
 	                            that.timer = setTimeout(function() { // assign timer a new timeout 
-	                                if (text.length < 2) return;
+	                                if (text.length < 3) return;
 	                                that.searchText = text;
 	                                that.fetchJobTypes(that.langaugeFilter);
 	                           }, 500); // 2000ms delay, tweak for faster/slower
@@ -140,7 +145,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
                      _.each(jobtypes,function(value,key,list){
                     	 that.app.globaljobtypes.push(value.name);
                      }); 
-                      that.addNew()
+                    //  that.addNew()
                  });
             }
            

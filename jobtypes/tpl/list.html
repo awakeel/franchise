@@ -5,7 +5,8 @@
                                                 
                                                 
                                                 <td><%=this.model.get('name')%></td> 
-                                                  <td><%=this.model.get('color')%></td> 
+                                                  <td><label style="background:<%=this.model.get('color')%>; width:30px;">&nbsp;</label></td>
+                                                   <td><%=this.model.get('comments')%></td>  
                                                 <td width="25%">
                                                 	<a class="btn btn-danger delete-token btn-sm" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
                                                 	<button class="btn btn-info edit-token btn-sm"><%=this.setting.language['edit']%></button>

@@ -2,15 +2,14 @@
                                                 
                                                 
                                                 
-                                                
-                                                 <td><%=this.model.get('name')%></td> 
-                                                <td><%=this.model.get('dateto')%></td> 
-                                                <td><%=this.model.get('dateto')%></td> 
-                                                <td><%=this.model.get('start')%> - <%=this.model.get('end')%></td> 
-                                                <td><%=this.model.get('employeename')%></td> 
+                                                 <td><%=this.model.get('service')%></td> 
+                                                 <td><%=this.model.get('customer')%></td> 
+                                                <td><%=this.model.get('bookingdate')%></td> 
+                                                    <td><%=this.model.get('emp')%></td> 
+                                                      <td><label class="label label-success"><%=this.model.get('status')%></label></td> 
                                                 <td width="25%">
-                                                	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info edit-token"><%=this.setting.language['edit']%></button>
+                                                	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.app.language['delete']%></a>
+                                                	<button class="btn btn-info edit-token"><%=this.app.language['edit']%></button>
                                                  </td>
                                            
                                            

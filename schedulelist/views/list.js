@@ -12,12 +12,13 @@ define(['text!schedulelist/tpl/list.html','app'],
 				this.listenTo(this.model, 'change', this.render);
 			    this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
+			    this.app = this.setting;
 				this.render();
 			},
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
-				
 			},
+			
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
@@ -56,7 +57,13 @@ define(['text!schedulelist/tpl/list.html','app'],
                
                  },
                  
-                 
+                 updateToken:function(){
+      				var that = this;
+      				require(['schedulelist/views/createschedule'],function(AddUpdate){ 
+      					var objAddUpdate = new AddUpdate({page:that, model:that.model});
+      					that.options.page.$el.html(objAddUpdate.$el); 
+      				})
+      			},
                  save:function(title,comments,branchid,view){
                 	    this.model.set('branchid',branchid);
                 	  	this.model.set('name',title);

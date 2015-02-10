@@ -26,6 +26,7 @@ define(
 								this.jobtype = this.model.get('jobtype');
 								this.name = this.model.get('name');
 								this.jobtypeid = this.model.get('jobtypeid');
+								this.color = this.model.get('color');
 								this.time = this.model.get('time');
 								this.price = this.model.get('price');
 								this.type = this.model.get('type');
@@ -50,13 +51,7 @@ define(
 														+ sel + '"]')
 												.removeClass('notActive')
 												.addClass('active');
-										if (sel == "Y" ) {
-											that.$el.find('.show-bookable')
-													.slideDown('fast')
-										} else {
-											that.$el.find('.show-bookable')
-													.slideUp('fast');
-										}
+										 
 
 									})
 							that.$el.find("#txtservice").typeahead({
@@ -64,10 +59,12 @@ define(
 
 								local : that.app.globalservices
 							});
+						 
 							if(typeof this.options.id  == "undefined"){
 								this.$el.find('#txtservice').val(this.name);
 								this.$el.find("#txttime").val(this.time);
 								this.$el.find("#txtprice").val(this.price);
+								this.$el.find("#txtcolor").val(this.color);
 								this.$el.find("#txtcomments").val(this.comments);
 								this.$el.find('#ddljobtypes').val(this.jobtypeid);
 								that.$el.find('a').addClass('notActive').removeClass('active');
@@ -77,12 +74,12 @@ define(
 										.removeClass('notActive')
 										.addClass('active');
 								
-								if (this.type.trim() == "bookable" ) { 
-									that.$el.find('.show-bookable').slideDown('fast')						
-								} else {
-									console.log('I am here at the top of the screen');
-									that.$el.find('.show-bookable').hide('fast');	
-								}
+								 
+								that.$el.find("#txtservice").on('blur',function(){
+									if(!that.$el.find("#txtservice").val())
+										that.$el.find("#txtservice").val(that.name);
+									console.log(that.name);
+								}) 
 							}
 						},
 						closeView : function() {
@@ -116,6 +113,7 @@ define(
 									'toggle')
 							var comments = this.$el.find('#txtcomments').val();
 							var time = this.$el.find('#txttime').val();
+							var color = this.$el.find('#txtcolor').val();
 							var price = this.$el.find('#txtprice').val();
 							var jobtypeid = this.$el.find('#ddljobtypes').val();
 							console.log(type)
@@ -124,19 +122,19 @@ define(
 										.removeClass('hide')
 								return false;
 							}
-							if (type == "Y") {
-								if (!price) {
+							 
+								if (!price || price < 0) {
 									this.$el.find('.price-error').removeClass(
 											'hide')
 									return false;
 								}
-								if (!time) {
+								if (!time || time <= 14) {
 									this.$el.find('.time-error').removeClass(
 											'hide')
 									return false;
 								}
 
-							}
+							 
 							this.app.showLoading('Saving Info...', this.$el);
 							
 							this.objService.set('franchiseid', this.franchiseid);
@@ -145,6 +143,7 @@ define(
 							this.objService.set('comments', comments);
 							this.objService.set('time', time);
 							this.objService.set('price', price);
+							this.objService.set('color', color);
 							this.objService.set('jobtypeid', jobtypeid);
 							var model = this.objService.save();
 							this.parent.objServices.add(this.objService);

@@ -1,56 +1,54 @@
 define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/views/list','schedulelist/models/schedulelist' ],
-	function (template,ScheduleLists,ScheduleList,ScheduleListModel) {
+	function (template,BookingLists,BookingList,BookingModel) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:"div",
 			className:"col-lg-12",
 			events:{
-				"keyup #txtschedulelist":"searchschedulelist", 
 				"click .delete-p":"deleteToken", 
 				"click .add-new":"addNew"
 			},
             initialize: function () {
 				this.template = _.template(template);
 				this.request = null;
-				this.fetched = 0;
 				this.searchText = '';
-				this.setting = this.options.setting;
 				this.app = this.options.setting;
 				this.franchiseid = this.app.user_franchise_id;
 				this.branchid = this.app.user_branch_id;
 				this.offsetLength = 10;
-				this.objScheduleLists = new ScheduleLists();
+				this.objBookingLists = new BookingLists();
 				this.render();
 				
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
-				this.app.showLoading('Loading Schedules....',this.$el);
+				this.app.showLoading('Loading Booking...',this.$el);
 				//$(window).scroll(_.bind(this.lazyLoading, this));
                // $(window).resize(_.bind(this.lazyLoading, this));
-                this.fetchSchedules(); 
+                this.fetchBookings(); 
                 var that = this;
                 var id = null;
                
-                
+                this.app.getTiming(this.branchid);
+             
 			},
 			 
-			fetchSchedules:function(){ 
-				var that = this;
-				var _data = {}; 
+			fetchBookings:function(){ 
+				 var that = this;
+				 var _data = {}; 
 				 _data['search'] = this.searchText;
 				 _data['branchid'] = this.branchid; 
-				 that.setting.jobTypes = {};
 				 if(this.request)
 	                    this.request.abort();
 				 that.$el.find('tbody').empty();
-				     this.request = this.objScheduleLists.fetch({data: _data, success: function(data) {
+				     this.request = this.objBookingLists.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
-						var objScheduleList = new ScheduleList({model:model,page:that,setting:that.setting});
-						that.$el.find('tbody').append(objScheduleList.$el);
+						var objBookingList = new BookingList({model:model,page:that,app:that.app});
+						that.$el.find('tbody').append(objBookingList.$el);
 					})
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no schedule ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="9">';
+							trNoRecord += '<div class="col-lg-9 pull-right"><P> Boo... You have no schedule ';
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
@@ -71,9 +69,10 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 			},
 			addNew:function(){
 				var that = this;
-				require(['schedulelist/views/createschedule'],function(AddUpdate){
-					var objAddUpdate = new AddUpdate({id:1,page:that});
-					that.$el.html(objAddUpdate.$el);
+				this.$el.find('#newbooking').parent().remove();
+				require(['booking/views/newbooking'],function(AddUpdate){
+					var objAddUpdate = new AddUpdate({id:1,page:that,app:that.app});
+					that.$el.append(objAddUpdate.$el);
 				})
 			},
 			 

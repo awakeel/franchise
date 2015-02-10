@@ -3,7 +3,7 @@ define(['text!roles/tpl/addupdate.html','roles/views/list','roles/models/role'],
 		'use strict';
 		return Backbone.View.extend({  
 			 events:{
-				 'click .close':"closeView", 
+				 'click .close-p':"closeView", 
 				 "click .save-p":"save"
 			 },
 			  initialize: function () {

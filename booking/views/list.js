@@ -11,7 +11,7 @@ define(['text!booking/tpl/list.html','app'],
 				this.template = _.template(template);
 				this.listenTo(this.model, 'change', this.render);
 			    this.listenTo(this.model, 'destroy', this.remove);
-			    this.setting = this.options.setting;
+			    this.app = this.options.app;
 				this.render();
 			},
 			render: function () {
@@ -21,14 +21,14 @@ define(['text!booking/tpl/list.html','app'],
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
-                var URL = "api/deleteschedule";
+                var URL = "api/deletebooking";
 			    swal({
 			      title: "Are you sure?",
 			      text: "You will not be able to recover this record!",
 			      type: "error",
 			      showCancelButton: true,
 			      confirmButtonClass: 'btn-danger',
-			      confirmButtonText: 'Danger!'
+			      confirmButtonText: 'Yes, Delete!'
 			    },
 			    function(isConfirm) {
 			    	    if (isConfirm) {
@@ -36,10 +36,10 @@ define(['text!booking/tpl/list.html','app'],
 		                        .done(function(data) {
 		                             var _json = jQuery.parseJSON(data);
 		                            if (_json[0] !== 'err') {
-		                            	that.setting.successMessage();
+		                            	that.app.successMessage();
 		                            	that.model.destroy({
 		                            	      success: function() { 
-		                            	    	  swal("Deleted!", "Schedule has been deleted.", "success");
+		                            	    	  swal("Deleted!", "Booking has been deleted.", "success");
 		                            	      }
 		                            	  });  
 		                            }

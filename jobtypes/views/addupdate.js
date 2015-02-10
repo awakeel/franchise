@@ -22,38 +22,54 @@ define(
 						render : function() {
 							this.$el.html(this.template());
 							var that = this;
-							that.$el.find("#txtname").typeahead({
-								hint : true,
-
-								local : that.app.globaljobtypes
-							});
+							console.log(that.app.globaljobtypes);
+							that.$el.find("#txtname").typeahead( {
+								  local:that.app.globaljobtypes 
+								})   
+							
 							this.parent = this.options.page;
 							if(typeof this.options.id == "undefined"){ 
 								this.parent = this.options.page.options.page;
+								
 								this.objjobtype = this.options.model;  
 								this.color = this.options.model.get('color');
-							 	this.name = this.options.model.get('name');
+							 	this.name = this.options.model.get('name');  
 								this.comments = this.options.model.get('comments');
-								this.$el.find("#txtname").val( this.options.model.get('name'));
+								this.$el.find("#txtname").val( this.options.model.get('name')); 
 								this.$el.find("#txtcolor").val(this.color);
 								this.$el.find('#txtcomments').val( this.options.model.get('comments'));
+								that.$el.find("#txtname").on('blur',function(){
+									if(!that.$el.find("#txtname").val())
+										that.$el.find("#txtname").val(that.name);
+									console.log(that.name);
+								}) 
 							}
 						},
-						closeView : function() {
-							this.$el.find('.modal').modal('hide'); 
-							this.$el.remove();
+						closeView : function() { 
+							var that = this; 
+							require([ 'jobtypes/views/lists' ],
+								function(Lists) { 
+									var objLists = new Lists({
+										setting : that.app,
+										id:that.branchid
+									});
+									that.$el.parent().html(objLists.$el);
+									Backbone.View.prototype.remove.call(that);
+									that.undelegateEvents();
+									that.$el.remove();
+									that.$el.removeData().unbind();
+									that.remove();
+								})
 						},
 						clearErrorFilter : function() {
 							this.$el.find('.name-error').addClass('hide');
-						},
-						
+						}, 
 						save : function() {
 							var name = this.$el.find('#txtname').val();
 							var color = this.$el.find('#txtcolor').val();
 							var comments = this.$el.find('#txtcomments').val()
 							if (!name) {
-								this.$el.find('.name-error')
-										.removeClass('hide')
+								this.$el.find('.name-error').removeClass('hide')
 								return false;
 							}
 							this.app.showLoading('Wait a moment....', this.$el);

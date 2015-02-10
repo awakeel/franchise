@@ -48,8 +48,9 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 				 this.setting.services = {};
 				 if(this.request)
 	                    this.request.abort();
-				 that.$el.find('tbody').empty();
+				
 				 this.request = this.objServices.fetch({data: _data, success: function(data) {
+					 that.$el.find('tbody').empty();
 					_.each(data.models,function(model){
 						var objService = new Service({model:model,page:that,setting:that.setting});
 						that.$el.find('tbody').append(objService.$el);
@@ -140,7 +141,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
                      }
                      if($.inArray(code, nonKey)!==-1) return;
                           if(code == 8 || code == 46){
-                                  
+                                  if(!text || text.length > 3)
 		                        	 that.searchText = text;
 			                          that.fetchServices();
 		                       
@@ -149,7 +150,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 		                        this.searchText = text;
 		                          clearTimeout(that.timer); // Clear the timer so we don't end up with dupes.
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
-		                                if (text.length < 2) return;
+		                                if (text.length < 3) return;
 		                                that.searchText = text;
 		                                that.fetchServices(that.langaugeFilter);
 		                           }, 500); // 2000ms delay, tweak for faster/slower

@@ -21,6 +21,7 @@ define(['text!schedulelist/tpl/lists.html','schedulelist/collections/schedulelis
 				this.offsetLength = 10;
 				this.objScheduleLists = new ScheduleLists();
 				this.render();
+				this.app.getTiming(this.branchid);
 				
 			}, 
 			render: function () { 

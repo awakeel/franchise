@@ -21,8 +21,9 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.franchiseid = this.app.user_franchise_id;
 				this.offsetLength = 10; 
 				this.objBranches = new Branches();
+				this.app.getTiming(this.branchid);
 				this.render();
-				
+				this.app.getTiming(this.branchid);
 			},
 			addNew:function(){
 				var that = this;
@@ -49,10 +50,12 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 				this.app.showLoading('Loading department...',this.$el.find('.table-responsive'));
 				 _data['search'] = this.searchText;
 				 _data['franchiseid'] = this.franchiseid;
-				 that.$el.find("table tbody").html('');
+				 this.$el.find(".table-branches-list tbody").empty();
 				 if(this.request)
 	                    this.request.abort();
+				
 				 this.request = this.objBranches.fetch({data: _data, success: function(data) {
+					 that.$el.find(".table-branches-list tbody").empty();
 					_.each(data.models,function(model){
 						var objBranch = new Branch({model:model,page:that,setting:that.app});
 						that.$el.find("table tbody").append(objBranch.$el);
@@ -125,24 +128,25 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
                      var that = this;
                      var text = $(ev.target).val(); 
                      var code = ev.keyCode ? ev.keyCode : ev.which;
-                     var nonKey =[17, 40 , 38 , 37 , 39 , 16,8,46];
+                     var nonKey =[17, 40 , 38 , 37 , 39 , 16,46];
                      if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
                            return;
-                     }
-                     if($.inArray(code, nonKey)!==-1) return;
+                     } 
+                     if($.inArray(code, nonKey)!==-1) return; 
+                     
                           if(code == 8 || code == 46){
-                                 if(text){ 
+                                if(!text || text.length>3){ 
 		                        	 that.searchText = text;
 			                          that.fetchBranches();
-		                         }
+		                          }
                            }else{
 		                   
 		                        this.searchText = text;
 		                          clearTimeout(that.timer); // Clear the timer so we don't end up with dupes.
 		                            that.timer = setTimeout(function() { // assign timer a new timeout 
-		                                if (text.length < 2) return;
+		                                if (text.length < 3) return;
 		                                that.searchText = text;
-		                                that.fetchBranches(that.langaugeFilter);
+		                                that.fetchBranches();
 		                           }, 500); // 2000ms delay, tweak for faster/slower
                           }
             },

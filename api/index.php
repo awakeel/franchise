@@ -4,7 +4,7 @@ $path =  dirname(__FILE__) ;
 require $path .'/rb.php';  
 R::setup('mysql:host=localhost;dbname=franchise',
 'root',''); // 
-    // R::debug( TRUE );
+     /// R::debug( TRUE );
 require $path .'/Slim/Slim.php'; 
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
@@ -17,6 +17,8 @@ require $path .'/classes/Permission.php';
 require $path .'/classes/Schedule.php';
 require $path .'/classes/Roles.php';
 require $path .'/classes/Leaves.php';
+require $path .'/classes/Booking.php';
+require $path .'/classes/BookingCalender.php';
 $app = new Slim(); 
 $auth = new Authorize($app);
 $permission = new Permission($app,$auth);
@@ -30,6 +32,8 @@ $objServices = new Services($app);
 $objEmployees = new Employees($app);
 $objBranches = new Branches($app,$auth);
 $objSchedule = new Schedule($app);
+$objBooking = new Booking($app);
+$objBookingCal = new BookingCalender($app);
 $objRoles = new Roles($app,$auth);
 $objLeaves = new Leaves($app,$auth);
 // Section employees

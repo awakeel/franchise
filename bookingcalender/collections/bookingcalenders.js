@@ -6,12 +6,12 @@
  * Dependency: Notificaiton Model
  */
 
-define(['backbone',  'booking/models/booking'], function (Backbone, ModelBooking) {
+define(['backbone',  'bookingcalender/models/bookingcalender'], function (Backbone, ModelSchedule) {
 	'use strict';
 	return Backbone.Collection.extend({
             
-            model:ModelBooking,
-            url: 'api/bookings'
+            model:ModelSchedule,
+            url: 'api/bookingcalender'
            
            
              

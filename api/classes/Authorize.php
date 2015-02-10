@@ -12,8 +12,11 @@ class Authorize {
         		echo json_encode('Logout');
         		//$app->redirect('/#login');
         	});
+        	$app->post('/changepassword', function () use ($app) {
+        		$this->changePassword();
+        	});
         	$app->get('/getsession', function () use ($app) {
-        			echo json_encode($_SESSION);
+        			$this->getSession();
         	});
         	$app->post("/switchdepartment",function() use ($app){
         		$this->changeDepartment();
@@ -154,6 +157,50 @@ function Login($phone,$password){
 		echo json_encode($error);
 	}
 }
+function getSession(){
+	    if(!isset($_GET['employeeid'])){
+	    	echo json_encode($_SESSION);
+	    	return;
+	    }
+	 	$employeeid = $_GET['employeeid'];
+		$sql = "select * from employees where isactivated = 1 and id = $employeeid";
+	
+		$db = getConnection();
+		$stmt = $db->prepare($sql); 
+		$stmt->execute();
+		$employees = $stmt->fetchAll(PDO::FETCH_OBJ);
+		$branches;
+		if(isset($employees[0]->id) && !empty($employees[0]->id)){
+			$sql = "select b.* from branches b
+				inner join employeedepartments ed on ed.branchid = b.id
+				where ed.employeeid = ".$employees[0]->id;
+			$branches = R::getAll($sql);
+			$_SESSION['branches'] = $branches;
+		}
+	
+		 
+		// Include support for JSONP requests
+			
+	
+		$basic = null;
+	$_SESSION['is_logged_in'] = true;
+	 
+	$_SESSION['since'] = date("F j, Y, g:i a");
+	$_SESSION['ip'] = $_SERVER['REMOTE_ADDR'];
+	$_SESSION['login_failure'] = false;
+	$_SESSION['employeeid'] =  $employees[0]->id;
+	$_SESSION['branchid'] =  $employees[0]->branchid;
+	$_SESSION['franchiseid'] = $employees[0]->franchiseid;
+	$_SESSION['isfranchise'] = $employees[0]->isfranchise;
+	$_SESSION['roleid'] = $employees[0]->roleid;
+	$basic['ip'] =  $_SERVER['REMOTE_ADDR'];
+	$basic['since'] = date("F j, Y, g:i a");
+	$basic['login_failure'] = false;
+	$basic['is_logged_in'] = true;
+	$employees[0]->setting = $basic;
+	$_SESSION['user'] = $employees[0];
+	echo json_encode($_SESSION);
+}
 function saveLoginHistory($ip,$employeeid){
  
 		$sql = "INSERT INTO loginhistory (ip, employeeid,time,branchid) ";
@@ -187,6 +234,22 @@ function updateIsNew($employeeid){
 		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
 		echo '{"error":{"text":'. $e->getMessage() .'}}';
 	} 
+}
+function changePassword(){
+	$employeeid = $_POST['employeeid'];
+	$password = $_POST['password1'];
+   $sql = "update employees set password = $password, passwordchanged = '1' where id=$employeeid "; 
+	try {
+		$db = getConnection();
+		$stmt = $db->prepare($sql); 
+		$stmt->execute();
+		$db = null;
+		echo json_encode(array('msg'=>"true"));
+	} catch(PDOException $e) {
+		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+		echo '{"error":{"text":'. $e->getMessage() .'}}';
+	} 
+	 
 }
 function changeDepartment(){
 	$params = json_decode($request->getBody()); 

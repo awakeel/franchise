@@ -28,12 +28,20 @@ class Branches
     							$branchid = $_GET['branchid'];
     					$this->getTimings($branchid);
     				});
-        $app->post('/weeks', function () {
-
-        	$request = Slim::getInstance()->request();
-        	$this->saveTiming($request);
-		
-		        });
+			        $app->post('/weeks', function () {
+			
+			        	$request = Slim::getInstance()->request();
+			        	$this->saveTiming($request);
+					
+					        });
+			        	$app->get('/gettimingmonday',function(){
+			        		$request = Slim::getInstance()->request();
+			        		$branchid = 0;
+			        		if(isset($_GET['branchid']))
+			        			$branchid = $_GET['branchid'];
+			        		$this->getTimingMonday($branchid);
+			        	});
+			        	
  
     }
     function getEmployeeDepartments(  ) {  
@@ -199,7 +207,7 @@ class Branches
 	    	} 
             try {
 			   $sql = 'SELECT * FROM timings 
-			    	   WHERE branchid = "'.$branchid.'" order by opened asc';
+			    	   WHERE branchid = "'.$branchid.'"   order by opened asc';
 			    $rows = R::getAll($sql);
 			   // $authors = R::convertToBeans('timings',$rows);
                 if (!isset($_GET['callback'])) {
@@ -213,13 +221,33 @@ class Branches
                     echo json_encode($error);
              }
     }
+    function getTimingMonday( $branchid) {
+    	if($this->auth->getLoggedInMessages() == false){
+    		return false;
+    	}
+    	try {
+    		$sql = 'SELECT * FROM timings
+			    	   WHERE branchid = "'.$branchid.'" and day = "monday" order by opened asc';
+    		$rows = R::getAll($sql);
+    		// $authors = R::convertToBeans('timings',$rows);
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($rows);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($rows) . ');';
+    		}
+    
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
     function deleteBranch(){
     	 $id = $_GET['id'];
     	 
     	 $this->deleteTimings($id);
     			try {
     				R::exec('delete from branches where id = '.$id);  
-    				 
+    				echo json_encode($id);
     			} catch(Exception $e) {
     			//error_log($e->getMessage(), 3, '/var/tmp/php.log');
     				echo json_encode(['error'=>'Integrity constraint'] );

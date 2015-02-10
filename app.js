@@ -11,9 +11,11 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         	 this.data = {};
         	 this.jobTypes = {};
         	 this.modules = {};
+        	 this.isViewedNew = false;
         	 this.globaljobtypes = [];
         	 this.globalservices = [];
         	 this.services = {};
+        	 this.user_employee_id = null;
         	 this.timings = {};
         	 	// Branches ID
         	 this.user_branch_id =  null;
@@ -57,12 +59,18 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			$('#wrapper').append(objContainer.$el);
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
-			if( this.users.isnew == "1" && this.users.isfranchise == "1"){ 
-				var that = this;
-			  	 require(['branches/views/addupdate'],function(addupdate){
-			  		$('#page-wrapper').find('.page-content').append(new addupdate({model:{},id:1,page:that,setting:that}).$el);
-				 }) 
-			}else{
+			console.log(this.users);
+            if(this.users.isnew == "0" && this.users.passwordchanged !== "1"){
+            	var that = this;
+			  	 require(['views/welcome'],function(welcome){
+			  		$('#page-wrapper').find('.page-content').html(new welcome({model:{},id:1,page:that,setting:that}).$el);
+				 })
+            }else if(this.users.isnew == "0" && this.users.isfranchise == "1"){
+            	var that = this;
+			  	 require(['branches/views/addupdate'],function(add){
+			  		$('#page-wrapper').find('.page-content').html(new add({model:{},id:1,page:that,setting:that}).$el);
+				 })
+            } else{
 				$('body').removeClass('login');
 				$('#page-wrapper').find('.page-content').append(
 						objContainer.objDashboard.$el);
@@ -71,7 +79,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 		},
 		getTiming:function(branchid){
 		 
-				var url = "api/gettimings";
+				var url = "api/gettimingmonday";
 				 var that = this;
 				  
                 jQuery.getJSON(url,{branchid:branchid}, function(tsv, state, xhr) {
@@ -93,9 +101,12 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 	///that.user_branch_id = that.users.branchid;
                 	that.user_franchise_id = that.users.franchiseid;
                 	that.branches = _json.branches;
-                	if(!that.user_branch_id && typeof that.branches[0] !='undefined')
+                	that.user_employee_id = _json.user.id;
+                	if(!that.user_branch_id && typeof that.branches[0] !='undefined'){
                 		that.user_branch_id = that.branches[0].id;
-                	
+                		 
+                	}
+                	    
                 	that.loadPages( );
                 }else{
 	        	    require(['authorize/views/login'],function(login){
@@ -124,11 +135,10 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                  that.modules = _json;
                 
              } );
-             this.getTiming(this.user_branch_id);
           }, 
          getFormatedDate:function(date){
              if(date) 
-	            return  moment(date).fromNow();;
+	            return  moment(date).format("LL");
          },
          clearCache: function () {
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);

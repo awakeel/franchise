@@ -13,13 +13,12 @@ define(['text!branches/tpl/list.html','app'],
 				this.listenTo(this.model, 'change', this.render);
 			    this.listenTo(this.model, 'destroy', this.remove);
 			    this.setting = this.options.setting;
+			    this.app = this.setting;
 				this.render();
 			},
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
-				this.$el.on("mouseover",function(){
-					this
-				})
+				 
 			},
 			deleteBranch:function(ev){
 				var that = this;
@@ -31,15 +30,18 @@ define(['text!branches/tpl/list.html','app'],
   			      type: "error",
   			      showCancelButton: true,
   			      confirmButtonClass: 'btn-danger',
-  			      confirmButtonText: 'Danger!'
+  			      confirmButtonText: 'Yes, Delete!'
   			    },
   			    function(isConfirm) {
   			    	    if (isConfirm) {
-  			    	    	$.getJSON(URL, {id:id}, function (tsv, state, xhr) {
-				                var _json = jQuery.parseJSON(xhr.responseText);
-				                if (typeof _json.error == "undefined") {
+  			    			that.app.showLoading('Please wait...',that.$el);
+  			    			$.get(URL, {id:id})
+	                        .done(function(data) {
+	                             var _json = jQuery.parseJSON(data);
+				                
+				                if (typeof _json.error == "undefined" || _json == "") {
   		                            	that.setting.successMessage();
-  		                            that.model.destroy({
+  		                                  that.model.destroy({
   		                            	      success: function() { 
   		                            	    	  swal("Deleted!", "Record has been deleted.", "success");
   		                            	      }
@@ -48,6 +50,7 @@ define(['text!branches/tpl/list.html','app'],
   		                            else {
   		                            	swal("Error", "There is problem while deleting :)", "error");
   		                            }
+				                  that.app.showLoading(false,that.$el);
   		                      	that.options.page.render();
 	                            	
   		                        });

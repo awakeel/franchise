@@ -54,7 +54,7 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 						this.fillTimings();
 						this.objModelBranch = this.model;
 						this.objModelBranch.set({id:this.model.get('id')});
-						 
+						this.$el.find('.department-name').html(this.name);
 					}
 				  
 				 
@@ -64,10 +64,9 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 			
 				
 				this.$el.find('#txtname').val(this.name);
-				this.$el.find('#txtcity').val(this.name);
-				this.$el.find('#txtzip').val(this.name);
-				this.$el.find('#txtaddress').val(this.name);
-				this.$el.find("#txtdescription").text(this.desc);
+				this.$el.find('#txtcity').val(this.city);
+				this.$el.find('#txtzip').val(this.zip	);
+				this.$el.find('#txtaddress').val(this.address); 
 				 this.app.showLoading(false,this.$el);
 				
 				this.$el.find('#chkall').on('click',function(ev){ 
@@ -93,7 +92,8 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					
 				}) 
 
-				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
+				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i'  ,
+							    'showDuration': true});
 				this.$el.find('.days').on('click',function(){
 					if($(this).prop('checked')!= true){
 						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',true);
@@ -204,12 +204,13 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					this.$el.find('.name-error').removeClass('hide');
 					return false;
 				}
-				var desc = this.$el.find('#txtdescription').val();
-				if(!desc){
-					this.$el.find('.desc-error').removeClass('hide');
-					this.app.showLoading(false,this.$el);
-					return false;
-				}
+				var desc = '';
+				//var desc = this.$el.find('#txtdescription').val();
+				//if(!desc){
+				//	this.$el.find('.desc-error').removeClass('hide');
+				//	this.app.showLoading(false,this.$el);
+				//	return false;
+				//}
 				
 				
 				this.objModelBranch.set({name:name,notes:desc});
