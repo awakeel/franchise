@@ -1,6 +1,6 @@
 define(
 		[ 'text!jobtypes/tpl/addupdate.html', 'jobtypes/views/list',
-				'jobtypes/models/jobtype' ],
+				'jobtypes/models/jobtype'  ],
 		function(template, JobType, JobTypeModel) {
 			'use strict';
 			return Backbone.View
@@ -44,6 +44,9 @@ define(
 									console.log(that.name);
 								}) 
 							}
+							this.$el.find('.color')  .spectrum({
+							    color: this.color
+							});  
 						},
 						closeView : function() { 
 							var that = this; 
@@ -66,7 +69,8 @@ define(
 						}, 
 						save : function() {
 							var name = this.$el.find('#txtname').val();
-							var color = this.$el.find('#txtcolor').val();
+							var t = this.$el.find(".color").spectrum("get") ;
+							var color = t.toHexString() // "#ff0000"
 							var comments = this.$el.find('#txtcomments').val()
 							if (!name) {
 								this.$el.find('.name-error').removeClass('hide')

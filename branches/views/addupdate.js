@@ -135,18 +135,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					if($current >= $total) {
 						that.$el.find('.pagerw .next').hide();
 						that.$el.find('.pagerw .finish').show().on('click',function(){
-							 swal({
-							      title: "Create Schedule?",
-							      text: "Create your first schedule, click on schedule list and add new!",
-							      type: "info" 
-							   
-							    });
-							 require(['dashboard/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
-								   	var objLists = new Lists({setting:that.app});
-							    	var objBreadCrumb = new BreadCrumb({title:'dashboard',setting:that.app,show:''});
-							    	$('#page-wrapper').find('.page-content').html(objLists.$el);
-							    	$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
-							    })
+							that.checkTiming();
 						});
 						that.$el.find('.pagerw .finish').removeClass('disabled');
 					} else {
@@ -196,6 +185,61 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					}
 				} });
 			
+			},
+			checkTiming:function(app){
+				var that = this;
+				if(typeof this.app.timings[0] === "undefined"){
+					swal({
+					      title: "Warning?",
+					      text: "Basic configuration has been done, please logout and relogin, so that system should load new settings",
+					      type: "info" ,
+					   
+					    	  showCancelButton: true,
+			  			      confirmButtonClass: 'btn-primary',
+			  			      confirmButtonText: 'Yes, Logout!'
+			  			    },
+			  			    function(isConfirm) {
+			  			    	    if (isConfirm) {
+			  			    	    	that.app.users = {};
+			  		    				Backbone.history.length = 0;
+			  		    				 var URL = "api/logout"; 
+			  		    		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+			  		    		                var _json = jQuery.parseJSON(xhr.responseText);
+			  		    		                    require(['authorize/views/login'],function(login){
+			  		    	                        	$('body').html(new login({app:that.app}).$el);
+			  		    	                        })
+			  		    		            }); 
+			  			    	    }
+			  			   })
+				}else{
+					 swal({
+					      title: "Thank you",
+					      text: "Would you like to create your first schedule?,",
+					      type: "info" ,
+					   
+					    	  showCancelButton: true,
+			  			      confirmButtonClass: 'btn-primary',
+			  			      confirmButtonText: 'Yes, Create!'
+			  			    },
+			  			    function(isConfirm) {
+			  			    	    if (isConfirm) {
+			  			    	    	 require(['schedulelist/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
+											   	var objLists = new Lists({setting:that.app});
+										    	var objBreadCrumb = new BreadCrumb({title:'Schedule List',setting:that.app,show:''});
+										    	$('#page-wrapper').find('.page-content').html(objLists.$el);
+										    	$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
+										    })	
+			  			    	    }else{
+			  			    	    	 require(['dashboard/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
+											   	var objLists = new Lists({setting:that.app});
+										    	var objBreadCrumb = new BreadCrumb({title:'dashboard',setting:that.app,show:''});
+										    	$('#page-wrapper').find('.page-content').html(objLists.$el);
+										    	$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
+										    })	
+			  			    	    }
+			  			   })
+				 
+				}
 			},
 			changeText:function(txt){
 				this.$el.find('.top-info').html(txt);

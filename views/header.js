@@ -3,20 +3,16 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
             'use strict';
             return Backbone.View.extend({
                 tagName: 'div',
-                
                 events: {
-                    
                     'click .dep-change':'changeDepartment',
-                    'click .logout_open': 'logout', 
-                    //"click ":"quickAdd"
+                    'click .logout_open': 'logout'
                 },
                 initialize: function() { 
                     this.template = _.template(template);
                     this.app = this.options.setting;
                     this.render();
-                    
-                    
-                },logout:function(){
+                },
+                logout:function(){
                 	this.app.users = {};
     				Backbone.history.length = 0;
     				 var URL = "api/logout";
@@ -31,41 +27,29 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
     				
     			},
     			changeDepartment:function(ev){
-    			 var branchid = $(ev.target).data('id');
-    			 var data = this.app.data;
-    			 Backbone.history.length = 0;
-    			 if(typeof this.app.branches !="undefined")
-    			     var branch = this.app.branches.filter(function(el){
-    				 return el.id == branchid;
-    			 });
-    			
-    			 require([ 'app' ], function(app) {
-                        		// var mainRouter = new router({user:_json[0]});
-    				              var settings = app.load(data,branch[0].name);
-                        		   app.getUser(branchid);
-                        		   //console.log(branch + "branch");
-                        		  //app.loadPages('khan department ' +branch[0].name);
-                        		  
-                        		
-                 });
-    			 
-    			 
-    				
-    			},
+	    			 var branchid = $(ev.target).data('id');
+	    			 var data = this.app.data;
+	    			 Backbone.history.length = 0;
+	    			 if(typeof this.app.branches !="undefined")
+	    			     var branch = this.app.branches.filter(function(el){
+	    				 return el.id == branchid;
+	    			 });
+	    			
+	    			 require([ 'app' ], function(app) {
+		 	              var settings = app.load(data,branch[0].name);
+		        		  app.getUser(branchid);
+	                 });
+    			 },
                 render: function() {
                     this.$el.html(this.template({}));
                     $("#sidebar-toggle").click(function(e) {
-                    	   e.preventDefault();
-                    	    $(".navbar-side").toggleClass("collapsed");
+                    	     e.preventDefault();
+                    	     $(".navbar-side").toggleClass("collapsed");
                     	     $("#page-wrapper").toggleClass("collapsed");
-                    	 });
-
-                    	//Portlet Icon Toggle
-                    	$(".portlet-widgets .fa-chevron-down, .portlet-widgets .fa-chevron-up").click(function() {
-                    	    $(this).toggleClass("fa-chevron-down fa-chevron-up");
-                    	});
-                     
-                  
+                    });
+                	$(".portlet-widgets .fa-chevron-down, .portlet-widgets .fa-chevron-up").click(function() {
+                	    $(this).toggleClass("fa-chevron-down fa-chevron-up");
+                	});
                 },
                 getDepartments:function(id){
                 	var that = this;
@@ -86,14 +70,13 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                 	     }else if(check_id == false && name == value.name){
                 			 login  ='(<small  data-id="'+value.id+'" style="cursor:pointer"> Currently Logged In</small>)';
                 		 }else{
-                			 login  ='(<small class="dep-change" data-id="'+value.id+'" style="cursor:pointer"> Auto Login</small>)';
+                			 login  ='<button  class="dep-change btn btn-sm btn-primary" data-id="'+value.id+'" style="cursor:pointer"> Auto Login</button> ';
                 		 }
-                		 
-                		          str+='<li   data-id="'+value.id+'"> <a> <div class="row"> <div class="col-xs-2">  </div>';
-                		          str+='<div class="col-xs-10">  <p> <strong>'+value.name+'</strong>: '+login+' </p>  </div>';
-                		          str+='</div> </a> </li>';
+        		          str+='<li   data-id="'+value.id+'"> <a> <div class="row"> <div class="col-xs-2">  </div>';
+        		          str+='<div class="col-xs-10">  <p> <strong>'+value.name+'</strong>: '+login+' </p>  </div>';
+        		          str+='</div> </a> </li>';
                 	});
-                	return str;
+                    return str;
                 },
                 getUserName:function(){
                 	if(this.app.current_branch !=""){
@@ -101,21 +84,20 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
     				}else if(typeof this.app.branches[0] !="undefined"){
                 		return this.app.branches[0].name;
                 	}else if(this.app.users.isfranchise == "1"){
-                		return "Main Franchise";
+                		return this.app.users.company;
                 	}
                 },
                 getTitle: function(obj) {
                     var title = $(obj.target).parent("li").find("a").text();
                     return title;
                 },
-               
                 loadNotifications: function() {
                      $(".add_dialogue" ).animate({top:"-600px"});
                       $(".quick-add").removeClass( "active" );
                       if (this.$el.find(".messages_dialogue").css('display')!="none") {
-                        this.$el.find(".messages_dialogue").slideUp();
+                    	  this.$el.find(".messages_dialogue").slideUp();
                           return false;
-                    }
+                      }
                     this.$el.find('.lo-confirm a.lo-no').click();
                     this.$el.find( ".add_dialogue" ).animate({top:"-600px"});
                     var that = this;
@@ -130,24 +112,23 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                     });
                     this.$el.find(".messages_dialogue").find(".view-all").on("click",function(){
                          
-                        that.$el.find(".messages_dialogue").addClass('popmodel').html(new Notifications({isModel:true,newMessages : that.newMessages}).el)
-                         that.$el.find(".popmodel").css({
-                        "position": "absolute",
-                        "height":$(window).height() - 200+ "px",
-                        "top": "70px",
-                        "left": ((($(window).width() -  that.$el.find(".popmodel").outerWidth()) / 2) + $(window).scrollLeft() + "px")});
-                        that.$el.find(".overlay").show();
-                        that.$el.find(".messages_dialogue").find(".all-notification").css("height",$(window).height() - 230 + "px");
+                    that.$el.find(".messages_dialogue").addClass('popmodel').html(new Notifications({isModel:true,newMessages : that.newMessages}).el)
+                    that.$el.find(".popmodel").css({
+	                    "position": "absolute",
+	                    "height":$(window).height() - 200+ "px",
+	                    "top": "70px",
+	                    "left": ((($(window).width() -  that.$el.find(".popmodel").outerWidth()) / 2) + $(window).scrollLeft() + "px")});
+	                    that.$el.find(".overlay").show();
+	                    that.$el.find(".messages_dialogue").find(".all-notification").css("height",$(window).height() - 230 + "px");
                     });
-                      
                 },
                 hideMessageDialog:function(ev){
                    this.$el.find(".messages_dialogue").removeAttr('style');
                    this.$el.find(".messages_dialogue").removeClass('popmodel').hide();
                    $(ev.target).hide();
                 },
-               updateNotfication:function(){
-                     var URL = "/pms/io/user/notification/?BMS_REQ_TK="+app.get('bms_token')+"&type=latest";
+                updateNotfication:function(){
+                    var URL = "/pms/io/user/notification/?BMS_REQ_TK="+app.get('bms_token')+"&type=latest";
                     var that = this;
                     jQuery.getJSON(URL,  function(tsv, state, xhr){
                         var data = jQuery.parseJSON(xhr.responseText);
@@ -162,7 +143,6 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                         }
                         if(that.newMessages < data['notify.unread.count'] && that.firstTime == false){
                             that.$el.find('.messagesbtn').addClass('swing');
-                            
                             that.$el.find('.messagesbtn sup').css({"top":"-4px",left:"22px"});
                             setTimeout(function(){
                                  that.$el.find('.messagesbtn').removeClass('swing');

@@ -434,6 +434,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				this.$el.find('.role-error').addClass('hide');
 				this.$el.find('.jobtype-error').addClass('hide');
 				this.$el.find('.password-error').addClass('hide');
+				this.$el.find('.email-error').addClass('hide');
 			},
 			save:function(){
 					this.clearFields();
@@ -442,6 +443,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					var _p = this.$el.find('#txtphone').val();
 					var _e = this.$el.find('#txtemail').val();
 					var _pas = this.$el.find('#txtpassword').val();
+					
 					var branchid = this.$el.find('#ddldepartments').val();
 					if(!_p){
 						this.$el.find('.phone-error').removeClass('hide');
@@ -449,6 +451,10 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					}
 					if(!_f){
 						this.$el.find('.firstname-error').removeClass('hide');
+						return false;
+					}
+					if(!_e || !this.app.IsEmail(_e)){
+						this.$el.find('.email-error').removeClass('hide');
 						return false;
 					}
 					if(!_l){
@@ -506,8 +512,8 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	            	this.objModelEmployee.set('franchiseid',this.franchiseid);
 	            	this.objModelEmployee.set('role',role);
 	            	this.objModelEmployee.set('branchids',branchesid);
-	            	var model = this.objModelEmployee.save({},{
-	            	    wait:true,
+	            	var model = this.objModelEmployee.save(null,{
+	            	    
 	            	    success:function(model, response) {
 	            	    	if(that.data){
 	   	            		 var URL = "api/saveemployeetiming"; 
@@ -515,18 +521,17 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	   	 		                var _json = jQuery.parseJSON(xhr.responseText);
 	   	 		           
 	   	 				     });
-	   	            		that.data = null;
+	   	            		  that.data = null;
 	   	            	    }  
-	            	    	 that.objModelEmployee.set('jobtypes',jtypes);
-	 	   	 		        that.parent.objEmployees.add(that.objModelEmployee);  
-	 		   		            	
-	 	   	 		    that.app.successMessage();
-	 		   			            $("#tr_norecord").remove();
-	 		   			         that.closeView();
+	            	    	that.closeView();
+	 	   	 		           that.app.successMessage();
+	 		   			        $("#tr_norecord").remove();
+	 		   			         
 	            	    },
 	            	    error: function(model, error) {
-	            	        console.log(model.toJSON());
-	            	        console.log('error.responseText');
+	            	    	console.log(error.statusText  );
+	            	    	that.app.errorMessage();
+	            	    	that.closeView();
 	            	    }
 	            	}); 
 	       

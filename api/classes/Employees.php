@@ -158,9 +158,11 @@ class Employees
     				$employees->about = $params->about;
     				$employees->type = $params->type;
     				$employees->phone = $params->phone;
+    				//$employees->isactivated = 1;
     				///$employees->roleid = $params->roleid;
     				$employees->franchiseid = $params->franchiseid; 
     				$id = R::store($employees);
+    				echo json_encode($params);
     			}else{
     				$employees = R::dispense( 'employees' ); 
     				$employees->firstname = $params->firstname;
@@ -171,11 +173,13 @@ class Employees
     				$employees->about = $params->about;
     				$employees->phone = $params->phone;
     				$employees->type = $params->type;
+    				$employees->isactivated = 1;
     				///$employees->roleid = $params->roleid;
     				$employees->franchiseid = $params->franchiseid;
     			 
     				$id = R::store($employees);
-    				echo json_encode($id);
+    				$this->send_email_registration($params);
+    				echo json_encode($params);
     			}
     			$this->addAreas($params->services,$params->jobtypes,$id,$params->franchiseid, $params->branchesrole);
     		} catch(PDOException $e) {
@@ -355,5 +359,38 @@ class Employees
     		echo json_encode(['error'=>'Integrity constraint'] );
     	}
     }
+
+      function send_email_registration($params) {
+     
+     
+    		$name = $params->firstname . " " . $params->lastname;
+    		$phone = $params->phone;
+    		$password = $params->password;
+    		$email = $params->email; 
+    	  
+    		$msg = "Dear $name<br/>
+    		Your account has been registered.<br/>
+    		You may now log in by clicking this link or copying and pasting it into your browser:<br/>
+    		<a href='http://outsourced.dk/' target='_blank'>Saloon - A franchise solution</a><br/>
+    		You will be able to log in using:<br/>
+    		username: $phone<br/>
+    		password: $password<br/><br/>"
+    		. "-Saloon Team";
+    	 
+    
+    
+    	// use wordwrap() if lines are longer than 70 characters
+    	$msg = wordwrap($msg, 70);
+    	//echo "<pre>";
+    	//print_r($msg);
+    	//print_r($email);
+    	//echo "</pre>";
+    	//exit;
+    	// send email
+    	$headers = "From: info@outsourced.dk \r\n";
+    	$headers .= "MIME-Version: 1.0\r\n";
+    	$headers .= "Content-Type: text/html; charset=UTF-8 \r\n";
+    	mail($email, "Account details for $name", $msg, $headers);
+      }
 }
 ?>

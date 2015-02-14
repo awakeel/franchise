@@ -4,7 +4,7 @@ $path =  dirname(__FILE__) ;
 require $path .'/rb.php';  
 R::setup('mysql:host=localhost;dbname=franchise',
 'root',''); // 
-     /// R::debug( TRUE );
+     //  R::debug( TRUE );
 require $path .'/Slim/Slim.php'; 
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';

@@ -201,6 +201,7 @@ class Schedule
 		    			$schedule->schedulegroupid = $params->schedulegroupid;
 		    			$schedule->createdby = R::isoDate();
 		    		    $id = R::store($schedule);
+		    		    echo json_encode($id);
 		    		//} 
 		    	} catch(PDOException $e) {
 		    		echo '{"error":{"text":'. $e->getMessage() .'}}';

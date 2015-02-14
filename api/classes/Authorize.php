@@ -46,7 +46,10 @@ class Authorize {
         					
         					
         				}
-        				
+        				if($cursor[0]->isactivated == "0"){
+        					echo json_encode(['isactivated'=>false]);
+        					return false;
+        				}
         				if ($cursor == NULL || count($cursor) < 1 ){
         					////$collection->insert($data);
         					$_SESSION['is_logged_in'] = false; 
@@ -131,9 +134,8 @@ function Login($phone,$password){
 	 
 	
 	try {
-		$sql = "select * from employees where phone = :phone and password = :password and isactivated = 1";
-	 
-		$db = getConnection();
+		$sql = "select e.*,f.company from employees e inner join franchises f on f.id = e.franchiseid where e.phone = :phone and e.password = :password";
+	 	$db = getConnection();
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam("phone", $phone);
 		$stmt->bindParam("password", $password);
@@ -163,7 +165,7 @@ function getSession(){
 	    	return;
 	    }
 	 	$employeeid = $_GET['employeeid'];
-		$sql = "select * from employees where isactivated = 1 and id = $employeeid";
+		$sql = "select e.*,f.company from employees e inner join franchises f on f.id = e.franchiseid where e.isactivated = 1 and e.id = $employeeid";
 	
 		$db = getConnection();
 		$stmt = $db->prepare($sql); 

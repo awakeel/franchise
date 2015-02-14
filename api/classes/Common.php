@@ -17,12 +17,16 @@ class Common
     				$app->get('/dashboard/quickstats', function () {
     					$this->getQuickStats(  );
     				});
+    					$app->get('/cities', function () {
+    						$this->getCities(  );
+    					});
+    					
     }
     function getQuickStats( ) {
     	$franchiseid = $_SESSION['franchiseid'];
 		 $sql = "SELECT * 
 					FROM
-					 
+					(select Count(employees.id) as emp from employees where franchiseid = $franchiseid) as t1,
 					(SELECT COUNT(services.id) AS ser FROM services   WHERE franchiseid = $franchiseid ) AS T2, 
 					(SELECT COUNT(jobtypes.id) AS job  FROM jobtypes   WHERE franchiseid = $franchiseid ) AS T3,
 					(SELECT COUNT(schedule.id) AS sch FROM schedule   WHERE branchid = $this->branchId ) AS T4 ,
@@ -113,15 +117,11 @@ class Common
     		echo json_encode($error);
     	}
     }
-    function getCities( ) {
-    
-    	$sql = "select * from data_adres_city where branchid = $this->branchId ";
+    function getCities( ) { 
+        $country =  @$_GET['country'];
+    	$sql = "select * from data_adres_city where CountryCode='".$country."'";
     	try {
-    		$db = getConnection();
-    		$stmt = $db->prepare($sql);
-    		$stmt->execute();
-    		$timings = $stmt->fetchAll(PDO::FETCH_OBJ);
-    		$db = null;
+    		$timings = R::getAll($sql);
     
     		// Include support for JSONP requests
     		if (!isset($_GET['callback'])) {

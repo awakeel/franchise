@@ -158,8 +158,11 @@ class Branches
 		    			
 		   	}
 		   	$id = R::store( $branch );
+		   	echo json_encode($id);
 		   	$this->updateIsNew(@$_SESSION['employeeid']);
+		   	$this->addEmployeeDepartments(@$_SESSION['employeeid'],$id,$this->auth->getFranchiseId());
 		   	$this->doLogic($params->timing,$id);
+		   	
     }
     function doLogic($timing,$branchid){ 
     	 $data = explode('||', $timing);
@@ -177,6 +180,38 @@ class Branches
     	 
     
     } 
+
+    function getRole( $franid){
+    	$search = "";
+    	try {
+    
+    		$roles =  R::getCol( 'SELECT id FROM role WHERE franchiseid = :franchiseid and name="Manager"',
+    				[':franchiseid' => $franid]
+    		); 
+    		return $roles[0];
+    			
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
+    
+    function addEmployeeDepartments($eid,$departmentid,$franid){
+    
+    	 $rid = $this->getRole($franid);
+    	try {
+    		$employees = R::dispense( 'employeedepartments' );
+    		$employees->employeeid = $eid;
+    		$employees->branchid = $departmentid;
+    		$employees->franchiseid = $franid;
+    		$employees->roleid = $rid;
+    		$id = R::store($employees);
+    		 
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
+    }
     function updateIsNew($employeeid){
     
     	$sql = "update employees set isnew ='0' where id=$employeeid ";

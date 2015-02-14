@@ -81,6 +81,9 @@ define(
 									console.log(that.name);
 								}) 
 							}
+							this.$el.find('.color')  .spectrum({
+							    color: this.color
+							}); 
 						},
 						closeView : function() {
 							// this.$el.find('#newservice').modal('hide');
@@ -113,7 +116,8 @@ define(
 									'toggle')
 							var comments = this.$el.find('#txtcomments').val();
 							var time = this.$el.find('#txttime').val();
-							var color = this.$el.find('#txtcolor').val();
+							var t = this.$el.find(".color").spectrum("get") ;
+							var color = t.toHexString() // "#ff0000"
 							var price = this.$el.find('#txtprice').val();
 							var jobtypeid = this.$el.find('#ddljobtypes').val();
 							console.log(type)

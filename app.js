@@ -1,5 +1,5 @@
 define(['jquery','language/collections/languages','spin','moment','flex',
-		'views/main_container'], function (jquery,Language,Spinner,moment,flex,Container) {
+		'views/main_container','js/colorjs'], function (jquery,Language,Spinner,moment,flex,Container,color) {
     'use strict'; 
     var app = Backbone.Model.extend({
         load: function (users,name) {
@@ -20,7 +20,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         	 	// Branches ID
         	 this.user_branch_id =  null;
         	 this.user_franchise_id = 0;
-        	 	// End BranchId 
+        	 	// End BranchId fv
         	 this.users = users || {};
              this.set(_.extend({
                 env: 'TEST',
@@ -90,15 +90,48 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 });
 			 
 		},
-		checkTiming:function(){
+		checkTiming:function(app){
+			var that = this;
 			if(typeof this.timings[0] === "undefined"){
-				   swal({
-					      title: "Choose department, You are logged in as a franchise?",
-					      text: "No timing, Please select department to add schedule!",
-					      type: "error" 
-					   
-					    });
+				swal({
+				      title: "Warning?",
+				      text: "No, department selected, would you like to logout!",
+				      type: "info" ,
+				   
+				    	  showCancelButton: true,
+		  			      confirmButtonClass: 'btn-primary',
+		  			      confirmButtonText: 'Yes, Logout!'
+		  			    },
+		  			    function(isConfirm) {
+		  			    	    if (isConfirm) {
+		  			    	    	this.users = {};
+		  		    				Backbone.history.length = 0;
+		  		    				 var URL = "api/logout";
+		  		    		            var that = this;
+		  		    		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+		  		    		                var _json = jQuery.parseJSON(xhr.responseText);
+		  		    		                    require(['authorize/views/login'],function(login){
+		  		    	                        	$('body').html(new login({app:app}).$el);
+		  		    	                        })
+		  		    		            }); 
+		  			    	    }
+		  			   })
 			}
+		},
+		IsEmail:function(email) {
+			  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			  return regex.test(email);
+			},
+		IsIE:function(){ 
+		        var ua = window.navigator.userAgent;
+		        var msie = ua.indexOf("MSIE ");
+
+		        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer, return version number
+		            return true;
+		        else                 // If another browser, return 0
+		            return false;
+ 
+		 
 		},
         getUser: function (branchid) {
             var URL = "api/getsession";

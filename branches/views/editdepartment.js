@@ -18,10 +18,10 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 				this.city = '';
 				this.address = '';
 				this.departmentName = 'Department';
-				
 				this.template = _.template(template);
 				this.setting = this.options.setting;
 				this.app = this.options.setting;
+				this.empcity = this.app.users.city || null;
 				this.objModelBranch = new ModelBranch();
 				this.render();
 				
@@ -57,7 +57,7 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 						this.$el.find('.department-name').html(this.name);
 					}
 				  
-				 
+				   this.fetchCities();
 			 
 			 
 				 
@@ -71,19 +71,21 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 				
 				this.$el.find('#chkall').on('click',function(ev){ 
 					
-					that.$el.find('.days').prop("checked", !that.$el.find('.days').prop("checked"));
-					var first = that.$el.find("#txtsm").val();
-					var end = that.$el.find("#txtem").val();
+					 
+					var first = that.$el.find("#txtsmonday").val();
+					var end = that.$el.find("#txtemonday").val();
 					if(!first)
 						first = "9:00";
 					if(!end)
 						end = "17:00"; 
 					if($(ev.target).is(':checked')){
+						that.$el.find('.days').prop("checked",true);
 						that.$el.find('.first-text').attr('disabled',false);
 						that.$el.find('.end-text').attr('disabled',false);
 						that.$el.find(".first-text").val(first)
 						that.$el.find(".end-text").val(end)
 					}else{
+						that.$el.find('.days').prop("checked",false);
 						that.$el.find('.first-text').attr('disabled',true);
 						that.$el.find('.end-text').attr('disabled',true);
 						that.$el.find(".first-text").val('')
@@ -103,6 +105,10 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					}else{
 						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',false);
 						that.$el.find("#txte"+$(this).attr('id')).attr('disabled',false)
+						var first =that.$el.find(".first-text").val();
+						var end = that.$el.find(".end-text").val();
+						 that.$el.find("#txts"+$(this).attr('id')).val(first);
+						 that.$el.find("#txte"+$(this).attr('id')).val(end);
 					}
 				})
 			} ,
@@ -273,16 +279,14 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 	               this.objModelBranch.set({timing:data});
  				 
  				  $.when(this.objModelBranch.save({id:this.id})).done(function(data){
- 					   var d = jQuery.parseJSON(data);
+ 					    var d = jQuery.parseJSON(data);
  					    that.id = d.id;
- 					   
- 						that.addSchedule();
- 						 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly.');
+ 					    that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly.');
  						that.app.showLoading(false,that.$el);
  						that.closeView();
  				  }).fail(function(){
- 					 that.setting.successMessage(that.$el.find('.department-name').html() + ' saved successfuly. ');
-						that.app.showLoading(false,that.$el);
+ 					 that.setting.successMessage(that.$el.find('.department-name').html() + ' Problem saving successfuly. ');
+					 that.app.showLoading(false,that.$el);
  				   });
  				
  				
@@ -388,7 +392,24 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					var objEmployees = new Employees({setting:that.setting,id:that.id,from:'department'});
 					that.$el.find(".table-employees").html(objEmployees.$el);
 				})
-			}
+			},
+			fetchCities:function(){
+				 var URL = "api/cities";
+		         var that = this;
+		         var country = this.app.users.country;
+		          jQuery.getJSON(URL,{ country:country},  function (tsv, state, xhr) {
+	                var _json = jQuery.parseJSON(xhr.responseText);
+		                 that.$el.find("#txtcity").html(_.map(_json,function(value,key,list){
+		                	 var checked = "";
+		                	 if(that.id && that.city.toLowerCase().trim() == value.Name.toLowerCase().trim())
+		                	   checked = "selected";
+		                	 else if(!that.id && that.empcity && that.empcity.toLowerCase().trim() == value.Name.toLowerCase().trim())
+		                	   checked = "selected";
+		                	 
+		                	   return "<option value='"+value.Name+"'  "+checked+">"+value.Name+"</option>";}).join());
+		                    
+		           }); 
+		     }, 
 		 
 		});
 	});

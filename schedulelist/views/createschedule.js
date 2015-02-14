@@ -20,7 +20,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 							   this.branchid = this.options.page.branchid;
 							
 							this.render(); 
-							this.app.checkTiming();
+							this.app.checkTiming(this.app);
 						},
 						
 						fetchAllData:function(groupid){
@@ -157,15 +157,53 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 						save : function() { 
 
 							var that = this;
-							this.app.showLoading('Wait a moment....', this.$el);
+							
 							 var groupid = 0;
 							 var total = this.$el.find('.schedule-div:not(:last-child)').length;
 							 var URL = "api/saveschedulegroup"; 
 							 var title = that.$el.find('#txttitle').val();
+							 if(!title){
+								 swal({
+								      title: "Warning",
+								      text: "Please enter title",
+								      type: "error" 
+								   
+								    });
+								 return;
+							 }
+							 if(!that.startDate || !that.endDate){
+								 swal({
+								      title: "Warning",
+								      text: "Please select date range",
+								      type: "error" 
+								   
+								    });
+								 return;
+						     }
+							 if(!that.startDate || !that.endDate){
+									 swal({
+									      title: "Warning",
+									      text: "Please select date range",
+									      type: "error" 
+									   
+									    });
+									 return;
+							 }
+							 var total = that.$el.find('.schedule-div:not(:last-child)').length;
+							 if(total < 1){
+								 swal({
+								      title: "Warning",
+								      text: "Please choose atleast one job type",
+								      type: "error" 
+								   
+								    });
+								 return;
+							 }
 							 var data = {title:title};
 							 if(this.id){
 								   data = {title:title,schedulegroupid:this.options.model.get('schedulegroupid')};
 							 }
+							 this.app.showLoading('Saving Schedule....', this.$el);
 							 $.getJSON(URL,data,  function (tsv, state, xhr) {
 	   	 		                var groupid = jQuery.parseJSON(xhr.responseText);
 	   	 		                that.$el.find('.schedule-div:not(:last-child)').each(function(index){
@@ -187,10 +225,12 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 								objScheduleModel.set('employeeid',employeeid);
 								objScheduleModel.set('branchid',that.branchid);
 								objScheduleModel.set('schedulegroupid',groupid); 
-								objScheduleModel.save( );
-								that.app.showLoading(false, that.$el); 
-								that.app.successMessage();
-						       })
+								objScheduleModel.save(null,{success:function(){
+									that.app.showLoading(false, that.$el); 
+									that.app.successMessage();
+							       	that.closeView();
+								}} );
+								})
 	   	 				     });
 							
 								this.app.showLoading(false,this.$el);

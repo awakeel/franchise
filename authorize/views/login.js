@@ -24,6 +24,7 @@ define(['text!authorize/tpl/login.html','authorize/models/login'],
 				this.$el.find('.password-error').addClass('hide');
 				this.$el.find('.phone-error-empty').addClass('hide');
 				this.$el.find('.password-error-empty').addClass('hide');
+				this.$el.find('.isactivated-error').addClass('hide');
 			},
 			enterLogin:function(ev){
 				if(ev.which == 13) {
@@ -60,6 +61,10 @@ define(['text!authorize/tpl/login.html','authorize/models/login'],
                      	that.$el.find('.password-error').removeClass('hide');
                       	return;
                       }
+                     if(_json.isactivated == false){
+                      	that.$el.find('.isactivated-error').removeClass('hide');
+                       	return;
+                       }
                     if(_json.is_logged_in){
                     	that.app.destroy();
                     	require([ 'app' ], function(app) {

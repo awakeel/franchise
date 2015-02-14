@@ -134,7 +134,7 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				}else if(typeof this.app.branches[0] !="undefined"){
             		return this.app.branches[0].name;
             	}else if(this.app.users.isfranchise == "1"){
-            		return "Main Franchise";
+            		return this.app.users.company;
             	}
             },
 			checkUndefined:function(id){

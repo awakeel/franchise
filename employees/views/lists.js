@@ -50,11 +50,12 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 				// _data['specific'] = 0;
 				// _data['jobtypeid'] = that.jobtypeFilter;
 				// this.objjobtypes.reset();
-				 this.$el.find('.employees-table tbody').empty();
+				 
 				 if(this.request)
 	                    this.request.abort();
 				 
 				 this.request = this.objEmployees.fetch({data: _data,reset: true, success: function(data) {
+					 that.$el.find('.employees-table tbody').empty();
 					_.each(data.models,function(model){
 						var objEmployee = new Employee({model:model,page:that,setting:that.setting});
 						that.$el.find('.employees-table tbody').append(objEmployee.$el);
