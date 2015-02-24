@@ -15,6 +15,9 @@ class Authorize {
         	$app->post('/changepassword', function () use ($app) {
         		$this->changePassword();
         	});
+        		$app->post('/forgot', function () use ($app) {
+        			$this->forgotPassword();
+        		});
         	$app->get('/getsession', function () use ($app) {
         			$this->getSession();
         	});
@@ -26,12 +29,18 @@ class Authorize {
         					$phone = $_POST['phone'];
         				} else {
         					$phone = '';
+        				} 
+        				if ( isset($_POST['password']) ) {
+        					$password =$_POST['password'];
+        				} else {
+        					$password = '';
         				}
         				$data = array(
         						'phone' => $phone, 
-        						'password' =>  $_POST['password'] ,
+        						'password' =>   $password
         				);
-        				$cursor = $this->Login($phone,$_POST['password'] );
+        				$cursor = $this->Login($phone,$password );
+        				
         				if(!isset($cursor[0]->phone)){
         					echo json_encode(['phone'=>false]);
         					return false;
@@ -46,8 +55,13 @@ class Authorize {
         					
         					
         				}
+        			
         				if($cursor[0]->isactivated == "0"){
         					echo json_encode(['isactivated'=>false]);
+        					return false;
+        				}
+        				if($cursor == false){
+        					echo json_encode(['dep'=>false]);
         					return false;
         				}
         				if ($cursor == NULL || count($cursor) < 1 ){
@@ -85,6 +99,45 @@ class Authorize {
         				echo json_encode($_SESSION);
         				 
         			});
+    }
+    function forgotPassword() {
+    	$search = "";
+    	if(isset($_POST['email']) && !empty($_POST['email'])){
+    		$email = $_POST['email'];
+    		 
+    		try {
+    			 $emp = R::findOne( 'employees', ' email = ? ', [ $email]);
+    			 $empemail = "";
+    			 $emailpassword = "";
+    			 if($emp){
+	    			 $empemail = $emp->email;
+	    			 $emailpassword = $emp->password;
+    			 } 
+    			 if($empemail && $emailpassword){
+    			 	$this->sendForgotEmail($empemail,$emailpassword); 
+    			 	echo json_encode(array("msg"=>'Password sent to   '.$email));
+    			 }else{
+    			 	echo json_encode(["msg"=>'No account associated with  '.$email]);
+    			 }
+    			 	
+    			 
+    		} catch(PDOException $e) {
+    			$error = array("error"=> array("text"=>$e->getMessage()));
+    			echo json_encode($error);
+    		}
+    		   
+    	}else{
+    		echo json_encode(array('isemail'=>false));
+    	}
+    }
+    function sendForgotEmail($email,$password) {
+    	 
+    	 
+    	$headers = "From:KnockoutSports postmaster@knocksports.com\r\n";
+    	$headers .= "MIME-Version: 1.0\r\n";
+    	$headers .= "Content-Type: text/html; charset=UTF-8 \r\n";
+    	$msg = "SMP <br> Password: ".$password;
+    	mail($email, "SMP - Forgot Password ", $msg, $headers);
     }
 function isLoggedIn(){
 	if(@$_SESSION['is_logged_in'] == true)
@@ -131,8 +184,7 @@ function getLoginType($branchid = 0, $useAsFranchise = false){
 	return $_SESSION['user']->franchiseid;
 }
 function Login($phone,$password){
-	 
-	
+	  
 	try {
 		$sql = "select e.*,f.company from employees e inner join franchises f on f.id = e.franchiseid where e.phone = :phone and e.password = :password";
 	 	$db = getConnection();
@@ -145,12 +197,14 @@ function Login($phone,$password){
 		if(isset($employees[0]->id) && !empty($employees[0]->id)){
 		$sql = "select b.* from branches b 
 				inner join employeedepartments ed on ed.branchid = b.id
-				where ed.employeeid = ".$employees[0]->id;
+				where b.isactivated = 1 and ed.employeeid = ".$employees[0]->id;
 			$branches = R::getAll($sql);
 			$_SESSION['branches'] = $branches;
 		}
-		  
-		 return  $employees;
+		if(!isset($branches[0]->id) && !isset($employees[0]->isfranchise) && !isset($employees[0]->phone))
+			return false;
+		 
+		return  $employees;
 		// Include support for JSONP requests
 		 
 	
@@ -173,9 +227,9 @@ function getSession(){
 		$employees = $stmt->fetchAll(PDO::FETCH_OBJ);
 		$branches;
 		if(isset($employees[0]->id) && !empty($employees[0]->id)){
-			$sql = "select b.* from branches b
+			$sql = "select  b.* from branches b
 				inner join employeedepartments ed on ed.branchid = b.id
-				where ed.employeeid = ".$employees[0]->id;
+				where b.isactivated = 1 and ed.employeeid = ".$employees[0]->id;
 			$branches = R::getAll($sql);
 			$_SESSION['branches'] = $branches;
 		}
@@ -257,9 +311,9 @@ function changeDepartment(){
 	$params = json_decode($request->getBody()); 
 	$branches;
 	if(isset($employees[0]->id) && !empty($employees[0]->id)){
-		$sql = "select b.* from branches b
+		$sql = "select distinct b.* from branches b
 				inner join employeedepartments ed on ed.branchid = b.id
-				where ed.employeeid = ".$employees[0]->id;
+				where b.isactivated = 1 and ed.employeeid = ".$employees[0]->id;
 		$branches = R::getAll($sql);
 		$_SESSION['branches'] = $branches;
 	}

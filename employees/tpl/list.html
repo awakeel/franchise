@@ -1,15 +1,11 @@
                                            		 
                                                 <td><%=this.model.get('firstname')%> <%=this.model.get('lastname')%></td>
                                                 <td><%=this.model.get('phone')%></td> 
-                                                <td><%=this.model.get('email')%></td> 
+                                                
                                                   <td><%=this.model.get('role')%></td> 
                                                 <td><%=this.model.get('jobtypes')%></td> 
                                                 <td width="30%">
-                                                <div style="width:;" class="slide-btns s-clr4 three"> <span class="icon setting"></span>
-                                  <div> <a class="icon pause s-clr3" title="pause"><span>Pause</span></a>
-                                  <a class="icon preview s-clr2" title="preview"><span>Preview</span></a> 
-                                  <a title="delete" class="icon delete s-clr1"><span>Delete</span></a> </div>
-                                </div>
+                                              
                                 <%if(this.model.get('isfranchise') != "1"){%>
                                     <a class="btn btn-danger  btn-sm delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
                                 <%}%>             	

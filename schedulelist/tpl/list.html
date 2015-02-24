@@ -1,12 +1,11 @@
-                                          
-                                                
-                                                
-                                                
-                                                <td><%=this.model.get('title')%></td>
-                                                  <td><%=this.model.get('datefrom')%> - <%=this.model.get('dateto')%></td> 
-                                                 <td width="25%">
-                                                	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info edit-token"><%=this.setting.language['edit']%></button>
-                                                 </td>
-                                           
-                                           
+
+<td><%=this.model.get('title')%> <a class='plus-click'> + </a></td>
+<td><%=this.getDuration()%></td>
+<td><%=this.model.get('jobtypes')%></td>
+<td><%=this.model.get('employee')%></td>
+<td width="25%"><a class="btn btn-danger delete-token"
+	data-id="<%=this.model.get('id')%>">
+		<%=this.setting.language['delete']%></a>
+	<button class="btn btn-info edit-token"><%=this.setting.language['edit']%></button>
+	<button class="btn btn-info change-day">Change Day</button></td>
+

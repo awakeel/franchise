@@ -1,11 +1,13 @@
-define(['text!schedulelist/tpl/list.html','app'],
-	function (template,app) {
+define(['text!schedulelist/tpl/list.html' ],
+	function (template) {
 		'use strict';
 		return Backbone.View.extend({  
 			tagName:'tr',
 			events:{
 			 	"click .delete-token":"deleteToken",
-			 	"click .edit-token":"updateToken"
+			 	"click .edit-token":"updateToken",
+			 	"click .change-day":"changeSpecialDay",
+			 	"click .plus-click":'loadSchedule'
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -18,7 +20,35 @@ define(['text!schedulelist/tpl/list.html','app'],
 			render: function () {
 				this.$el.html(this.template(this.model.toJSON()));
 			},
-			
+			loadSchedule:function(){
+				var that = this;
+				require(['schedulelist/views/loadschedule'],function(loadschedule){
+					var objLoadschedule = new loadschedule({model:that.model,app:that.app});
+					var modal = that.options.page.$el.find("#loadschedule");
+					modal.find('#loadschedule_d').html(objLoadschedule.$el);
+					
+					modal.modal('show');
+					 
+				});
+			},
+			changeSpecialDay:function(){
+				var that = this;
+				require(['schedulelist/views/specialday'],function(specialday){
+					var objSpecialDay = new specialday({model:that.model,app:that.app});
+					var modal = that.options.page.$el.find("#changespecialday");
+					modal.find('#modalspecialdialog').html(objSpecialDay.$el);
+					modal.modal('show');
+				});
+			},
+			getDuration:function(){
+		
+				var str = this.getDate(this.model.get('datefrom')) + ' to ' +  this.getDate(this.model.get('dateto'));
+			 
+				return str;
+			},
+			getDate:function(date){
+				return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
+			},
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 

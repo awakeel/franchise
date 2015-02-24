@@ -1,0 +1,67 @@
+
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal"
+		aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	<h4 class="modal-title" id="myModalLabel">Re-Schedule Specifc Day</h4>
+</div>
+<div class="modal-body">
+   
+   
+   
+<form class="form-horizontal">  
+        <fieldset>  
+          <legend> </legend>  
+          <div class="control-group error">  
+            <label class="control-label" for="inputError">Select Job type</label>  
+            <div class="controls">  
+            	 
+			       <div id="ddljobtypes"></div>
+                   <span class="help-block e-jobtypes hide"><i
+					class="fa fa-warning"></i>Please select job type.</span>
+			     
+            </div>  
+          </div>  
+          <div class="control-group warning">  
+            <label class="control-label" for="inputWarning">Date (Day)</label>  
+            <div class="controls">  
+              <span
+				class="help-block e-date hide"><i
+				class="fa fa-warning"></i>Select the date</span>
+					<input class="form-control" placeholder="Select Date " style="width: 200px;" type="text"
+					id="txtdate">
+            </div>  
+          </div>  
+          <div class="control-group success">  
+            <label class="control-label" for="inputSuccess">Time From</label>  
+            <div class="controls">  
+             <span
+				class="help-block e-timefrom hide"><i
+				class="fa fa-warning"></i>Please select time from</span>
+			<input type="text" style="width: 200px;"
+				class="timepicker form-control  first-text" id="txtstart" />
+            </div>  
+          </div>  
+          <div class="control-group success">  
+            <label class="control-label" for="selectError">Select with success</label>  
+            <div class="controls">  
+              <span
+				class="help-block e-timeto hide"><i
+				class="fa fa-warning"></i>Please select time to</span>
+		    	<input type="text" style="width: 200px;"
+				class="timepicker form-control  last-text" id="txtend" />
+               
+            </div>  
+          </div>  
+        </fieldset>  
+</form>  
+   
+    
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	<button type="button" class="btn btn-primary changespecial">Save
+		Changes</button>
+</div>

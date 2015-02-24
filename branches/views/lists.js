@@ -63,7 +63,7 @@ define(['text!branches/tpl/lists.html','branches/collections/branches','branches
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					if(data.length < 1){
-						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no department ';
+						var trNoRecord = '<tr><td colspan="5">  <div class="col-lg-9 pull-right"><P> No Department Found ';
 					     trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);

@@ -51,7 +51,7 @@ define(['text!schedulelist/tpl/lists.html','schedulelist/collections/schedulelis
 						that.$el.find('tbody').append(objScheduleList.$el);
 					})
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="7">  <div class="col-lg-9 pull-right"><P> Boo... You have no schedule ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="7">  <div class="col-lg-9 pull-right"><P> No Schedule Found ';
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);

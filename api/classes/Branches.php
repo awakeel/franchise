@@ -41,7 +41,9 @@ class Branches
 			        			$branchid = $_GET['branchid'];
 			        		$this->getTimingMonday($branchid);
 			        	});
-			        	
+			        		$app->get('/changestatus',function(){ 
+			        			$this->changeStatus();
+			        		});
  
     }
     function getEmployeeDepartments(  ) {  
@@ -60,13 +62,13 @@ class Branches
       FROM  branches b 
       INNER JOIN employeedepartments r  ON r.branchid = b.id 
       INNER JOIN role  ON role.id = r.roleid 
-      WHERE r.employeeid = $employeeid
+      WHERE r.employeeid = $employeeid and b.isactivated = 1
       GROUP BY b.NAME
    UNION
       SELECT w.*, '' AS selected, 0 AS role, '' AS rolename  FROM branches w  
       
       
- WHERE franchiseid = :franchiseid
+ WHERE franchiseid = :franchiseid and w.isactivated = 1
  ) AS v
  GROUP BY NAME
              			";
@@ -226,6 +228,25 @@ class Branches
     		echo '{"error":{"text":'. $e->getMessage() .'}}';
     	}
     }
+    function changeStatus(){
+        $id;
+         $status;
+    	if(isset($_GET['status']) && isset($_GET['id'])){
+        	$id = $_GET['id'];
+        	$status = $_GET['status'];
+        }
+    	 
+    	try {
+    		$branch = R::dispense( 'branches' );
+    		$branch->id = $id;
+    		$branch->isactivated = $status;
+    		$id = R::store($branch);
+    		echo json_encode($id);
+    	} catch(PDOException $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	}
+    }
     function dbSaveTiming($day,$open,$close,$branchid){
     	 
     	 try {
@@ -257,7 +278,7 @@ class Branches
 	    	} 
             try {
 			   $sql = 'SELECT * FROM timings 
-			    	   WHERE branchid = "'.$branchid.'"   order by opened asc';
+			    	   WHERE branchid = "'.$branchid.'"  ORDER BY FIELD(day, "monday", "tuesday", "wednesday","thursday", "friday", "saturday", "sunday")';
 			    $rows = R::getAll($sql);
 			   // $authors = R::convertToBeans('timings',$rows);
                 if (!isset($_GET['callback'])) {

@@ -41,25 +41,25 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			showEmployees:function(ev){
 				var id = $(ev.target).val();
 				this.employeeid = id;
-				//this.jobtypeid = null;
-				//this.scheduleid = null;
-				 this.changeCalender(id);
+				this.jobtypeid = null;
+				this.scheduleid = null;
+				//this.changeCalender(id);
 			},
 			showJobTypes:function(ev){
 				var id = $(ev.target).val();
 				this.jobtypeid = id;
-				//this.employeeid = null; 
-				//this.scheduleid = null;
-				 this.fetchEmployees(id);
-				 this.changeCalender(id);
+				this.employeeid = null; 
+				this.scheduleid = null;
+				//this.fetchEmployees(id);
+				//this.changeCalender(id);
 			},
 			showSchedules:function(ev){
 				var id = $(ev.target).val();
 				this.scheduleid = id;
-				//this.employeeid = null;
-				//this.jobtypeid = null; 
-				 this.fetchJobTypes(id);
-				 this.changeCalender(id);
+				this.employeeid = null;
+				this.jobtypeid = null; 
+				//this.fetchJobTypes(id);
+				//this.changeCalender(id);
 			},
 			changeCalender:function(value){
 				this.fetchData();
@@ -84,8 +84,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(models){ 
-				 
+			initScheduleCalander:function(models){  
 				    var start,end;
 				   	start = this.app.timings[0].opened.split(':')[0];
 					end = this.app.timings[0].closed.split(':')[0];
@@ -103,15 +102,11 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	        				center:'title',
 	        				right: 'month,agendaWeek,agendaDay'
 	                    },
-    				//	titleFormat: {
-    						//  month: 'MMMM yyyy',
-    						//  week: "d[ MMM][ yyyy]{ '&#8212;' d MMM yyyy}",
-    						//  day: 'dddd, MMM d, yyyy'
-    						//},
-	                    axisFormat: 'HH:mm',
-	                    timeFormat: {
-	                        agenda: 'H:mm{ - h:mm}'
-	                    },
+    					titleFormat: {
+    						  month: 'MMMM yyyy',
+    						  week: "d[ MMM][ yyyy]{ '&#8212;' d MMM yyyy}",
+    						  day: 'dddd, MMM d, yyyy'
+    						},
 	                    defaultView: 'agendaWeek',
 	                    //selectable: true,
 	                    formatDate:(new Date()).toISOString().slice(0, 10),
@@ -147,10 +142,10 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    eventDrop: function( event, dayDelta, minuteDelta, allDay) {
 	                        console.log("@@ drag/drop event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
 	                    },
-	                    eventRender: function(event, element) { 
+	                    eventRender: function(event, element) {  
 	                    	element.find('.fc-event-inner').empty();
 	                    	var content = '<h3>'+event.description+'</h3>' + 
-	                    	'<p> <h4>Assign to :  '+event.name+'</h4><br />' + 
+	                    	'<p><b>Assign to :</b> '+event.name+'<br />' + 
 	        				'<p><b>Start:</b> '+event.start+'<br />' + 
 	        				(event.end && '<p><b>End:</b> '+event.end+'</p>' || '');
 	                    	 element.qtip({ 
@@ -185,7 +180,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
  
 				 
 			},
-			 
+		      
 			 fetchJobTypes:function(id){
 				 var URL = "api/jobtypeschedule";
 		         var that = this;
@@ -215,7 +210,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 					 var that = this;
 					 var str = "";
 					 that.$el.find("#ddlemployees").html("<option selected value='0'> All Employees </option>");
-	                  jQuery.getJSON(url,{ branchid:this.app.user_branch_id,jobtypeid:jobtypeid,schedulegroupid:this.scheduleid}, function(tsv, state, xhr) {
+	                  jQuery.getJSON(url,{ branchid:this.app.user_branch_id,jobtypeid:jobtypeid}, function(tsv, state, xhr) {
 	                	  var _json = jQuery.parseJSON(xhr.responseText);
 			                 that.$el.find("#ddlemployees").append(_.map(_json,function(value,key,list){ console.log(value);return "<option value="+value.id+">"+value.name+  "</option>";}).join());
 			                 that.app.showLoading(false,this.$el );

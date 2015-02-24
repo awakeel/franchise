@@ -17,6 +17,7 @@ define([ 'text!dashboard/tpl/quickstats.html','app'],
 			render: function () {
 				this.$el.html(this.template({}));
 				this.loadMenu();
+				this.app.getTiming(this.app.user_branch_id);
 			}, 
 			loadMenu:function(){
 				var isBranch = false;

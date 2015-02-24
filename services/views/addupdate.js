@@ -15,14 +15,17 @@ define(
 							this.franchiseid = this.app.user_franchise_id;
 							this.objService = new ServiceModel();
 							this.jobtypeid = 0;
-						 
+						    this.id = 0;
 							if(typeof this.options.id  == "undefined"){
 								this.parent = this.options.page.options.page;
+								this.id = 0;
 							}else{
+								
 								this.parent = this.options.page;
 							}
 							if(typeof this.options.id  == "undefined"){
 								this.objService = this.model;
+								this.id = this.model.get('id');
 								this.jobtype = this.model.get('jobtype');
 								this.name = this.model.get('name');
 								this.jobtypeid = this.model.get('jobtypeid');
@@ -106,6 +109,7 @@ define(
 						},
 						clearErrorFilter : function() {
 							this.$el.find('.name-error').addClass('hide');
+							this.$el.find('.jobtypes-error').addClass('hide');
 							this.$el.find('.price-error').addClass('hide')
 							this.$el.find('.time-error').addClass('hide')
 						},
@@ -119,14 +123,13 @@ define(
 							var t = this.$el.find(".color").spectrum("get") ;
 							var color = t.toHexString() // "#ff0000"
 							var price = this.$el.find('#txtprice').val();
-							var jobtypeid = this.$el.find('#ddljobtypes').val();
-							console.log(type)
-							if (!name) {
-								this.$el.find('.name-error')
-										.removeClass('hide')
-								return false;
-							}
 							 
+								if (!name) {
+									this.$el.find('.name-error')
+											.removeClass('hide')
+									return false;
+								}
+								 
 								if (!price || price < 0) {
 									this.$el.find('.price-error').removeClass(
 											'hide')
@@ -137,7 +140,15 @@ define(
 											'hide')
 									return false;
 								}
-
+								var jobtypes = "";
+							 	$('.jobtypes-list :checked').each(function() {
+							 		jobtypes +=$(this).val()+","; 
+						        }); 
+							 	if(!jobtypes){
+							 		this.$el.find('.jobtypes-error').removeClass(
+									'hide')
+							         return false;
+							 	}
 							 var that = this;
 							
 							
@@ -148,7 +159,7 @@ define(
 							this.objService.set('time', time);
 							this.objService.set('price', price);
 							this.objService.set('color', color);
-							this.objService.set('jobtypeid', jobtypeid);
+							this.objService.set('jobtypes', jobtypes);
 							this.app.showLoading('Saving Info...', this.$el);
 							 this.objService.save(null,{success:function(){
 								 console.log('err');
@@ -168,25 +179,22 @@ define(
 						
 						},
 						getJobTypes : function() {
-							var URL = "api/jobtypes";
+							var URL = "api/servicejobtypes";
 							var that = this;
 							var options = "";
 							jQuery.getJSON(URL, {
-								franchiseid : this.franchiseid
+								franchiseid : this.franchiseid,serviceid:this.id
 							}, function(tsv, state, xhr) {
 								var _json = jQuery.parseJSON(xhr.responseText);
-
-								_.each(_json, function(value, key, list) {
-									var selected = "";
-									// if(that.countryid == key.id)
-									//	selected = "selected";
-									if(that.jobtypeid == value.id )
-										selected = "selected";
-									options += "<option value='" + value.id
-											+ "' " + selected + "  >"
-											+ value.name + "</option>";
-								})
-								that.$el.find("#ddljobtypes").html(options);
+								var str = "";
+								 _.each(_json,function(value,key,list){ 
+					                	  
+										 str+='<div class="checkbox" style="display:inline-block; padding:0px 20px 0px 20px; width:46%;">';
+										    str+='<label> <input type="checkbox" '+value.selected+'    value="'+value.id+'"  >'+value.name;
+								 
+												str+='</label></div>'; 
+									}); 
+					                that.$el.find('.jobtypes-list').html(str);  
 
 							});
 						},

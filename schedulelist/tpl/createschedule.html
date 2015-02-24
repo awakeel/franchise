@@ -24,11 +24,10 @@
 				</div>
 					<div class="col-md-4">
 				 <label>  <br/> </label>
-					<div class="input-append  input-group">
-					
+					<div class="input-append  input-group"> 
 						<a class="btn btn-green navbar-right" href="#primary"
-					data-toggle="modal"> <i class="fa fa-briefcase"
-					style="margin-right: 8px;"> </i>Add Job types
+						data-toggle="modal"> <i class="fa fa-briefcase"
+						style="margin-right: 8px;"> </i>Add Job types
 				     </a>
 					</div>
 				</div>
@@ -63,17 +62,27 @@
 			<div id="area_a2" class="change-body" style="display: block;">
 				<div class="portlet-body">
 					<div class="row">
-						<div class=" col-lg-6 col-md-6 col-sm-6">
-							<h4>From :</h4>
-							<input
-								class="form-control timepicker timefrom ui-timepicker-input"
-								type="text" autocomplete="off">
-						</div>
-						<div class=" col-lg-6 col-md-6 col-sm-6">
-							<h4>To :</h4>
-							<input class="form-control timepicker timeto ui-timepicker-input"
-								type="text" autocomplete="off">
-						</div>
+					<table class="table table-hover  table-striped  ">
+							<thead>
+								<tr>
+									<th>
+										<div class="checkbox">
+											<label> <input id='chkall' type="checkbox" value="">All
+											</label>
+										</div>
+									</th>
+									<th><div class="checkbox">
+											<label> From</label>
+										</div></th>
+									<th><div class="checkbox">
+											<label> To</label>
+										</div></th>
+								</tr>
+							</thead>
+							<tbody class="timings-div-schedule">
+							</tbody>
+							</table>
+							
 						<div class="col-md-7">
 							<h4>Employees</h4>
 							 <select class="ddlemployees">

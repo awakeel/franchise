@@ -18,10 +18,15 @@ class Services
     		$this->saveService($request);
     	});
     		
+    		
     		$app->get('/deleteservices',function(){
     			$request = Slim::getInstance()->request();
     			$this->deleteService($request);
     		});
+    			$app->get('/servicejobtypes',function(){
+    			 
+    				$this->getAllJobTypesByBranchId();
+    			});
     			$app->get('/globalservices',function(){
     				 
     				$this->getGlobalServices();
@@ -90,6 +95,46 @@ class Services
     		echo json_encode($error);
     	}
     }
+    function getAllJobTypesByBranchId() {
+    	$search = "";
+    	 
+    	$serviceid= 0;
+    	if(isset($_GET['serviceid']) && !empty($_GET['serviceid'])){
+    		$serviceid = $_GET['serviceid']; 
+    	}
+    	$sql = "   SELECT * FROM (SELECT j.*,
+				      IF(sj.jobtypeid IS NULL, '', 'checked') AS selected
+				       FROM  jobtypes j 
+				       left JOIN servicesjobtypes sj ON sj.`jobtypeid` = j.id
+				       left JOIN services s ON s.id = sj.`serviceid`
+    			where  j.franchiseid = ".$_SESSION['franchiseid']." and sj.serviceid = $serviceid 
+				   UNION
+				      SELECT jw.*, '' AS selected FROM jobtypes jw  
+				      where  jw.franchiseid = ".$_SESSION['franchiseid']."   
+				      
+				
+				 ) AS v
+				      		
+    			
+				 GROUP BY NAME
+             	  ";
+    	try {
+    		$services = R::getAll($sql);
+    
+    		// Include support for JSONP requests
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($services);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($services) . ');';
+    		}
+    
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
+    
+    
     function saveService($request){
     
     	$params = json_decode($request->getBody());
@@ -103,8 +148,7 @@ class Services
     		$services->price = $params->price;
     		$services->type = $params->type;
     		$services->color = $params->color;
-    		$services->time = $params->time;
-    		$services->jobtypeid = $params->jobtypeid;
+    		$services->time = $params->time; 
     		$services->isactivated  = 1;
     		$services->createdon = R::isoDate();
     		
@@ -117,13 +161,13 @@ class Services
     		$services->price = $params->price;
     		$services->type = $params->type;
     		$services->time = $params->time;
-    		$services->color = $params->color;
-    		$services->jobtypeid = $params->jobtypeid;
+    		$services->color = $params->color; 
     		$services->isactivated  =1;
     		$services->createdon = R::isoDate();
     		$services->franchiseid = $params->franchiseid;
     	}
     	$id = R::store($services);
+    	$this->doLogic($params->jobtypes,$id,$params->franchiseid);
     	echo json_encode($params);
     }
     function getAllByBranchId( ) { 
@@ -153,7 +197,37 @@ class Services
                     echo json_encode($error);
             }
     }
-   
+    function doLogic($jobtypes,$id,$fid){
+    	 
+    	$data = explode(',', $jobtypes);
+    	$this->deleteServiceJobTypes($id);
+    	//$branchid = $params->branchid;
+    	foreach($data as $d){
+    		if(!$d) continue;
+    		 
+    		$this->dbSaveServicesJobTypes($d,$id,$fid);
+    	}
+    
+    
+    }
+    function dbSaveServicesJobTypes($jid,$sid,$fid){
+    	$jobtypes = R::dispense( 'servicesjobtypes' );
+    	$jobtypes->jobtypeid = $jid;
+    	$jobtypes->serviceid = $sid;  
+    	$jobtypes->franchiseid = $fid;
+    	$id = R::store($jobtypes);
+    }
+    function deleteServiceJobTypes($id){
+    	 
+    	$sql = "delete from servicesjobtypes where serviceid=$id";
+    
+    	try {
+    		$jobtypes = R::exec($sql); 
+    	} catch(Exception $e) {
+    		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    		echo json_encode(['error'=>'Integrity constraint'] );
+    	}
+    }
     function deleteService(){
     	$id = $_GET['id'];
     	$sql = "delete from services where id=:id ";

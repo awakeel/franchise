@@ -51,7 +51,7 @@ define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes
 						that.setting.jobTypes[model.attributes['id']] = model.attributes['name'];
 					})
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> Boo... You have no job types ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="5">  <div class="col-lg-9 pull-right"><P> No Job Types Found ';
 						 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';

@@ -22,6 +22,7 @@
 			'tokenfield':"libs/bootstrap-tokenfield.min", 
 			'spin':'libs/spin',
 			'swal':'libs/sweetalert',
+			'qtip':'libs/qtip',
 			
 		},
 		shim : {
@@ -57,6 +58,7 @@
 	});
 
 	require([ 'jquery', 'bootstrap', 'backbone','router'], function($,bootstrap,Backbone,router  ) {
+		 
 		var mainRouter = new router();
 			Backbone.history.start({
 				pushState : true

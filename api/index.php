@@ -1,10 +1,11 @@
 <?php
+///header('Content-Type: text/html; charset=UTF-8');
 session_start();  
 $path =  dirname(__FILE__) ;
 require $path .'/rb.php';  
 R::setup('mysql:host=localhost;dbname=franchise',
 'root',''); // 
-     //  R::debug( TRUE );
+     //     R::debug( TRUE );
 require $path .'/Slim/Slim.php'; 
 require $path .'/classes/Common.php';
 require $path.'/classes/Language.php';
@@ -20,6 +21,7 @@ require $path .'/classes/Leaves.php';
 require $path .'/classes/Booking.php';
 require $path .'/classes/BookingCalender.php';
 $app = new Slim(); 
+//$app->contentType('charset=utf-8');
 $auth = new Authorize($app);
 $permission = new Permission($app,$auth);
 
@@ -268,7 +270,11 @@ function getConnection() {
 	$dbpass=""; 
 	$dbname="franchise";
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);	
+	
+	 $dbh -> exec("set names utf8");     // works in old versions of PHP (< 5.2)
+	 
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	
 	return $dbh;
 }
 

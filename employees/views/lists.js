@@ -69,7 +69,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                          
                     //} 
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P> Boo... You have no employee ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P>No Employee Found ';
  
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';

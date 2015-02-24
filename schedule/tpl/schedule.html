@@ -1,13 +1,26 @@
 <div class="right_container">
                     		<div class="row ">
-                                    <div class="col-md-4"><input class="form-control" placeholder="Select Date " type="text" id="txtdate"></div>
-                                    <div class="col-md-4">
-                                    	<select id="ddlscheduletype">
-	                                    	<option value="1" selected=""> Show Job types</option>
-	                                    	<option value="2"> Show Employees</option>
+                    		         <div class="col-md-2">
+                                    	<select id="ddlschedules">
+	                                    	<option value="0" selected="">  All Schedules </option>
                                         </select> 
-                                    </div>                       
-                                   
+                                    </div> 
+                                    <div class="col-md-2">
+                                    	<select id="ddljobtypes">
+	                                    	<option value="0" selected="">  All Job types </option>
+                                        </select> 
+                                    </div> 
+                                     <div class="col-md-2">
+                                    	<select id="ddlemployees">
+	                                    	<option value="0" selected="">  All Employees </option>
+                                        </select> 
+                                    </div> 
+                                     
+                                    <div class="col-md-3"><input class="form-control" placeholder="Select Date " type="text" id="txtdate"></div>
+                                     <div class="col-md-2" style="padding-top:2px;">
+                                    	<a class='color-code btn btn-sm btn-info'> Job types Color</a>
+                                    </div>                    
+                                       
                                     <div class="col-md-6  selection-box listing"> 
                                   
                                     
@@ -20,3 +33,36 @@
  
 <div id='calendar' class='cal'></div>
 </div>  
+
+
+<div   class="modal " id="colorcode" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+  <div class="modal-dialog" id="colorcode"><div class="modal-content">
+
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+		<span aria-hidden="true">×</span>
+	</button>
+	<h4 class="modal-title" id="myModalLabel">Color Codes</h4>
+</div>
+<div class="modal-body">
+   
+      <div class="table-responsive color-tbody">          
+     <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Job Type</th>
+            <th>Color</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+      </table>
+      </div>
+   
+    
+</div>
+<div class="modal-footer">
+	<button type="button" class="btn btn-default" data-dismiss="modal">Close</button> 
+</div></div></div>
+</div>

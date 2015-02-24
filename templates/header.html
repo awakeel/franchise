@@ -33,7 +33,7 @@
                     <li class="dropdown">
                         <a href="#" class="messages-link dropdown-toggle" data-toggle="dropdown">
                             <i class="fa fa-gear"></i>
-                            <span class="number">4</span> <i class="fa fa-caret-down"></i>
+                            <span class="number"> </span> <i class="fa fa-caret-down"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-scroll dropdown-messages">
 
@@ -43,7 +43,7 @@
                             </li>
 
                             <!-- Messages Dropdown Body - This is contained within a SlimScroll fixed height box. You can change the height using the SlimScroll jQuery features. -->
-                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><li id="messageScroll" style="overflow: hidden; width: auto; height: 200px;">
+                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><li id="messageScroll" style="overflow-y: scroll; overflow-x:hidden; width: auto; height: 200px;">
                                 <ul class="list-unstyled total-departments">
                                    <%=this.getDepartments()%>
                                    

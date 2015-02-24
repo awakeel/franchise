@@ -6,7 +6,8 @@ define(['text!branches/tpl/list.html','app'],
 			id:"table-white-row",
 			events:{
 			 	"click .delete-branch":"deleteBranch",
-			 	"click .edit-token":"updateToken"
+			 	"click .edit-token":"updateToken",
+			 	"click .change-status":"changeStatus"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -20,6 +21,52 @@ define(['text!branches/tpl/list.html','app'],
 				this.$el.html(this.template(this.model.toJSON()));
 				 
 			},
+			changeStatus:function(){
+				 var id = this.model.get('id');
+				 var status = this.model.get('isactivated');
+				 var text = "You are about to disable " + this.model.get('name') 
+				 if(status == "0"){
+					 var text = "You are about to enable " + this.model.get('name') 
+					 status = 1;
+				 } else {
+					 status = 0;
+				 }
+				 var that = this;
+				 var URL = "api/changestatus";
+	                swal({
+	  			      title: "Are you sure?",
+	  			      text: text,
+	  			      type: "error",
+	  			      showCancelButton: true,
+	  			      confirmButtonClass: 'btn-danger',
+	  			      confirmButtonText: 'Yes!'
+	  			 },
+	  			  function(isConfirm) {
+	  			     if (isConfirm) {
+	  			    			that.app.showLoading('Please wait...',that.$el);
+	  			    			$.get(URL, {id:id,status:status})
+		                        .done(function(data) {
+		                             var _json = jQuery.parseJSON(data);
+					                
+					                if (typeof _json.error == "undefined" || _json == "") {
+	  		                            	that.setting.successMessage();
+	  		                                  
+	  		                            	  swal("Status Changed!", "Transaction done.", "success");
+	  		                            	  // that.render();  
+	  		                            }
+	  		                            else {
+	  		                            	swal("Error", "There is problem while changing status :)", "error");
+	  		                            }
+					                  that.app.showLoading(false,that.$el);
+	  		                      	 that.options.page.render();
+		                            	
+	  		                        });
+	  			    		    
+	  			    		  } else {
+	  			    		    
+	  			    		  }
+	  			        });
+			},
 			deleteBranch:function(ev){
 				var that = this;
             	var id = that.model.get('id'); 
@@ -31,9 +78,9 @@ define(['text!branches/tpl/list.html','app'],
   			      showCancelButton: true,
   			      confirmButtonClass: 'btn-danger',
   			      confirmButtonText: 'Yes, Delete!'
-  			    },
-  			    function(isConfirm) {
-  			    	    if (isConfirm) {
+  			 },
+  			  function(isConfirm) {
+  			     if (isConfirm) {
   			    			that.app.showLoading('Please wait...',that.$el);
   			    			$.get(URL, {id:id})
 	                        .done(function(data) {
@@ -58,7 +105,7 @@ define(['text!branches/tpl/list.html','app'],
   			    		  } else {
   			    		    
   			    		  }
-  			    });
+  			        });
   			 
                  },
                  updateToken:function(ev){
@@ -72,10 +119,10 @@ define(['text!branches/tpl/list.html','app'],
                  },
                  getStatus:function(){
                 	 var status = this.model.get('isactivated');
-                	 if(status)
-                		 return "Active";
+                	 if(status !="0")
+                		 return "<span class='label label-success'> Active </span>";
                 	 else
-                		 return "Inactive";
+                		 return "<span class='label label-warning'> Inactive </span>";
                  },
                  saveToken:function(id,title,translate,view){
                 	  	this.model.set('languageid',this.options.page.languageFilter);

@@ -68,15 +68,11 @@ class Schedule
     }
     function getEmployeeByJobType(){
     	$branchid = @$_GET['branchid'];
-    	$schedulegroupid = @$_GET['schedulegroupid'];
     	$jobtypeid = @$_GET['jobtypeid'];
-    	$sql = " SELECT CONCAT(e.firstname , ' ' , e.lastname) AS name ,e.id as id,e.picture FROM employees e 
-    			 inner join schedule s on s.employeeid = e.id
-    			 inner join employeejobtypes ej on ej.employeeid = e.id
-    			 where ej.jobtypeid = $jobtypeid
-    			 and s.schedulegroupid = $schedulegroupid
-    			 and s.branchid = $branchid
-    			 GROUP BY e.firstname";
+    	$sql = "SELECT * FROM (SELECT CONCAT(e.firstname , ' ' , e.lastname) AS NAME ,e.id,e.picture FROM employees e 
+					WHERE e.id IN (SELECT ed.`employeeid` FROM employeedepartments ed   WHERE ed.`branchid` = $branchid)) tb
+					INNER JOIN employeejobtypes ej ON ej.`jobtypeid` = $jobtypeid
+					GROUP BY tb.id";
     	try {
     	$schedules = R::getAll($sql);
     	// Include support for JSONP requests
@@ -93,7 +89,7 @@ class Schedule
     }
     function getAllScheduleJobType(){
     	$sid = @$_GET['sid'];
-    	$sql = "select distinct j.* from jobtypes j 
+    	$sql = "select j.* from jobtypes j 
     	inner join schedule s on s.jobtypeid = j.id 
     	where s.schedulegroupid = $sid";
     	try {
@@ -218,14 +214,14 @@ class Schedule
             	if(isset($_GET['employeeid']) && !empty($_GET['employeeid'])){
             		$employeeid = $_GET['employeeid'];
             		if($employeeid !="0")
-            		$search .= " AND s.employeeid IN($employeeid)";
+            		$search = " AND s.employeeid IN($employeeid)";
             		//$jobtypeid = rtrim($jobtypeid, ',');
             	
             	}
             	if(isset($_GET['scheduleid']) && !empty($_GET['scheduleid'])){
             		$scheduleid = $_GET['scheduleid'];
             		if($scheduleid !="0")
-            		$search .= " AND s.schedulegroupid IN($scheduleid)";
+            		$search = " AND s.schedulegroupid IN($scheduleid)";
             		//$jobtypeid = rtrim($jobtypeid, ',');
             	       
             	}

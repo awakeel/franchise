@@ -91,8 +91,8 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			 
 		},
 		checkTiming:function(app){
-			var that = this;
-			if(typeof this.timings[0] === "undefined"){
+			var that = this; 
+			if(typeof this.timings  === "undefined"){
 				swal({
 				      title: "Warning?",
 				      text: "No, department selected, would you like to logout!",

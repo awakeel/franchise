@@ -59,7 +59,7 @@ define(['text!services/tpl/lists.html','services/collections/services','services
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="7">  <div class="col-lg-9 pull-right"><P> Boo... You have no service ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="7">  <div class="col-lg-9 pull-right"><P> No Service Found ';
 					 
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';

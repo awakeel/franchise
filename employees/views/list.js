@@ -42,7 +42,7 @@ define(['text!employees/tpl/list.html','app','swal'],
     			      type: "error",
     			      showCancelButton: true,
     			      confirmButtonClass: 'btn-danger',
-    			      confirmButtonText: 'Danger!'
+    			      confirmButtonText: 'Delete!'
     			    },
     			    function(isConfirm) {
     			    	    if (isConfirm) {

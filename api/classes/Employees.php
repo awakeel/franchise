@@ -178,7 +178,7 @@ class Employees
     				$employees->franchiseid = $params->franchiseid;
     			 
     				$id = R::store($employees);
-    				$this->send_email_registration($params);
+    				///$this->send_email_registration($params);
     				echo json_encode($params);
     			}
     			$this->addAreas($params->services,$params->jobtypes,$id,$params->franchiseid, $params->branchesrole);
@@ -390,7 +390,7 @@ class Employees
     	$headers = "From: info@outsourced.dk \r\n";
     	$headers .= "MIME-Version: 1.0\r\n";
     	$headers .= "Content-Type: text/html; charset=UTF-8 \r\n";
-    	mail($email, "Account details for $name", $msg, $headers);
+    	///mail($email, "Account details for $name", $msg, $headers);
       }
 }
 ?>

@@ -129,7 +129,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 				 
 							var objLists = new Lists({
 								setting : that.app,
-								id:that.branchid
+								//id:that.branchid
 							});
 							 
 								 that.$el.parent().html(objLists.$el);
