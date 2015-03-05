@@ -9,6 +9,9 @@ class Services
     	$app->get('/services', function () {
     		$this->getAllByBranchId(1);
     	});
+    		$app->get('/servicesbyjobtypeid', function () {
+    			$this->getAllByJobTypeId(1);
+    		});
     		$app->get('/employeeservices', function () {
     			$this->getServiceById($_GET['id']);
     		});
@@ -90,6 +93,29 @@ class Services
     			echo $_GET['callback'] . '(' . json_encode($branches) . ');';
     		}
     
+    	} catch(PDOException $e) {
+    		$error = array("error"=> array("text"=>$e->getMessage()));
+    		echo json_encode($error);
+    	}
+    }
+    function getAllByJobTypeId(){
+    	$jobtypeid = @$_GET['jobtypeid'];
+    	$franchiseid = @$_GET['franchiseid'];
+    	$sql = " SELECT s.*, s.id as id FROM services s
+INNER JOIN  servicesjobtypes sj ON sj.`serviceid` = s.id
+    			where sj.jobtypeid = $jobtypeid and sj.franchiseid= $franchiseid
+GROUP BY s.id	
+    	";
+    	try {
+    		$services = R::getAll($sql);
+    	
+    		// Include support for JSONP requests
+    		if (!isset($_GET['callback'])) {
+    			echo json_encode($services);
+    		} else {
+    			echo $_GET['callback'] . '(' . json_encode($services) . ');';
+    		}
+    	
     	} catch(PDOException $e) {
     		$error = array("error"=> array("text"=>$e->getMessage()));
     		echo json_encode($error);

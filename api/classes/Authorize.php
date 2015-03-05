@@ -95,7 +95,7 @@ class Authorize {
         						$_SESSION['is_logged_in'] = false;
         					}
         				}
-        				 
+        				$_SESSION['firsttime'] = '';
         				echo json_encode($_SESSION);
         				 
         			});
@@ -255,6 +255,8 @@ function getSession(){
 	$basic['is_logged_in'] = true;
 	$employees[0]->setting = $basic;
 	$_SESSION['user'] = $employees[0];
+	$_SESSION['firsttime'] = '';
+	$_SESSION['firsttime'] = @$_GET['firsttime'];
 	echo json_encode($_SESSION);
 }
 function saveLoginHistory($ip,$employeeid){

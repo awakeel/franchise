@@ -11,10 +11,11 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/welcome.html'],
 			initialize: function () {
 				this.template = _.template(template); 
 				this.app = this.options.setting;
+				 
 				this.render();
 				 			
 			},
-
+			 
 			render: function () {
 				this.$el.html(this.template({}));
 				

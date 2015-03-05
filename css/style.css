@@ -5813,3 +5813,90 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
         margin-left:-40%; /* -(width/2) */
     }
 }
+.elipse-schedule{
+  display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;     /** IE6+, Firefox 7+, Opera 11+, Chrome, Safari **/
+        -o-text-overflow: ellipsis;  /** Opera 9 & 10 **/
+        width: 173px; /* note that this width will have to be smaller to see the effect */
+}
+ 
+/*Schedule Page  Start ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+.right_container {
+	width:100%;
+	float:left;
+	background:#fff;
+	border:1px solid #d9d9db;
+	padding:20px;}
+.circle_border {
+	width:50px;
+	height:50px;
+	float:left;
+	border-radius:500px !important;
+	border:1px solid #d9d9db;
+	padding:4px !important;}
+.selection-box .pagination {
+	margin:0px !important;}
+.circle_img {
+	width:40px;
+	height:40px;
+	float:left;
+	padding:7px;
+	border-radius:500px;
+	text-align:center;
+	background:#d7d5d7;
+	color:#8b8b8b;
+	font-size:18px;}
+ 
+.user_container {
+	width:auto;
+	float:left;
+	margin-right:10px;}
+#scheduledate {
+	float:left !important;
+	width:100%;}
+/*Schedule Page  Ends ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+/*Form Page  Starts ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+.right_container .nav > li > a {
+	padding:10px 20px !important;
+	background:#bcbcbc;
+	color:#000;}
+.tab-content {
+	background:#fff;
+	padding:20px;}
+.feaild_container {
+	margin-bottom:20px;
+	width:100%;
+	float:left;}
+.text-feaild {
+	border:1px solid #cccccc;}
+.info-container {
+	border:1px solid #cccccc;
+	width:100%;
+	padding:20px;
+	float:left;}
+.info-container h4{
+	background:#e74c3c;
+	padding:10px;
+	color:#fff;
+	margin-top:0px;
+	margin-bottom:20px;
+}
+.history_container {
+	width:100%;
+	float:left;
+	height:400px;
+	overflow-y:scroll;
+	overflow-x:hidden;}
+.margin{
+	margin-top:20px;}
+/*Form Page  ends ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
+@media(min-width:768px) and (max-width:1024px) {
+	.right_container .nav > li > a {
+		padding:10px !important;}
+		.text-feaild {
+			margin-bottom:20px !important;}
+}
+#myTab li a.active{background-color:#fff;}

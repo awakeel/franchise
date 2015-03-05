@@ -44,7 +44,7 @@ define(['text!branches/tpl/list.html','app'],
 	  			  function(isConfirm) {
 	  			     if (isConfirm) {
 	  			    			that.app.showLoading('Please wait...',that.$el);
-	  			    			$.get(URL, {id:id,status:status})
+	  			    			$.get(URL, {id:id,status:status,franchiseid:that.app.user_franchise_id})
 		                        .done(function(data) {
 		                             var _json = jQuery.parseJSON(data);
 					                
@@ -55,7 +55,7 @@ define(['text!branches/tpl/list.html','app'],
 	  		                            	  // that.render();  
 	  		                            }
 	  		                            else {
-	  		                            	swal("Error", "There is problem while changing status :)", "error");
+	  		                            	swal("Error",  _json.error, "error");
 	  		                            }
 					                  that.app.showLoading(false,that.$el);
 	  		                      	 that.options.page.render();

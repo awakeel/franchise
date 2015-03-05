@@ -5,177 +5,245 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 					.extend({
 						events : {
 							'click .close-pp' : "closeView",
-							"click .save-p" : "save",
-							"click .add-new-box":"clone"
+							"click .update-customer" : "updateCustomer",
+							"click .add-new-box":"clone",
+							"click .add-new-comments":'updateComments',
+							'click .back':'closeView',
+							'click .btn-change-employee':'showEmployeeList',
+							'click .btn-change-service':'showServiceList',
+							'change #ddlemployees':'changeBooking',
+							'change #ddlservices':'changeBooking'
 						},
 						initialize : function() {
 							this.template = _.template(template); 
 							this.app = this.options.app;
 							this.cloneId = 1;
-							this.branchid = this.app.user_branch_id;
-							 console.log(this.app);
-							this.parent = this.options.page;
-							 if(typeof this.options.page.branchid !="undefined" && this.options.page.branchid)
-								this.branchid = this.options.page.branchid;
+							this.model = null;
+							this.branchid = this.app.user_branch_id; 
 							this.render(); 
-							   console.log(this.app.timings);
+							$('a[data-toggle="tab"]:first').tab('show');
+						},
+						showEmployeeList:function(){
+							this.$el.find("#ddlemployees").removeAttr('disabled');
+						},
+						showServiceList:function(){
+							this.$el.find("#ddlservices").removeAttr('disabled');
 						},
 						render : function() {
 							this.$el.html(this.template());
+							this.getBookings();
+							this.getComments();
+							this.getHistory();
+							this.getLogs();
+						},
+						closeView:function(){
 							var that = this;
-							this.startdate = null;
-							this.enddate = null;
-							//that.$el.find("#txtname").typeahead({
-							//	  hint: true, 
-							//	  local: that.app.globaljobtypes
-							// }); 
-							var startDate = new Date(); startDate.setDate( startDate.getDate() + 1 );
-							this.$el.find('#scheduledate input').daterangepicker({
-								format: 'YYYY-MM-DD',
-							    startDate:startDate,
-							    minDate: new Date()
-							 } ,function(start, end, label) {
-								 console.log(label + ' start ' +  start + ' end ' + end);
-								that.startdate =  start.format('YYYY-MM-DD') ;
-								that.enddate =  end.format('YYYY-MM-DD');
-							  });
-							
-							 
-						    this.fillEmployees();
-						    this.fillJobTypes();
-							if(typeof this.options.id == "undefined"){ 
-							}
+							  require(['booking/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){ 
+							    	var objLists = new Lists({setting:that.app});
+							    	var objBreadCrumb = new BreadCrumb({title:'Booking',setting:that.app});
+							    	$('#page-wrapper').find('.page-content').html(objLists.$el); 
+							    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
+							    })
 						},
-						clone:function(){
-							var quantity = this.$el.find("#ddlquantity").val();
-							for(var i = 0; i<=quantity-1; i++){
-								this.cloneFirstOne();
-							}
-						},
-						cloneFirstOne:function(){
-							
-							this.app.showLoading('Loading Setting...',this.$el);
-							this.cloneId= this.cloneId + 1;
-							var count = this.cloneId ;
-						 
-							var clone = this.$el.find('.schedule-row div:first').clone();
-							this.$el.find('.schedule-row div:first').removeClass('clone');
-							clone.addClass('removable-clone'+this.cloneId);
-							
-							clone.find('.change-header').attr('id','area_'+count);
-							clone.find('.change-body').attr('id','area_a'+count);
-							var that = this;
-							clone.find('.areas').on('click',function(){
-								$(this).find('i').toggleClass("fa-chevron-down fa-chevron-up");
-								console.log($(this)  + 'id is this' ); 
-								var id = $(this).attr('id').split('_')[1];
-								that.$el.find('#area_a'+id).slideToggle( "slow" );
-							});
-							var text  = this.$el.find('#ddljobtypes option:selected').text().trim();
-							var id = this.$el.find('#ddljobtypes').val();
-							clone.find('input[type=hidden]').val(id);
-							clone.find('.portlet-title h4 strong').text('1  x ' +text);
-							 this.$el.find('.schedule-row').prepend(clone);
-							
-							clone.show();
-							clone.find('.btn-remove').on('click',function(){
-								clone. remove();
-							 
-							});
-							this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' });
-							this.fillEmployees(id,clone);
-							this.app.showLoading(false,this.$el);
-						},
-						closeView : function() { 
-							var that = this;
-
-							require([ 'schedulelist/views/lists' ],
-									function(Lists) {
-
-										var objLists = new Lists({
-											setting : that.app
-										});
-										that.$el.parent().html(objLists.$el);
-										Backbone.View.prototype.remove
-												.call(that);
-										that.undelegateEvents();
-										that.$el.remove();
-										that.$el.removeData().unbind();
-										that.remove();
-									})
-
-						},
-						clearErrorFilter : function() {
-							this.$el.find('.name-error').addClass('hide');
-						}, 
-						save : function() {
-							var that = this;
-							this.app.showLoading('Wait a moment....', this.$el);
-							 
-							this.$el.find('.schedule-div:not(:last-child)').each(function(){
-								var timeto = $(this).find('.timeto').val();
-								var timefrom = $(this).find('.timefrom').val();
-								var jobtypeid = $(this).find('input[type=hidden]').val();
-								var employeeid  = $(this).find('.ddlemployees').val();
-							    console.log($(this).find('.ddlemployees').val());
-								var objScheduleModel = new ScheduleModel();
-								objScheduleModel.set('timefrom',timefrom);
-								objScheduleModel.set('timeto',timeto)
-								objScheduleModel.set('jobtypeid',jobtypeid);
-								objScheduleModel.set('datefrom',that.startdate);
-								objScheduleModel.set('dateto',that.enddate);
-								objScheduleModel.set('employeeid',employeeid);
-								objScheduleModel.set('branchid',that.branchid);
-								objScheduleModel.save();
-							})
-							this.app.showLoading(false, this.$el); 
-						 
-							this.app.successMessage();
-						 
-						},
-						fillEmployees:function(id,clone){
-							var url = "api/employeebyid";
-							 var that = this;
-							 var employees ;
-							 var names = new Array();
-			                 var ids = new Object(); 
-			                 var str = "<option value='0' selected> None <option>";
-			                  jQuery.getJSON(url,{jobtypeid:id,branchid:this.branchid}, function(tsv, state, xhr) {
+						getBookings:function(){
+							var url = "api/bookingbyid";
+							 var that = this; 
+			                  jQuery.getJSON(url,{bookingid:this.options.model.get('id'),branchid:this.branchid}, function(tsv, state, xhr) {
 			                   var employees = jQuery.parseJSON(xhr.responseText);
-			                   		_.each( employees, function ( value, key,list ) {
-			                   			if(value.id){
-			                   			  str+="<option value='"+value.id+"'> "+value.firstname + '' + value.lastname + " </option>";
-			                   			  
-			                   			}
-			                         });  
-			                              clone.find(".ddlemployees") .html(str);
-			                              clone.find(".ddlemployees  option")
-			                              .filter(function() {
-			                                  return !this.value || $.trim(this.value).length == 0;
-			                               })
-			                              .remove();
-
-			                       	   	 
-			                  		 
+			                   that.model = employees[0];
+			                   that.basicInfo();
+			                   that.basicBooking();
+			                   that.fetchEmployees();
+			                   that.fetchServices();
 			                   
-			                   });
-						 },
-						fillJobTypes:function(){
-							 
-							var url = "api/jobtypes";
-							var that = this;
-							var str = "";
-							jQuery.getJSON(url, {franchiseid:this.app.user_franchise_id},function(tsv, state, xhr) {
-			                   var employees = jQuery.parseJSON(xhr.responseText);
-			                   		_.each( employees, function (value,key,list)
-			                               {
-			                                 str+= "<option value='"+value.id+"'>"+ value.name +"</option>";
-			                               } ); 
-					                   	  that.$el.find("#ddljobtypes").html(str);
-					                   	 
-			                   
-			                   });
+			                   	});
 						},
-
+						  
+						getLogs:function(){
+							var url = "api/getalllogs";
+							 var that = this; 
+			                  jQuery.getJSON(url,{bookingid:this.options.model.get('id')}, function(tsv, state, xhr) {
+			                   var logs = jQuery.parseJSON(xhr.responseText);
+			                   var str = ""; 
+			                   _.each(logs,function(value,key,list){
+			                	    str +='<div class="info-container" style="margin-top: 20px;"> <div class="col-sm-4"><p><strong>';
+			                	    str +=value.createdon+'</strong> 	</p> </div> <div class="col-sm-4"> <p> <strong>';
+			                	    str +=value.title+' </strong> </p> 	</div> <div class="col-sm-4"> <p> <strong style="color: #e74c3c;">';
+			                	    str +=value.text+'</strong> </p> </div> </div>'; 
+			                   })
+			                   that.$el.find("#divlogs").html(str);
+			               
+			                  });
+						},
+						getComments:function(){
+							var url = "api/getallcomments";
+							 var that = this; 
+			                  jQuery.getJSON(url,{customerid:this.options.model.get('customerid'),branchid:this.branchid}, function(tsv, state, xhr) {
+			                   var comments = jQuery.parseJSON(xhr.responseText);
+			                   var str = "";
+			                   var mdr = "";
+			                   var i = 0;
+			                   _.each(comments,function(value,key,list){
+			                	   if(i < 6){
+			                	    str +='<div class="feaild_container">';
+			                	    str +='<div class="col-sm-12"><p><strong>'+value.createddate+'</strong> </p></div>';
+			                	    str +='<div class="col-sm-12">  <p>'+value.comments+'</p></div>';
+			                	    str +='</div>';
+			                	   }
+			                	   i = i + 1;
+			                	    mdr +='<div class=" col-md-12">';
+			                	    mdr +='<div class="info-container" style="margin-top:20px;">';
+			                	    mdr +='<p><strong>'+value.createddate+'</strong></p>';
+			                	    mdr +='<p>'+value.comments+'</p>';
+			                	    mdr +='</div>';
+			                	   mdr +='</div>';
+			                   })
+			                   that.$el.find("#divcomments").html(str);
+			                   that.$el.find("#divsectioncomments").html(mdr);
+			                  });
+						},
+						getHistory:function(){
+							var url = "api/getallhistory";
+							 var that = this; 
+			                  jQuery.getJSON(url,{customerid:this.options.model.get('customerid'),branchid:this.branchid}, function(tsv, state, xhr) {
+			                   var history = jQuery.parseJSON(xhr.responseText);
+			                   var str = "";
+			                    
+			                   _.each(history,function(value,key,list){
+									   str+='<div class="col-lg-12 col-md-12 col-sm-12">';
+									   str+='<div class="info-container" style="margin-top:20px;">';
+									   str+='<div class="row">';
+									   str+='<div class="col-sm-4">';
+									   str+='<p>'+that.getDate(value.dayid) + ' from '+ value.timestart + ' to ' + value.timeend+'</p>';
+									   str+='</div>';
+									   str+='<div class="col-sm-4">';
+									   str+='<p>Services: <strong>'+value.service+'</strong></p>';
+									   str+='</div>';
+									str+='<div class="col-sm-4">';
+									str+='<p>Status:</p>';
+									str+='</div>';
+									str+='<div class="clearfix"></div>';
+									str+='<div class="col-sm-4">';
+									str+='<p>Price :<strong>'+value.price+'</strong></p>';
+									str+='</div>';
+									str+='<div class="col-sm-4">';
+									str+='<p>Employee: <strong>'+value.employee+'</strong></p>';
+									str+='</div>';
+									str+='<div class="col-sm-4">';
+									str+='<p>Duration: <strong> from '+ value.timestart + ' to ' + value.timeend+'</strong></p>';
+									str+='</div>';
+									str+='<div class="col-sm-12">';
+									   str+='</div>';
+									   str+='</div>';
+									   str+='</div>';
+									   str+='</div>';
+			                   })
+			                   
+			                   that.$el.find("#divhistory").html(str);
+			                  });
+						},
+						updateCustomer:function(){
+							var that = this;
+							var name =  this.$el.find('#txtname').val();
+							var phone = this.$el.find('#txtphone').val();
+							var email = this.$el.find('#txtemail').val();
+							var id = this.model.customerid;
+							var URL = "api/savcustomer";
+							 this.app.showLoading('Wait, Saving info...',this.$el);
+								$.post(URL, {phone:phone,name:name,id:id,email:email})
+				                .done(function(data) { 
+				                	 that.app.showLoading(false,that.$el);
+				                	 that.app.successMessage();
+				                });
+						},
+						changeBooking:function(ev){
+							var from = $(ev.target).attr('id');
+							var id = ev.target.value;
+							var that = this;
+							var URL = "api/changebooking";
+							var type = "";
+							if(from == "ddlemployees"){
+								type = "employees";
+							}else{
+							    type = "services";
+							}
+							
+							 this.app.showLoading('Wait, Saving info...',this.$el);
+							  var mdr = "";
+								$.post(URL, {type:type,customerid:this.model.customerid,id:id,bookingid:this.model.bookingid,franchiseid:this.app.user_franchise_id,branchid:this.app.user_branch_id})
+				                .done(function(data) { 
+				                	 that.app.showLoading(false,that.$el);
+				                	 that.app.successMessage();
+				                	 $(ev.target).attr('disabled',true);
+				                });
+						},
+						basicInfo:function(){
+							this.$el.find('#txtname').val(this.model.name);
+							this.$el.find('#txtphone').val(this.model.phone);
+							this.$el.find('#txtemail').val(this.model.email);
+						},
+						basicBooking:function(){
+							this.$el.find('#pdepartment').html(this.model.branch);
+						 	this.$el.find('#pprice').html(this.model.price + "$");
+							this.$el.find('#pdatetime').html(this.model.dayid);
+							this.$el.find('#pbookingtype').html(this.model.bookingtype);
+							 	this.$el.find('#pDatetime').html(this.getDate(this.model.dayid) + ' from '+ this.model.timestart + ' to ' + this.model.timeend); 
+						},
+						getDate:function(date){
+							return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
+						},
+						updateComments:function(){
+							var that = this;
+							var comments =  this.$el.find('#txtcomments').val(); 
+							var id = this.model.customerid;
+							var URL = "api/savecomments";
+							 this.app.showLoading('Wait, Saving info...',this.$el);
+							 var mdr = "";
+								$.post(URL, {comments:comments,customerid:id})
+				                .done(function(data) { 
+				                	 that.app.showLoading(false,that.$el);
+				                	 that.app.successMessage();
+				                	 mdr +='<div class=" col-md-12">';
+				                	    mdr +='<div class="info-container" style="margin-top:20px;">';
+				                	    mdr +='<p><strong> Few moment Ago</strong></p>';
+				                	    mdr +='<p>'+comments+'</p>';
+				                	    mdr +='</div>';
+				                	    	mdr +='</div>';
+				                	    	that.$el.find("#divsectioncomments").prepend(mdr);
+				                });
+						},
+						 fetchServices:function(){
+							 var URL = "api/servicesbyjobtypeid";
+					         var that = this;  
+					          jQuery.getJSON(URL,{franchiseid:this.app.user_franchise_id,jobtypeid:this.model.jobtypeid},  function (tsv, state, xhr) {
+				                var _json = jQuery.parseJSON(xhr.responseText);
+					                 that.$el.find("#ddlservices").html(_.map(_json,function(value,key,list){ 
+					                	 var check = "";
+					                	 if(value.id == that.model.serviceid)
+					                		 check = "selected";
+					                	 return "<option "+check+" data-price="+value.price+" data-time="+value.time+" value="+value.id+">"+value.name+"</option>";
+					                	 }).join());
+					                
+									  
+					          }); 
+					     },
+					       
+					     fetchEmployees:function(branchid){
+					    	 this.app.showLoading('Loading Data...',this.lid );
+								 var URL = "api/getemployeesbyjobtypeid";
+								 var that = this; 
+								 this.$el.find("#ddlemployees").html("<option value='0' selected> None </option>");
+							      jQuery.getJSON(URL,{frachiseid:this.app.user_franchise_id,jobtypeid:this.model.jobtypeid},  function (tsv, state, xhr) {
+					                var _json = jQuery.parseJSON(xhr.responseText);
+						                 that.$el.find("#ddlemployees").append(_.map(_json,function(value,key,list){
+						                	 var check = "";
+						                	 console.log(that.model.employeeid)
+						                	 if(value.id == that.model.employeeid)
+						                		 check = "selected";
+						                	 	return "<option "+check+" value="+value.id+">"+value.name + "</option>";
+						                	 }).join());
+						                 that.app.showLoading(false,this.lid );
+							      	});
+					     }
 					});
 		});

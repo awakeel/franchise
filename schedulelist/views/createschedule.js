@@ -313,7 +313,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 			                   				selected =  "selected" ;
 			                   			}
 			                   			if(value.id){
-			                   			  str+="<option "+selected+" value='"+value.id+"'> "+value.firstname + '' + value.lastname + " </option>";
+			                   			  str+="<option "+selected+" value='"+value.id+"'> "+value.firstname + '  ' + value.lastname + " </option>";
 			                   			  
 			                   			}
 			                         });  

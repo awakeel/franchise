@@ -1,19 +1,28 @@
 <div class="right_container">
-                    		<div class="row ">
-                                    <div class="col-md-4"><input class="form-control" placeholder="Select Date " type="text" id="txtdate"></div>
-                                    <div class="col-md-4">
-                                    	 
-                                    </div>                       
-                                   
-                                    <div class="col-md-6  selection-box listing"> 
-                                  
-                                    
-                                    </div>
-                                    
-                                   
-                                    
-                                </div>
-                    	
- 
-<div id='calendar' class='cal'></div>
-</div>  
+	<div class="row filters">
+		
+		<div class="col-md-8 ">
+			<div class="col-md-4">
+				<select id="ddljobtypes">
+					<option value="0" selected="">All Job types</option>
+				</select>
+			</div>
+			<div class="col-md-4">
+				<select id="ddlemployees">
+					<option value="0" selected="">All Employees</option>
+				</select>
+			</div>
+		</div>
+<div class="col-md-4 pull-right">
+			<input class="form-control" placeholder="Select Date " type="text"
+				id="txtdate">
+		</div>
+		<div class="col-md-6  selection-box listing"></div>
+
+
+
+	</div>
+
+
+	<div id='calendar' class='cal'></div>
+</div>

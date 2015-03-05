@@ -75,9 +75,9 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					var first = that.$el.find("#txtsmonday").val();
 					var end = that.$el.find("#txtemonday").val();
 					if(!first)
-						first = "9:00";
+						first = "09:00";
 					if(!end)
-						end = "17:00"; 
+						end = "18:00"; 
 					if($(ev.target).is(':checked')){
 						that.$el.find('.days').prop("checked",true);
 						that.$el.find('.first-text').attr('disabled',false);
@@ -403,7 +403,7 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 		                	 var checked = "";
 		                	 if(that.id && that.city.toLowerCase().trim() == value.Name.toLowerCase().trim())
 		                	   checked = "selected";
-		                	 else if(!that.id && that.empcity && that.empcity.toLowerCase().trim() == value.Name.toLowerCase().trim())
+		                	 else if(!that.id && that.empcity && that.empcity.toLowerCase().trim() == value.Name.ID)
 		                	   checked = "selected";
 		                	 
 		                	   return "<option value='"+value.Name+"'  "+checked+">"+value.Name+"</option>";}).join());

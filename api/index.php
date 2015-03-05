@@ -16,6 +16,7 @@ require $path .'/classes/Services.php';
 require $path .'/classes/Authorize.php';
 require $path .'/classes/Permission.php';
 require $path .'/classes/Schedule.php';
+require $path .'/classes/Customer.php';
 require $path .'/classes/Roles.php';
 require $path .'/classes/Leaves.php';
 require $path .'/classes/Booking.php';
@@ -38,6 +39,7 @@ $objBooking = new Booking($app);
 $objBookingCal = new BookingCalender($app);
 $objRoles = new Roles($app,$auth);
 $objLeaves = new Leaves($app,$auth);
+$objCustomer = new Customer($app,$auth);
 // Section employees
 $app->get('/employees', function () {
 	if(authorize('user')){

@@ -75,7 +75,7 @@ class JobTypes
     		$franchiseid = $_GET['franchiseid'];
     	 
     	} 
-    	$sql = "select * from jobtypes where franchiseid ='".$franchiseid."'  $search order by id desc";
+    	$sql = "select j.*, j.color as backgroundColor from jobtypes as j where franchiseid ='".$franchiseid."'  $search order by id desc";
     	    try {
               	$types = R::getAll($sql);
             // Include support for JSONP requests

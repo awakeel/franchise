@@ -1,19 +1,19 @@
 
-<td width="35%"><a href="#00"><strong><%=this.model.get('name')%></strong>
+<td width=""><a href="#00"><strong><%=this.model.get('name')%></strong>
 
 </a></td>
  
 <td width="5%"><%=this.getStatus()%></td>
 <td width="10%"><%=this.setting.getFormatedDate(this.model.get('createdon'))%></td>
-<td width="	25%"><a class="btn btn-danger delete-branch btn-sm"
+<td width="	45%"><a class="btn btn-danger delete-branch btn-sm"
 	style="color: #fff" data-id="<%=this.model.get('id')%>">
 		<%=this.setting.language['delete']%></a>
 	<button class="btn btn-info edit-token btn-sm"><%=this.setting.language['edit']%></button>
 	<button class="btn btn-success change-status btn-s1m">
 	<%if(this.model.get('isactivated') == "1"){%>
-		<%=this.setting.language['inactive']%>
+		Deactivate
 	<%}else{%>
-		<%=this.setting.language['active']%>
+		Activate
 	<%}%>
 	</button>
 </td>

@@ -66,6 +66,7 @@ class Schedule
                     echo json_encode($error);
             }
     }
+    
     function getEmployeeByJobType(){
     	$branchid = @$_GET['branchid'];
     	$schedulegroupid = @$_GET['schedulegroupid'];
@@ -228,6 +229,13 @@ class Schedule
             		$search .= " AND s.schedulegroupid IN($scheduleid)";
             		//$jobtypeid = rtrim($jobtypeid, ',');
             	       
+            	}
+            	if(isset($_GET['issp']) && !empty($_GET['issp'])){
+            		$issp = $_GET['issp'];
+            		if($issp && !empty($issp) && $issp != "0")
+            			$search .= " AND st.ischanged = 1 order by st.end desc, st.start asc";
+            		//$jobtypeid = rtrim($jobtypeid, ',');
+            	
             	}
             		$sql = "SELECT st.*,    s.schedulegroupid,st.scheduleid, st.dayid AS datefrom,st.dayid AS dateto,j.color AS backgroundColor,j.name as title,concat(e.firstname , ' ' , e.lastname) as name  FROM scheduletiming st
 								  INNER JOIN schedule s ON s.id = st.scheduleid
@@ -398,6 +406,7 @@ INNER JOIN schedule s ON s.id = st.`scheduleid`
     	$d2 = explode('-',$to);
     	$d2 = $d2[0].$d2[1].$d2[2]; 
     	$id = $this->dbSaveSchedule($params);
+    	if(!$id){ echo json_encode('ok'); return 0;}
     	$sql = "select d_dayid, LOWER(theday) as theday from d_day where d_dayid >= $d1 and d_dayid <= $d2";
     	try {
     	    $dates = R::getAll($sql);
@@ -409,6 +418,7 @@ INNER JOIN schedule s ON s.id = st.`scheduleid`
 		 				 if (strpos($d,$day) !== false) {
 					       $da = explode("=",$d);
 					       $timing = explode("##",$da[1]);
+					       if($timing[0])
 						   $this->dbSaveScheduleTiming($id,$dayid,$timing[0],$timing[1]);
 		 				 }
 	 				 }
@@ -423,6 +433,7 @@ INNER JOIN schedule s ON s.id = st.`scheduleid`
     }
     
     function dbSaveSchedule($params ){
+    	if(!$params->jobtypeid) return null;
     	$schedule = R::dispense( 'schedule' );
     	
     	$schedule->jobtypeid = $params->jobtypeid;

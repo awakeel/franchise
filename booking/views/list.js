@@ -52,12 +52,16 @@ define(['text!booking/tpl/list.html','app'],
 			    		    
 			    		  }
 			    });
-			
-               
-                 },
-                 
-                 
-                 save:function(title,comments,branchid,view){
+			  },
+			  updateToken:function(ev){
+             	 var that = this;  
+             	 
+             	 require(['booking/views/createbooking'],function(addupdate){
+             		 that.options.page.$el.html(new addupdate({model:that.model,page:that,app:that.app}).$el);
+             		 	// $("#newjobtypes").modal('show');
+             	})
+              },
+              save:function(title,comments,branchid,view){
                 	    this.model.set('branchid',branchid);
                 	  	this.model.set('name',title);
                 	  	this.model.set('comments',comments);

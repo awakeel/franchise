@@ -27,6 +27,7 @@ define(['text!employees/tpl/list.html','app','swal'],
 							var objLists = new Lists({
 								setting : that.setting,
 								id:that.branchid
+								///employeeid:that.model.get('id')
 							});
 							 
 								 that.$el. parents('.col-lg-12').html(objLists.$el);

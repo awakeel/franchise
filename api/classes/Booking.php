@@ -16,12 +16,16 @@ class Booking{
 	 }
 	 function getAllBookings() {
 	 	$branchid = @$_GET['branchid'];
+	 	$search = @$_GET['search'];
+	 	if(isset($search) && !empty($search)){
+	 		$search = " and (  s.name  like '%".$search."%' or b.title  like '%".$search."%')";
+	 	}
 	  	$sql = " SELECT b.*,e.firstname as emp, c.name AS customer, s.name AS service FROM bookings b
 					INNER JOIN branches br ON br.id = b.`branchid`
 					INNER JOIN services s ON s.id = b.`serviceid`
 					LEFT JOIN employees e ON e.id = b.`employeeid`
 					INNER JOIN customers c ON c.id = b.`customerid`
-					WHERE b.branchid = $branchid order by b.createdon";
+					WHERE b.branchid = $branchid  $search order by b.createdon";
 	 	try {
 	 		$bookings = R::getAll($sql); 
 	 		if (!isset($_GET['callback'])) {
@@ -60,7 +64,7 @@ class Booking{
 	 			$booking->timeend = $params->timeend;
 	 			$booking->bookingtype = $params->bookingtype;
 	 			$booking->price = $params->price;
-	 			$booking->bookingdate = date('Y-m-d', strtotime($params->bookingdate));
+	 			$booking->dayid = $params->dayid;
 	 			$booking->customerid = $customerid;
 	 			$booking->status = $params->status; 
 	 			$booking->createdon = R::isoDate();

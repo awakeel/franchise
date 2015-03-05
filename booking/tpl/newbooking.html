@@ -11,6 +11,16 @@
 				  <div class="modal-body">
 				                     <div id="inputSizing" class="panel-collapse collapse in">
                                         <div class="portlet-body">
+                                        	<div class="row" id="div-customer">
+                                                <div class="col-sm-4">
+                                                Department <label id="lbldepartments"></label>
+                                                 </div>
+                                                <div class="col-sm-4">
+                                                Jobt type <label id="lbljobtype"></label>
+                                                 </div>
+                                                
+                                            </div>
+                                        
                                             <h4>Customer Info</h4>
                                             <div class="row" id="div-customer">
                                                 <div class="col-sm-4">
@@ -23,38 +33,16 @@
                                                     <input type="text" class="form-control" id="txtemail" placeholder="Email">
                                                 </div>
                                             </div>
-                                            <h4>Select Department</h4>
-                                            <div class="row">
-                                                 <div class="col-lg-8">
-                                                    <select id="ddldepartments">
-                                                    </select> 
-                                                </div>
-                                            </div>
-                                            <br>
-                                                <div class="row">
-                                                <div class="col-sm-6">
-                                                 <h4>Select Job type</h4>
-													  <select id="ddlemployees">
-                                                    </select>
-													
-                                                 </div>
-                                                <div class="col-sm-6">
-                                                 <h4>Booking type</h4>
-                                                   	 <select id="ddlbookingtype">
-                                                    <option value="phone"> Phone </option>
-                                                    <option value="Drop-In">Drop In</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                            
                                             <div class="row">
                                              <div class="col-sm-6">
-                                                    <h4>Service <span id="txtprice"></span></h4>
+                                                    <h4>Service (price:<span id="txtprice"></span>)</h4>
                                                     <select id="ddlservices">
                                                     </select> 
                                                 </div>
                                                 <div class="col-sm-6">
                                                   <h4>Date</h4>
-                                                  <input class="form-control"  placeholder="Select Date " type="text" id="txtdate">   
+                                                  <input class="form-control"  placeholder="Select Date " disabled = "disabled" type="text" id="txtdatebooking">   
                                                  </div>
                                                
                                             </div>
@@ -62,27 +50,27 @@
                                               <div class="row">
                                                 <div class="col-sm-6">
                                                  <h4>Time From</h4>
-													<input type="text" disabled="disabled" style="width:200px;" class="timepicker form-control  first-text"
-														id="txtstart" />   
+													<input type="text"   style="width:200px;" class="timepicker form-control  first-text"
+														id="txtstartbooking" />   
 													
                                                  </div>
                                                 <div class="col-sm-6">
                                                  <h4>Time To</h4>
-                                                   	 <input type="text" disabled="disabled" style="width:200px;" class="timepicker form-control  last-text"
-														id="txtend" />
+                                                   	 <input type="text" style="width:200px;" disabled="disabled" class="  form-control  last-text"
+														id="txtendbooking" />
                                                 </div>
                                             </div>
                                              <br>
                                               <div class="row">
                                                 <div class="col-sm-6">
                                                  <h4>Select Employee</h4>
-													  <select id="ddlemployees">
+													  <select id="ddlemployeesbooking">
                                                     </select>
 													
                                                  </div>
                                                 <div class="col-sm-6">
                                                  <h4>Booking type</h4>
-                                                   	 <select id="ddlbookingtype">
+                                                   	 <select id="ddlbookingtypebooking">
                                                     <option value="phone"> Phone </option>
                                                     <option value="Drop-In">Drop In</option>
                                                     </select>

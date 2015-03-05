@@ -5,12 +5,13 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         load: function (users,name) {
         	 this.language = {};
         	 var that = this;
-        	 this.selectedLanguage = 2;
+        	 this.selectedLanguage = 1;
         	 this.branches = {};
         	 this.current_branch = name ||  "";
         	 this.data = {};
         	 this.jobTypes = {};
         	 this.modules = {};
+        	 this.firsttime = false;
         	 this.isViewedNew = false;
         	 this.globaljobtypes = [];
         	 this.globalservices = [];
@@ -44,23 +45,35 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			    		  that.language[key.title] = key.languagetitle;
 			    	   })  
 			             
-			           
+			         
 			    }}); 
         },
-        
+         
         loadPages : function( ) {
         	
 			var objContainer = new Container({
 				setting : this
-			}); 
-			 
+			});  
 			$('#wrapper').html(objContainer.objHeader.$el);
 			$('#wrapper').append(objContainer.objLeftMenu.$el);
 			$('#wrapper').append(objContainer.$el);
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
-			console.log(this.users);
-            if(this.users.isnew == "1" && this.users.passwordchanged !== "1"){
+			 if(this.firsttime == "launch"){
+				 var that = this;
+				 
+	           	 require(['schedulelist/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
+						var objLists = new Lists({setting:that});
+						var objBreadCrumb = new BreadCrumb({title:'schedulelist',setting:that,show:''});
+						$('#page-wrapper').find('.page-content').html(objLists.$el);
+						$('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
+						swal({
+						      title: "That's Great?",
+						      text: "Create your first schedule!",
+						      type: "info" , 
+				  			     } );
+			     })	
+			 }else if(this.users.isnew == "1" && this.users.passwordchanged !== "1"){
             	var that = this;
             	$('body').removeClass('login');
 			  	 require(['views/welcome'],function(welcome){
@@ -72,7 +85,8 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			  	 require(['views/welcome'],function(welcome){
 			  		$('#page-wrapper').find('.page-content').html(new welcome({model:{},id:1,page:that,setting:that}).$el);
 				 })
-            } else{
+              
+            }else{
 				$('body').removeClass('login');
 				$('#page-wrapper').find('.page-content').append(
 						objContainer.objDashboard.$el);
@@ -145,6 +159,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 if(typeof that.users !="undefined" && that.users.setting.is_logged_in){
                 	///that.user_branch_id = that.users.branchid;
                 	that.user_franchise_id = that.users.franchiseid;
+                	that.firsttime = _json.firsttime || 0;
                 	that.branches = _json.branches;
                 	that.user_employee_id = _json.user.id;
                 	if(!that.user_branch_id && typeof that.branches[0] !='undefined'){
@@ -172,14 +187,12 @@ define(['jquery','language/collections/languages','spin','moment','flex',
              var that = this;
              var data = {};
              if(this.user_branch_id){
-            	 data = {branchid:this.user_branch_id}
-            	 
+            	 data = {branchid:this.user_branch_id} 
              }
              jQuery.getJSON(URL,data,  function (tsv, state, xhr) {
                  var _json = jQuery.parseJSON(xhr.responseText);
-                 that.modules = _json;
-                
-             } );
+                 that.modules = _json; 
+             });
           }, 
          getFormatedDate:function(date){
              if(date) 

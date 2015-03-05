@@ -8,7 +8,8 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			 	"change #ddlemployees":"showEmployees",
 			 	"change #ddljobtypes":"showJobTypes",
 			 	"change #ddlschedules":"showSchedules",
-			 	"click .color-code":"showCode"
+			 	"click .color-code":"showCode",
+			 	"click .sp-days":"showSpecialDays"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -20,7 +21,12 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			    this.employeeid = null;
 			    this.jobtypes = null;
 			    this.jobtypeid = null;
-			    this.app.getTiming(this.app.user_branch_id);
+			    if(typeof this.app.timings[0] !="undefined"){
+			    	
+			    }else{
+			    	this.app.getTiming(this.app.user_branch_id);
+			    }
+			    
 			    this.fetchSchedules();
 			    this.fetchEmployees();
 			    this.fetchJobTypes();
@@ -28,15 +34,24 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 				
 			},
 			showCode:function(){
-				var str = "";
-				_.each(this.jobtypes,function(value,key,list){
-					str +="<tr>";
-					str +="<td>"+value.name+"</td>";
-					str +="<td><label style='padding-left:25px;padding-right:25px;background:"+value.color+"'>&nbsp;</label></td>";
-					str +="</tr>";
-				})
-				this.$el.find('#colorcode table tbody').html(str);
-				this.$el.find('#colorcode').modal('show');
+				  var str = "";
+				  var URL = "api/jobtypes";
+		         var that = this;
+		         this.app.showLoading('Loading...',this.$el.find('#colorcode table tbody'))
+		         that.$el.find("#ddljobtypes").html("<option selected value='0'> All Job types </option>");
+	            jQuery.getJSON(URL,{franchiseid:this.app.user_franchise_id},  function (tsv, state, xhr) {
+	            	 var _json = jQuery.parseJSON(xhr.responseText);
+	            	 _.each(_json,function(value,key,list){
+	 					str +="<tr>";
+	 					str +="<td>"+value.name+"</td>";
+	 					str +="<td><label style='padding-left:25px;padding-right:25px;background:"+value.color+"'>&nbsp;</label></td>";
+	 					str +="</tr>";
+	 				})
+	 				that.$el.find('#colorcode table tbody').html(str);
+	            	 that.$el.find('#colorcode').modal('show');	 
+	            }); 
+				
+				
 			},
 			showEmployees:function(ev){
 				var id = $(ev.target).val();
@@ -48,7 +63,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			showJobTypes:function(ev){
 				var id = $(ev.target).val();
 				this.jobtypeid = id;
-				//this.employeeid = null; 
+				  this.employeeid = null; 
 				//this.scheduleid = null;
 				 this.fetchEmployees(id);
 				 this.changeCalender(id);
@@ -56,13 +71,25 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			showSchedules:function(ev){
 				var id = $(ev.target).val();
 				this.scheduleid = id;
-				//this.employeeid = null;
-				//this.jobtypeid = null; 
+				 this.employeeid = null;
+				 this.jobtypeid = null; 
 				 this.fetchJobTypes(id);
 				 this.changeCalender(id);
 			},
-			changeCalender:function(value){
-				this.fetchData();
+			changeCalender:function(){
+				this.fetchData( 0);
+			},
+			showSpecialDays:function(){
+				    var isSP = this.$el.find('.sp-days').data('normal');
+				    if(isSP =="0"){
+				    	this.fetchData(1);
+				    	this.$el.find('.sp-days').html('Show Normal').data('normal',1);
+				    }else{
+				    	this.$el.find('.sp-days').html('Show SP').data('normal',0);
+				    	this.fetchData(0);
+				    }
+				    
+					
 			},
 			render: function () {
 				this.$el.html(this.template( ));
@@ -84,12 +111,19 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			},
-			initScheduleCalander:function(models){ 
-				 
+			initScheduleCalander:function(models,isSP){ 
+				    
 				    var start,end;
 				   	start = this.app.timings[0].opened.split(':')[0];
 					end = this.app.timings[0].closed.split(':')[0];
-				    var date = new Date();
+					if(isSP == "1"){
+						start = models[0].start.split('T')[1].split(":")[0];
+						end = models[0].end.split('T')[1].split(":")[0];
+					}else{
+						$('.sp-days').addClass('disabled');
+					}
+					
+                    var date = new Date();
 	                var d = date.getDate();
 	                var m = date.getMonth();
 	                var y = date.getFullYear();
@@ -153,6 +187,10 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    	'<p> <h4>Assign to :  '+event.name+'</h4><br />' + 
 	        				'<p><b>Start:</b> '+event.start+'<br />' + 
 	        				(event.end && '<p><b>End:</b> '+event.end+'</p>' || '');
+	                    	console.log(event.ischanged);
+	                    	if(event.ischanged == "1"){
+	                    		$('.sp-days').removeClass('disabled');
+	                    	}
 	                    	 element.qtip({ 
 	                             content:content,
 	                             style: {
@@ -198,15 +236,16 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 		                 that.app.showLoading(false,this.$el );
 	            }); 
 		     }, 
-		     fetchData:function(id){ 
+		     fetchData:function(isSP){ 
 		    	 this.app.showLoading('Loading schedule...',this.$el); 
 		    	 var data = {branchid:this.app.user_branch_id};
 		    	 data['employeeid'] = this.employeeid;
 		    	 data['jobtypeid'] = this.jobtypeid;
 		    	 data['scheduleid'] = this.scheduleid;
+		    	 data['issp'] = isSP
 		    	 var that = this;
 		    	 that.objSchedules.fetch({data:data ,success:function(data){
-					 that.initScheduleCalander(that.objSchedules.toJSON());
+					 that.initScheduleCalander(that.objSchedules.toJSON(),isSP);
 				 }})
 				 this.app.showLoading(false,this.$el); 
 		     },

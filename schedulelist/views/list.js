@@ -33,8 +33,9 @@ define(['text!schedulelist/tpl/list.html' ],
 			},
 			changeSpecialDay:function(){
 				var that = this;
+				var dur = this.getDuration();
 				require(['schedulelist/views/specialday'],function(specialday){
-					var objSpecialDay = new specialday({model:that.model,app:that.app});
+					var objSpecialDay = new specialday({model:that.model,duration:dur,app:that.app});
 					var modal = that.options.page.$el.find("#changespecialday");
 					modal.find('#modalspecialdialog').html(objSpecialDay.$el);
 					modal.modal('show');

@@ -21,7 +21,9 @@ define(['text!schedulelist/tpl/specialday.html','datepicker','timepick'],
 				    defaultDate: this.start,
 					    todayHighlight: true
 				});  
+				this.$el.find('#lgd').html('Duration: <small> '+ this.options.duration + '</small>' );
 				this.$el.find('#txtdate').val();
+				this.$el.find('#spntitle').html(this.options.model.get('title'));
 				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i'  });
 				this.fillJobTypes();
 			} ,

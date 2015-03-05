@@ -42,14 +42,11 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 			    if(!folder){ folder = $(ev.target).parent('li').data('folder')}
 			    if(typeof folder == "undefined") return;
 			    this.options.setting.showLoading('Loading ...',$('#page-wrapper').find('.page-content'));
-			    require([folder+'/views/lists'],function(Lists){
-			    
+			    require([folder+'/views/lists'],function(Lists){ 
 			    	var objLists = new Lists({setting:that.options.setting});
 			    	var objBreadCrumb = new BreadCrumb({title:folder,setting:that.options.setting,show:show});
-			    	$('#page-wrapper').find('.page-content').html(objLists.$el);
-			 
-			    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el);
-			    	
+			    	$('#page-wrapper').find('.page-content').html(objLists.$el); 
+			    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
 			    })
 			},
 			render: function () {

@@ -6,7 +6,8 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 			className:"col-lg-12",
 			events:{
 				"click .delete-p":"deleteToken", 
-				"click .add-new":"addNew"
+				"click .add-new":"addNew",
+				'keyup #txtsearchbooking':"searchBooking"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -47,8 +48,8 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 						that.$el.find('tbody').append(objBookingList.$el);
 					})
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="9">';
-							trNoRecord += '<div class="col-lg-9 pull-right"><P> Boo... You have no schedule ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="8">';
+							trNoRecord += '<div class="col-lg-9 pull-right"><P>No booking found ';
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
@@ -94,7 +95,7 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
                     this.fetchJobTypes(this.offsetLength);
                 }
             },
-            searchschedulelist:function(ev){ 
+            searchBooking:function(ev){ 
                      this.searchText = ''; 
                      this.timer = 0;
                      var that = this;
@@ -110,7 +111,7 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
                            if(code == 8 || code == 46){
                              if(text){ 
 	                        	 that.searchText = text;
-		                          that.fetchSchedules();
+		                          that.fetchBookings();
 	                         }
                             }else{
 	                          this.searchText = text;
@@ -118,7 +119,7 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 	                            that.timer = setTimeout(function() { // assign timer a new timeout 
 	                                if (text.length < 2) return;
 	                                that.searchText = text;
-	                                that.fetchSchedules(that.langaugeFilter);
+	                                that.fetchBookings(that.langaugeFilter);
 	                           }, 500); // 2000ms delay, tweak for faster/slower
                             }
             } 

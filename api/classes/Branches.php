@@ -44,6 +44,9 @@ class Branches
 			        		$app->get('/changestatus',function(){ 
 			        			$this->changeStatus();
 			        		});
+			        			$app->get('/branchesbyid', function () {
+			        				$this->getBranchById();
+			        			});
  
     }
     function getEmployeeDepartments(  ) {  
@@ -103,6 +106,22 @@ class Branches
     		echo json_encode($error);
     	}
     }
+    function getBranchById( ) {
+    	$branchid = $_GET['branchid'];
+    	$sql = "select * from branches where id =".$branchid;
+          try {
+              	$branch = R::getAll($sql);
+            // Include support for JSONP requests
+	            if (!isset($_GET['callback'])) {
+	                echo json_encode($branch);
+	            } else {
+	                echo $_GET['callback'] . '(' . json_encode($branch) . ');';
+	            }
+ 			 } catch(PDOException $e) {
+                    $error = array("error"=> array("text"=>$e->getMessage()));
+                    echo json_encode($error);
+            }
+    }
     function getAllByFranchise() { 
     	if($this->auth ->getLoggedInMessages() == false){
     		return false;
@@ -130,7 +149,19 @@ class Branches
                     echo json_encode($error);
             }
     }
-     
+    function getAllByFranchiseCount($fid) {  
+    	     $sql = "SELECT count(*) as total from branches b
+				   WHERE b.isactivated = '1' and b.franchiseid =".$fid;
+    				   try {
+	    				   $branches =  R::getAll(  $sql );
+	    				   // Include support for JSONP requests
+	    				   return $branches[0]['total'] ;
+	    
+    				   } catch(PDOException $e) {
+    				  	 $error = array("error"=> array("text"=>$e->getMessage()));
+    				   		echo json_encode($error);
+    				   }
+     }
     function saveBranches($request){
 	    	if($this->auth->getLoggedInMessages() == false){
 	    		return false;
@@ -235,7 +266,12 @@ class Branches
         	$id = $_GET['id'];
         	$status = $_GET['status'];
         }
-    	 
+    	$total = intval($this->getAllByFranchiseCount($_GET['franchiseid']));
+    	if($total < 2){
+    		echo json_encode(['error'=>' You have only one department, can\'t be Deactivated']);
+    		return;
+    	} 
+    	
     	try {
     		$branch = R::dispense( 'branches' );
     		$branch->id = $id;

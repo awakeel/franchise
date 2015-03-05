@@ -55,7 +55,7 @@ define(['text!authorize/tpl/login.html','authorize/models/login','app'],
 				}
 			},
 			login:function(){
-				this.app.showLoading('Wait, We checking our database...',this.$el.find('.login-area'));
+				
 				this.clearError();
 				var URL = "api/process";
 				var phone = this.$el.find("#txtphone").val();
@@ -71,6 +71,7 @@ define(['text!authorize/tpl/login.html','authorize/models/login','app'],
                 	return;
                 } 
                 var that = this;
+                this.app.showLoading('Wait, We checking...',this.$el);
 				$.post(URL, {phone:phone,password:password})
                 .done(function(data) {  
                 	 
@@ -104,7 +105,7 @@ define(['text!authorize/tpl/login.html','authorize/models/login','app'],
                     	console.log('I am false');
                     }
                  });
-				 this.app.showLoading(false,this.$el.find('.login-area'));
+				 this.app.showLoading(false,this.$el);
 			}
 		});
 	});
