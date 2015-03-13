@@ -319,6 +319,7 @@ class Employees
     	$this->deleteEmployeeServices($id);
     	try {
     		R::exec($sql);
+    		echo json_encode($id);
     	} catch(Exception   $e) {
     		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
     			echo json_encode(['error'=>'Integrity constraint'] );

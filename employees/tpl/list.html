@@ -1,16 +1,24 @@
-                                           		 
-                                                <td><%=this.model.get('firstname')%> <%=this.model.get('lastname')%></td>
-                                                <td><%=this.model.get('phone')%></td> 
-                                                
-                                                  <td><%=this.model.get('role')%></td> 
-                                                <td><%=this.model.get('jobtypes')%></td> 
-                                                <td width="35%">
-                                              
-                                <%if(this.model.get('isfranchise') != "1"){%>
+                                        
+<td style="background: none repeat scroll 0% 0% rgb(255, 255, 255); padding: 15px;">
+
+	<h4 style="color: #229AD0"><%=this.model.get('firstname')%> <%=this.model.get('lastname')%></h4>
+	<p>
+		<strong> Phone: <%=this.model.get('phone')%> </strong>  
+		<strong>Role: <%=this.model.get('role')  %> </strong>  
+	</p>
+	 <p>
+	   <strong>Job Types:</strong> <%=this.model.get('jobtypes') %>
+	  </p>
+	<div class="pull-right" style="vertical-align: top">
+	   <%if(this.model.get('isfranchise') != "1"){%>
                                     <a class="btn btn-danger  btn-sm delete-token" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
                                 <%}%>             	
                                                 	<button class="btn btn-info btn-sm edit-token"><%=this.setting.language['edit']%></button>
                                                 	 
-                                                       </td>
-                                           
+
+	</div>
+</td>
+
+                                           		 
+                                                                                         
                                            

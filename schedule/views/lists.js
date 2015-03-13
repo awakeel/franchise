@@ -95,12 +95,11 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 				this.$el.html(this.template( ));
 				this.app.showLoading('Loading schedule...',this.$el); 
 				var that = this;
-				 this.$el.find('#txtdate').datepicker({ todayBtn: true,
+				 this.$el.find('#sandbox-container input').datepicker({ todayBtn: true,
 					    clearBtn: true,
 					    autoclose: true,
 					    todayHighlight: true
-					}); 
-				   this.$el.find('#txtdate').datepicker({})
+					}) 
 				    .on('changeDate', function(e){
 				    	 that.$el.find('#calendar').fullCalendar('gotoDate',e.date)
 				    });

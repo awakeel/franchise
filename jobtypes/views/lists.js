@@ -1,3 +1,4 @@
+
 define(['text!jobtypes/tpl/lists.html','jobtypes/collections/jobtypes','jobtypes/views/list','jobtypes/models/jobtype','typeahead'],
 	function (template,JobTypes,JobType,JobTypeModel) {
 		'use strict';

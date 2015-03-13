@@ -5,7 +5,12 @@ define(['text!booking/tpl/list.html','app'],
 			tagName:'tr',
 			events:{
 			 	"click .delete-token":"deleteToken",
-			 	"click .edit-token":"updateToken"
+			 	"click .edit-token":"updateToken",
+			 	"click .change-status":'changeStatus',
+			 	'click .btn-change-status':'bookingStatusChange',
+			 	'click .close-status':function(){
+			 		$('.divshowstatus').hide();
+			 	}
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -18,6 +23,38 @@ define(['text!booking/tpl/list.html','app'],
 				this.$el.html(this.template(this.model.toJSON()));
 				
 			},
+			getDate:function(date){
+				return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
+			},
+			getWhen:function( ){
+				return this.getDate(this.model.get('dayid')) +' Time: '+  this.model.get('timestart') + ' - '+  this.model.get('timeend')
+			},
+			bookingStatusChange:function(ev){
+				var status = $(ev.target).data('status');
+				var URL = "api/bookingstatuschange";
+				var that = this;
+				that.model.set('status',status);
+				 $.get(URL, {id:this.model.get('id'),status:status})
+                 .done(function(data) {
+                      var _json = jQuery.parseJSON(data);
+                     
+                     	that.app.successMessage();
+                     	$('.divshowstatus').hide();
+                     	that.model.set('status',status);
+                     	that.render();
+                     
+                 });
+			},
+			changeStatus:function(ev){
+				var childPos = $(ev.target).position();
+				var parentPos = $(ev.target).parent().offset();
+				$('.divshowstatus').hide();
+				var childOffset = {
+					    top: childPos.top,
+					    right: 10
+					}
+				this.$el.find('.divshowstatus').css(childOffset).show();
+			},
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
@@ -29,7 +66,7 @@ define(['text!booking/tpl/list.html','app'],
 			      showCancelButton: true,
 			      confirmButtonClass: 'btn-danger',
 			      confirmButtonText: 'Yes, Delete!'
-			    },
+			    }, 
 			    function(isConfirm) {
 			    	    if (isConfirm) {
 			    	    	 $.get(URL, {id:id})
@@ -53,6 +90,30 @@ define(['text!booking/tpl/list.html','app'],
 			    		  }
 			    });
 			  },
+			  getStatus:function(){
+				  var str = "";
+				  var that = this;
+			    	var status = [{'btn-green':'Scheduled','btn-blue':'Present','btn-orange':'No Show','btn-red':'Cancelled','btn-purple':'Completed'}];
+			    	var dbStatus = this.model.get('status');
+			    	_.each(status[0],function(value,key ){
+			    		if(value != dbStatus){
+			    			if(dbStatus == "Scheduled" && value !="Completed")
+			    				str +="<button class='btn btn-change-status "+key+"' data-status='"+value+"'>"+value+"</button>";
+			    			if(dbStatus == "Present" && value !="No Show")
+			    				str +="<button class='btn btn-change-status "+key+"' data-status='"+value+"'>"+value+"</button>";
+			    			if(dbStatus == "No Show" && (value !="Cancelled" && value!="Completed"))
+			    				str +="<button class='btn btn-change-status "+key+"' data-status='"+value+"'>"+value+"</button>";
+			    			if(dbStatus == "Cancelled" && (value !="No Show" && value !="Completed"))
+			    				str +="<button class='btn btn-change-status "+key+"' data-status='"+value+"'>"+value+"</button>";
+			    			if(dbStatus == "Completed" && value =="Scheduled")
+			    				str +="<button class='btn btn-change-status "+key+"' data-status='"+value+"'>"+value+"</button>";
+			    		}
+			    	        
+			    		 
+			    	})
+			    	return str;
+			    	 
+			    },
 			  updateToken:function(ev){
              	 var that = this;  
              	 

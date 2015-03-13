@@ -1,5 +1,5 @@
 define(['jquery','language/collections/languages','spin','moment','flex',
-		'views/main_container','js/colorjs'], function (jquery,Language,Spinner,moment,flex,Container,color) {
+		'views/main_container','js/colorjs','datepicker'], function (jquery,Language,Spinner,moment,flex,Container,color,datepicker) {
     'use strict'; 
     var app = Backbone.Model.extend({
         load: function (users,name) {

@@ -1,19 +1,21 @@
 
-<td width=""><a href="#00"><strong><%=this.model.get('name')%></strong>
+<td style="background: none repeat scroll 0% 0% rgb(255, 255, 255)">
 
-</a></td>
- 
-<td width="5%"><%=this.getStatus()%></td>
-<td width="10%"><%=this.setting.getFormatedDate(this.model.get('createdon'))%></td>
-<td width="	45%"><a class="btn btn-danger delete-branch btn-sm"
-	style="color: #fff" data-id="<%=this.model.get('id')%>">
-		<%=this.setting.language['delete']%></a>
-	<button class="btn btn-info edit-token btn-sm"><%=this.setting.language['edit']%></button>
-	<button class="btn btn-success change-status btn-s1m">
-	<%if(this.model.get('isactivated') == "1"){%>
-		Deactivate
-	<%}else{%>
-		Activate
-	<%}%>
-	</button>
+	<h4 style="color: #229AD0"><%=this.model.get('name')%></h4>
+	<p>
+		<strong> <%= this.model.get('city') + ' ' +
+			this.model.get('zip')%> </strong> <%=this.getStatus()%>
+	</p>
+
+
+
+	<div class="pull-right" style="vertical-align: top">
+		<a class="btn btn-danger delete-branch btn-sm" style="color: #fff"
+			data-id="<%=this.model.get('id')%>">
+			<%=this.setting.language['delete']%></a>
+		<button class="btn btn-info edit-token btn-sm"><%=this.setting.language['edit']%></button>
+		<button class="btn btn-success change-status btn-s1m">
+			<%if(this.model.get('isactivated') == "1"){%> Deactivate <%}else{%>
+			Activate <%}%></button>
+	</div>
 </td>

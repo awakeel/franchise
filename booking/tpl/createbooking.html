@@ -6,22 +6,25 @@
 				<div class="portlet-body">
 					<ul class="nav nav-tabs" id="myTab">
 					<li></li>
-						<li><a data-toggle="tab" class="active"  
+						<li class="active"><a data-toggle="tab"  
 							href="#info">Info</a></li>
 
 						<li><a data-toggle="tab" href="#history">History</a></li>
-						<li><a data-toggle="tab" href="#comments">Comments</a></li>
+						<li class='comments-li'><a data-toggle="tab" href="#comments">Comments</a></li>
 						<li><a data-toggle="tab" href="#sms">SMS</a></li>
 						<li><a data-toggle="tab" href="#log">Log</a></li>
 					</ul>
 					<div class="modal-footer">
-
+						<div style="text-align: left;" class="pull-left col-md-4">
+						<h4 id="strongisregistered">Registration Id: 38</h4>
+						<small id="isregistered">Anonymous</small>
+						</div>
 						<button class="btn btn-green  back" type="button">Back to
 							listing</button>
 					</div>
 					<div class="tab-content" id="myTabContent">
 						<div id="info" class="tab-pane fade active in">
-							<h3>Info</h3>
+							<h3>Info  </h3>
 							</br>
 
 							<div class="row">
@@ -81,6 +84,7 @@
 													<label class="col-sm-4 control-label">Department:</label>
 													<div class="col-sm-8">
 														<p id="pdepartment"></p>
+														
 													</div>
 												</div>
 											</div>
@@ -124,6 +128,14 @@
 													<label class="col-sm-4 control-label">Booking Type:</label>
 													<div class="col-sm-8">
 														<p id="pbookingtype"></p>
+													</div>
+												</div>
+											</div>
+											<div class="feaild_container">
+												<div class="form-group">
+													<label class="col-sm-4 control-label">Status:</label>
+													<div class="col-sm-8">
+														<p style="font-size:20px; font-weight:bold;">(<%=this.options.model.get('status')%>)</p>
 													</div>
 												</div>
 											</div>

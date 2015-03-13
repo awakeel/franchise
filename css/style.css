@@ -5899,4 +5899,20 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 		.text-feaild {
 			margin-bottom:20px !important;}
 }
-#myTab li a.active{background-color:#fff;}
+#myTab li.active{background-color:#fff;}
+.divshowstatus{
+	background: #fff;
+	padding: 7px;
+	width:500px;
+	display:none;
+	position:absolute;
+	top:30px;
+	border:1px solid #eee; 
+}
+.divshowstatus button{
+	margin:0 3px;
+}
+.booking-table td {margin:5px;}
+.table{
+	border:1px solid #eee!important;
+} 

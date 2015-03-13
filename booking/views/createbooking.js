@@ -20,8 +20,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							this.cloneId = 1;
 							this.model = null;
 							this.branchid = this.app.user_branch_id; 
-							this.render(); 
-							$('a[data-toggle="tab"]:first').tab('show');
+							this.render();  
 						},
 						showEmployeeList:function(){
 							this.$el.find("#ddlemployees").removeAttr('disabled');
@@ -31,6 +30,10 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						},
 						render : function() {
 							this.$el.html(this.template());
+							if(this.options.model.get('status') == "Completed"){
+								this.$el.find('.btn-change-employee').hide();
+								this.$el.find('.btn-change-service').hide();
+							}
 							this.getBookings();
 							this.getComments();
 							this.getHistory();
@@ -98,6 +101,11 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 			                	    mdr +='</div>';
 			                	   mdr +='</div>';
 			                   })
+			                   if(i == 0){
+			                	   str = '<a data-toggle="tab" href="#comments">Add Comments</a>';
+			                	  // that.$el.find("#myTab li").removeClass('active');
+			                	   //that.$el.find("#myTab").find('.comments-li').addClass('active');
+			                   }
 			                   that.$el.find("#divcomments").html(str);
 			                   that.$el.find("#divsectioncomments").html(mdr);
 			                  });
@@ -152,6 +160,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							 this.app.showLoading('Wait, Saving info...',this.$el);
 								$.post(URL, {phone:phone,name:name,id:id,email:email})
 				                .done(function(data) { 
+				                	that.render();
 				                	 that.app.showLoading(false,that.$el);
 				                	 that.app.successMessage();
 				                });
@@ -162,25 +171,36 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							var that = this;
 							var URL = "api/changebooking";
 							var type = "";
+							var title ;
 							if(from == "ddlemployees"){
 								type = "employees";
+								title = this.$el.find('#ddlemployees option:selected').text();
 							}else{
 							    type = "services";
+							    title = this.$el.find('#ddlservices option:selected').text();
 							}
 							
 							 this.app.showLoading('Wait, Saving info...',this.$el);
 							  var mdr = "";
-								$.post(URL, {type:type,customerid:this.model.customerid,id:id,bookingid:this.model.bookingid,franchiseid:this.app.user_franchise_id,branchid:this.app.user_branch_id})
+								$.post(URL, {title:title,type:type,customerid:this.model.customerid,id:id,bookingid:this.model.bookingid,franchiseid:this.app.user_franchise_id,branchid:this.app.user_branch_id})
 				                .done(function(data) { 
 				                	 that.app.showLoading(false,that.$el);
 				                	 that.app.successMessage();
 				                	 $(ev.target).attr('disabled',true);
+				                	 that.render();
 				                });
 						},
 						basicInfo:function(){
 							this.$el.find('#txtname').val(this.model.name);
 							this.$el.find('#txtphone').val(this.model.phone);
 							this.$el.find('#txtemail').val(this.model.email);
+							console.log(this.model);
+							if(this.model.isregistered == "0"){
+								this.$el.find("#isregistered").show();
+							}else{
+								this.$el.find("#isregistered").hide();
+							}
+							this.$el.find("#strongisregistered").html('Registration Id: '+ this.model.customerid);
 						},
 						basicBooking:function(){
 							this.$el.find('#pdepartment').html(this.model.branch);
@@ -203,6 +223,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 				                .done(function(data) { 
 				                	 that.app.showLoading(false,that.$el);
 				                	 that.app.successMessage();
+				                	 that.render();
 				                	 mdr +='<div class=" col-md-12">';
 				                	    mdr +='<div class="info-container" style="margin-top:20px;">';
 				                	    mdr +='<p><strong> Few moment Ago</strong></p>';

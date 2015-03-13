@@ -1,0 +1,19 @@
+
+<td
+	style="background: none repeat scroll 0% 0% rgb(255, 255, 255); padding: 15px;">
+
+	<h4 style="color: #229AD0"><%=this.model.get('service')%></h4>
+	<p>
+		<strong>  #<%=this.model.get('customerid')%>-<%=this.model.get('customer')?this.model.get('customer'):'anonymous'%> </strong>
+	</p>
+          <ul class="list-inline"> 
+            <li><i class="fa fa-user fa-muted"></i> Employee: <%=this.model.get('firstname')?this.model.get('firstname') + ' ' +this.model.get('lastname'):'none' %></li>
+            <li><i class="fa fa-group fa-muted"></i> DateTime: <%=this.getWhen(this.model.get('dayid')) %></li>
+           
+          </ul> 
+	 
+	<div class="pull-right" style="vertical-align: top">
+		<button class="btn btn-success btn-sm print-invoice">Generate Invoice</button>
+
+	</div>
+</td>

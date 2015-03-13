@@ -13,6 +13,7 @@ define(['backbone', 'underscore',  'text!dashboard/tpl/lists.html'],
 				this.render();
 				this.loadQuickStats();
 				this.loadTodayBookings();
+				this.loadTasks();
 				//  			
 			},
 
@@ -29,10 +30,19 @@ define(['backbone', 'underscore',  'text!dashboard/tpl/lists.html'],
 			},
 			loadTodayBookings:function(){
 					var that = this;
+					this.app.showLoading('loading tasks..',this.$el.find("#divtodaybooking"));
 				    require(['booking/views/lists'],function(Lists){ 
 				    	var objLists = new Lists({setting:that.app,dashboard:true});
 				        that.$el.find("#divtodaybooking").html(objLists.$el);
 				    })
+			},
+			loadTasks:function(){
+				var that = this;
+				this.app.showLoading('loading tasks..',this.$el.find("#tasks"));
+				require(['tasks/views/lists'],function(Lists){ 
+			    	var objLists = new Lists({app:that.app,dashboard:true});
+			        that.$el.find("#tasks").html(objLists.$el);
+			    })
 			}
 		});
 	});

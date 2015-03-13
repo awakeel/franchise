@@ -1,0 +1,98 @@
+<div class="col-lg-8 col-lg-offset-2 col-md-12">
+	<div class="row">
+		<div class="col-md-6 pull-left">
+		 <a class="btn btn-green print" href="#">Print this invoice</a>
+		
+		</div>
+		
+		<div class="col-md-6 pull-right">
+		<button class="back btn btn-green">Back to Listing</button>
+		
+		</div>
+	
+	
+	</div>
+                        <div class="portlet portlet-default print-area">
+                            <div class="portlet-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h1><i class="fa fa-gears"></i> <%=this.app.branches[0].name%></h1>
+                                        <br>
+                                        <address>
+                                          
+                                            <br><%=this.app.branches[0].city%> <%=this.app.branches[0].zip%>
+                                            <br><%=this.app.branches[0].country%>
+                                            <br>
+                                          
+                                        </address>
+                                    </div>
+                                    <div class="col-md-6 invoice-terms">
+                                        <h3>Invoice #<%=this.id%></h3>
+                                        <p>
+                                            Invoice Date: <%=moment().format('MMMM D, YYYY')%>
+                                            <br>
+                                            <strong><span class="text-red">Payment Due: <%=this.date%></span></strong>
+                                        </p>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                                <hr>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h3>Customer</h3>
+                                        <address>
+                                            <strong><%=this.model.customer%></strong>
+                                             <br><%=this.model.email%>
+                                            <br>
+                                            <abbr title="Phone">P:</abbr><%=this.model.phone%>
+                                        </address>
+                                    </div>
+                                    <div class="col-md-6 invoice-terms">
+                                        <h3>Payment Instructions</h3>
+                                        <p>
+                                           
+                                        </p>
+                                       
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                                <hr>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <h3>Items</h3>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Quantity</th>
+                                                        <th>Item Price</th>
+                                                        <th>Description</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>1</td>
+                                                        <td><%=this.model.service%></td>
+                                                        <td><%=this.model.notes%></td>
+                                                        <td><%=this.model.price%></td>
+                                                    </tr>
+                                                     
+                                                    <tr class="text-red">
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td class="text-right"><strong>Total Amount:</strong>
+                                                        </td>
+                                                        <td><strong><%=this.model.price%></strong>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </div>
+                        </div>
+                    </div>

@@ -5,6 +5,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 				events:{
 					'click .close-pp' : "closeView",
 					"click .save-p" : "save",
+					"keyup #div_customer input":'getCustomerSearch'
 				},
 				initialize:function() {
 					this.template = _.template(template);
@@ -13,7 +14,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 					this.color = "";
 					var msec = Date.parse(this.options.date);
 				 	this.start = new Date(msec);
-				 	
+				 	this.req = null;
 				 	this.startTime =this.getTimeFromDate(this.start);
 				  	this.start =   this.start.getFullYear() +'-'+ ( '0' + (this.start.getMonth()+1) ).slice( -2 ) + '-'+ ( '0' + (this.start.getDate()) ).slice( -2 );
 				  	var msec = Date.parse(this.options.end);
@@ -27,6 +28,56 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 					this.app = this.options.page.app;
 					this.franchiseid  = this.app. user_franchise_id;
 					this.render();
+					this.$el.find('#colorcode').modal('hide');
+				},
+				getCustomerSearch:function(ev){
+					var text = $(ev.target).val();
+					var id = $(ev.target).attr('id');
+					
+					
+					if(text.length > 2){
+						if(id == "txtcustomername"){
+							 text = {name:text};   	
+							}else if(id == "txtphone"){
+								text = {phone:text}
+							}else if(id == "txtemail"){
+							  text = {email:text}
+						}
+						this.fetchCustomer(text);
+					}
+					console.log(id);
+				},
+				fetchCustomer:function(text){
+					var URL = "api/getcustomersbytext";
+			         var that = this;
+			         var str = "";
+			         if(this.req){
+			        	 this.req.abort();
+			         }
+			         text['branchid'] =this.app.user_branch_id;
+			          this.req = jQuery.getJSON(URL,text,  function (tsv, state, xhr) {
+		                var customers = jQuery.parseJSON(xhr.responseText);
+		                _.each(customers,function(value,key,list){
+		 					str +="<tr>";
+		 					str +="<td>"+value.name+"</td>";
+		 					str +="<td><label>"+value.email+"</label></td>";
+		 					str +="<td><label>"+value.phone+"</label> <button class='btn btn-primary btn-select-customer' data-id='"+value.id+"' data-phone='"+value.phone+"' data-email='"+value.email+"' data-name='"+value.name+"'>Use</button></td>";
+		 					str +="</tr>";
+		 				})
+			 				if(customers.length > 0){
+			 					 that.$el.find("#txtcustomername").data('id','');
+				 				that.$el.find('#colorcode table tbody').html(str);
+				            	 that.$el.find('#colorcode').modal('show');
+				            	 that.$el.find('.btn-select-customer').on('click',function(){
+				            		 that.$el.find("#txtcustomername").val($(this).data('name'));
+										  that.$el.find("#txtemail").val($(this).data('email'));
+										 that.$el.find("#txtphone").val($(this).data('phone'));
+									 that.$el.find("#txtcustomername").data('id',$(this).data('id'));
+									 that.$el.find('#colorcode').modal('hide');
+				            	 })
+				            	 
+			 				}
+			           }); 
 				},
 				getTimeFromDate:function(datetime){
 					var hours = datetime.getHours(); //returns 0-23
@@ -60,11 +111,17 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							}
 							//this.$el.find('#txtdatebooking').datepicker({ format: "yyyy-mm-dd" });  
 							this.$el.find('#txtdatebooking').val(this.start)
-							console.log(this.start.split('-').join('') )
-						 
+							 
 							this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' , 'minTime':this.startTime,
 							    'maxTime': this.endTime,
 							    'showDuration': true});
+							this.$el.find("#txtstartbooking").on('changeTime', function() {
+			            		var end =	that.$el.find("#ddlservices").val();
+			            	 		var newEnd = that.addMinutes($(this).val(), end);
+								    that.$el.find('#txtendbooking').val(newEnd);
+								 
+							});
+
 							this.fetchDepartments();
 							this.fetchServices(); 
 							this.app.showLoading(false,this.lid );
@@ -92,6 +149,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							var bookingdate = this.$el.find("#txtdatebooking").val();
 							bookingdate = bookingdate.split('-').join('');
 							var customername = this.$el.find("#txtcustomername").val();
+							var customerid = this.$el.find("#txtcustomername").data('id');
 							var email = this.$el.find("#txtemail").val();
 							var phone = this.$el.find("#txtphone").val();
 							var status = "Present";
@@ -108,6 +166,8 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							this.objBookingModel.set('price', price);
 							this.objBookingModel.set('dayid', bookingdate);
 							this.objBookingModel.set('customername', customername);
+							this.objBookingModel.set('customerid', customerid);
+
 							this.objBookingModel.set('email', email);
 							this.objBookingModel.set('phone', phone);
 							this.objBookingModel.set('status', status); 
@@ -158,6 +218,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 					     fetchServices:function(){
 							 var URL = "api/servicesbyjobtypeid";
 					         var that = this;
+					         this.end = 0;
 					         that.$el.find("#ddlservices").html("<option value='0' data-price = '0' data-time = '0'> Select Service </option>");
 					          jQuery.getJSON(URL,{franchiseid:this.app.user_franchise_id,jobtypeid:this.jobtypeid},  function (tsv, state, xhr) {
 				                var _json = jQuery.parseJSON(xhr.responseText);
@@ -166,7 +227,8 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 											var price = $(this).find(':selected').data('price'); 
 											var end = $(this).find(":selected").data('time');
 											var newEnd = that.addMinutes(that.$el.find("#txtstartbooking").val(), end);
-											 that.$el.find("#txtprice").html(price);
+											 that.end = end;
+											that.$el.find("#txtprice").html(price);
 											 that.$el.find("#txtendbooking").val(newEnd);
 										
 									 }) 
@@ -181,13 +243,18 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 					    	  return D(mins%(24*60)/60 | 0) + ':' + D(mins%60);  
 					    	}, 
 					     fetchEmployees:function(branchid){
-					    	 this.app.showLoading('Loading Data...',this.lid );
+					    	  this.app.showLoading('Loading Data...',this.lid );
 								 var URL = "api/getemployeesbyjobtypeid";
 								 var that = this;
 								 this.$el.find("#ddlemployeesbooking").html("<option value='0'> None </option>");
 							      jQuery.getJSON(URL,{frachiseid:this.app.user_franchise_id,jobtypeid:this.jobtypeid},  function (tsv, state, xhr) {
 					                var _json = jQuery.parseJSON(xhr.responseText);
-						                 that.$el.find("#ddlemployeesbooking").append(_.map(_json,function(value,key,list){ console.log(value);return "<option value="+value.id+">"+value.name + "</option>";}).join());
+						                 that.$el.find("#ddlemployeesbooking").append(_.map(_json,function(value,key,list){  
+						                	 var selected =  "";
+						                	 if(that.options.resourceid == value.id)
+						                		 selected = "selected";
+						                	 return "<option value="+value.id+" "+selected+">"+value.name + "</option>";
+						                	 }).join());
 						                 that.app.showLoading(false,this.lid );
 							      	});
 					     }

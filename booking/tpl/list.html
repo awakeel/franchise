@@ -1,15 +1,33 @@
-                                          
+                                          <td  style="background:none repeat scroll 0% 0% rgb(255, 255, 255)">
                                                 
+                                                <h4 style="color:#229AD0"><%=this.model.get('service')%></h4>
+                                                <p> <strong> When </strong>
+                                                <%= this.getWhen()%>    <label class="label label-success">   <%=this.model.get('status')%></label></p>
+                                                <ul class="list-inline">
+                                                    <li><i class="fa fa-map-marker fa-muted"></i> Job type: <%=this.model.get('jobtype')%></li>
+                                                    <li><i class="fa fa-user fa-muted"></i> Customer: <%=this.model.get('customerid')%>-<%=this.model.get('customer')%></li>
+                                                    <li><i class="fa fa-group fa-muted"></i> Assign To: <%=this.model.get('emp')%></li>
+                                                   
+                                                  </ul> 
                                                 
-                                                
-                                                 <td><%=this.model.get('service')%></td> 
-                                                 <td><%=this.model.get('customer')%></td> 
-                                                <td><%=this.model.get('timestart')%> - <%=this.model.get('timeend')%></td> 
-                                                    <td><%=this.model.get('emp')%></td> 
-                                                      <td><label class="label label-success"><%=this.model.get('status')%></label></td> 
-                                                <td width="25%">
+                                            
+                                                <div class="pull-right" style="vertical-align:top">
                                                 	<a class="btn btn-danger delete-token" data-id="<%=this.model.get('id')%>"> <%=this.app.language['delete']%></a>
                                                 	<button class="btn btn-info edit-token"><%=this.app.language['edit']%></button>
+                                                	<button class="btn btn-info change-status">Change Status</button>
+                                               <div class="divshowstatus" style="display:none" >
+                                           				 
+                          
+							                                <div class="portlet-body">
+							                                    <p>Current status
+							                                        <strong><%=this.model.get('status')%> </strong> <span class="pull-right close-status" style='cursor:pointer;'>X</span> </p>
+							                                    <p>
+							                                          <%=this.getStatus()%>
+																</p>
+							                                </div>
+							                            
+							                            </div>
+                      </div>
                                                  </td>
-                                           
+                                           			
                                            

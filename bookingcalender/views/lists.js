@@ -1,5 +1,5 @@
-define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collections/bookingcalenders','fullcalendar','timepick','daterangepicker','typeahead','datepicker','jqueryui','qtip','booking/views/newbooking'],
-	function (template,BookingCalender,calendar,timepicker,daterangepicker,typeahead,datepicker,jqueryui,qtip,NewBooking) {
+define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collections/bookingcalenders','fullcalendar','timepick','daterangepicker','typeahead','datepicker','jqueryui','qtip','booking/views/newbooking','moment'],
+	function (template,BookingCalender,calendar,timepicker,daterangepicker,typeahead,datepicker,jqueryui,qtip,NewBooking,moment) {
 		'use strict';
 		return Backbone.View.extend({  
 			events:{
@@ -16,6 +16,7 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 			    this.app = this.setting;
 			    this.from = this.options.dashboard || false
 			    this.objBookingCalender = new BookingCalender();
+			    this.employees = null;
 			    this.app.getTiming(this.app.user_branch_id);
 			    this.render();
 				
@@ -26,8 +27,15 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 				this.app.showLoading('Loading Booking...',this.$el);
 				 var e = ev.target.value; 
 				 var resource = [{id:e,name:this.$el.find("#ddlemployees option:selected").text()}];
-				 if(e == "0"){
+				 if(e == "0" && e !="-1"){
 					 resource =   that.jobtypes;
+				 }else{
+					 if(e=="-1"){
+						 resource = that.employees;
+					 }else{
+						 var resource = [{id:e,name:this.$el.find("#ddlemployees option:selected").text()}];
+					}
+					
 				 }
 				  var data = {branchid:this.app.user_branch_id,employeeid:e};
 			    	 that.objBookingCalender.fetch({data:data ,success:function(data){
@@ -55,32 +63,34 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 				this.$el.html(this.template( ));
 				this.app.showLoading('Loading Booking...',this.$el); 
 				var that = this;
-				 this.$el.find('#txtdate').datepicker({ todayBtn: true,
-					    clearBtn: true,
+				 this.$el.find('#sandbox-container input').datepicker({ todayBtn: true ,
 					    autoclose: true,
 					    todayHighlight: true
-					}); 
-				   this.$el.find('#txtdate').datepicker({})
+					})  
 				    .on('changeDate', function(e){
 				    	that.$el.find('#calendar').fullCalendar('gotoDate',e.date)
 				    });
-			
-				   /// this.fetchJobTypes(); 
+				   this.$el.find('#calendar').html(''); 
+				   /// this.fetchJobTypes();  
 				   this.fetchJobTypes();
+				   if( this.options.isemployee){
+					   this.$el.find(".jobtyedropdown").remove();
+				   }
 				   this.fetchEmployees(0);
 				   if(this.from == true){
 					   this.$el.find('.filters').hide();
 				   }
 				 this.app.showLoading(false,this.$el);
-			}  ,
-		 
+			},
 			closeSchedule:function(){
 				this.$el.find("#popup").hide();
 			}, 
+			
 			initScheduleCalander:function(models,resource){ 
 			    var start,end;
 				start = this.app.timings[0].opened.split(':')[0];
 				end = this.app.timings[0].closed.split(':')[0];
+				console.log(start + end);
 				//}
 			    var date = new Date();
                 var d = date.getDate();
@@ -117,26 +127,12 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
                   minTime:start,
                   maxTime:end,  
                   allDayDefault:false,
-                  editable: false, 
-                  select: function(start, end, allDay, event, resourceId) {
-                      // var title = prompt('Event Title:');
-                       //if (title) {
-                   	 var title = '';
-                         //  console.log("@@ adding event " + title + ", start " + start + ", end " + end + ", allDay " + allDay + ", resource " + resourceId);
-                              require(['booking/views/newbooking'],function(AddUpdate){
-               					var objAddUpdate = new AddUpdate({id:1,page:that,app:that.app,start:start,end:end});
-               					that.$el.append(objAddUpdate.$el);
-               				})
-               		///	} 
-                        
-                       calendar.fullCalendar('unselect');
-                   },
-                   
-                   disableResizing: true,
-                   eventClick: function(event,jsEvent,view) {
+                  disableResizing: false,
+                  eventClick: function(event,jsEvent,view) {
                 		 var title = '';  
                               var start = that.formatTime(jsEvent.timeStamp);
-                              var resource = that.getJobTypeValue(event.resourceId);
+                              console.log(event);
+                              var resource = that.getJobTypeValue(event.jobtypeid);
                               if(event.booking == "1"){ 
                             	  swal({
         						      title: "Warning!",
@@ -148,43 +144,34 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
                               var date =  event.start ;//.split('T')[0];
                               var end =  event.end ;
                               
-               					var objNewBooking = new NewBooking({id:1,page:that,app:that.app,date:date,start:start,end:end,resource:resource});
+               					var objNewBooking = new NewBooking({resourceid:event.resourceId,id:1,page:that,app:that.app,date:date,start:start,end:end,resource:resource});
                					that.$el.append(objNewBooking.$el);
                				 
                    },  
                     eventDrop: function( event, dayDelta, minuteDelta, allDay) {
                        console.log("@@ drag/drop event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
                     },
-                     
-                    eventAfterRender: function(event, element, view) {
-                    	//var width  ; 
-                    	///width = that.$("#calendar").width()/that.jobtypes.length;
-                    	 // Where 4 is the maximum events allowed at that time.
-                       //  console.log(width);
-                        // element.attr('data-width',width);
-                        // element.css('width','');
-                    	//element.width(width);
-                            
-                     
-                    }, 
+                    
 		            eventRender: function(event, element,view) { 
 		            	$(this).css('width','100%')
 		            	if(event.booking !="1"){
 		                  	element.find('.fc-event-time').empty();
+		                    var one_day = 1000 * 60 * 60 * 24;
+		                    var _Diff = Math.ceil((event.start.getTime() - view.visStart.getTime())/(one_day));
+		                    var dayClass = ".fc-day" + _Diff; 
+		                    console.log(dayClass);
+		                    $(dayClass).addClass('fc-sun');
 		                  	return;
 		            	}else{
 		            		element.find('.fc-event-inner').empty();
-	                    	var content = '<h3>Customer: '+event.customer+'</h3>' + 
+	                    	var content = '<h4> Service : '+event.service+'</h4><h4>Customer: '+event.customer+'</h4>' + 
 	                    	'<p> <h4>Assign to :  '+event.employee+'</h4><br />' + 
-	        				'<p><b>Start:</b> '+event.start+'<br />' + 
-	        				(event.end && '<p><b>End:</b> '+event.end+'</p>' || '');
-	                    	 
-	                     
-	                    	 element.qtip({ 
+	        				'<p><b>Start:</b> '+moment(event.start).format("LLL")+'<br />' + 
+	        				(event.end && '<p><b>End:</b> '+moment(event.end).format("LLL")+'</p>' || '');
+	                    	 	 element.qtip({ 
 	                             content:content,
 	                             style: {
-	                                 background: 'black',
-	                                 color: '#FFFFFF'
+	                                 classes: "qtip-light"
 	                             },
 	                             hide: {
 	                                 delay: 200,
@@ -255,31 +242,37 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 	                that.jobtypes = jobtypes;
 	            	var ids = "";
 	                that.$el.find("#ddljobtypes").append(_.map(_json,function(value,key,list){  return "<option value="+value.id+">"+value.name +  "</option>";}).join());
+	                if(!that.options.isemployee)
 	                that.fetchData(ids,"jobtypes",jobtypes);
 	            	 
 	            }); 
 		     }, 
 		     fetchEmployees:function(id){
-					var url = "api/getemployeesbyjobtypeid";
+		    	     if(this.options.isemployee){
+		    	    	 var url = "api/employeesgetall";
+		    	     }else{
+		    	    	 var url = "api/getemployeesbyjobtypeid";
+		     		  }
 					 var that = this;
-					 var str = ""; 
-					 that.$el.find("#ddlemployees").html("<option selected value='0'> All Employees </option>");
-	                  jQuery.getJSON(url,{ franchiseid:this.app.user_franchise_id,jobtypeid:id}, function(tsv, state, xhr) {
+					 var str = "";   
+					 that.$el.find("#ddlemployees").html("<option selected value='-1'> All Employees </option>");
+	                  jQuery.getJSON(url,{branchid:this.app.user_branch_id, franchiseid:this.app.user_franchise_id,jobtypeid:id}, function(tsv, state, xhr) {
 	                	  var _json = jQuery.parseJSON(xhr.responseText);
+	                	  that.employees = _json;
 			                 that.$el.find("#ddlemployees").append(_.map(_json,function(value,key,list){ return "<option value="+value.id+">"+value.name+  "</option>";}).join());
+			                 if(that.options.isemployee)
+			                 that.fetchData("-1","employees",_json);
 			                 that.app.showLoading(false,this.$el );
 				      	});
 			  },
 		     fetchData:function(ids, type,resource){ 
 		    	 this.app.showLoading('Loading schedule...',this.$el); 
 		    	 var data = {branchid:this.app.user_branch_id};
-		    	 if(type=="employees"){
+		    	 if(type=="employees" && this.options.isemployee){
 		    		 data['employeeid'] = ids;
-		    	 }else{
-		    		 data['jobtypeid'] = ids;
-		    	 }
+		    	 } 
 		    	 var that = this;
-		  	     var data = {branchid:this.app.user_branch_id};
+
 		    	 that.objBookingCalender.fetch({data:data ,success:function(data){
 					 that.initScheduleCalander(that.objBookingCalender.toJSON(),resource);
 				 }})

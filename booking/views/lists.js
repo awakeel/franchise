@@ -16,16 +16,16 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 				this.app = this.options.setting;
 				this.franchiseid = this.app.user_franchise_id;
 				this.branchid = this.app.user_branch_id;
-				this.offsetLength = 10;
+				this.offsetLength = 20;
 				this.objBookingLists = new BookingLists();
 				this.render();
-				
+				this.$el.css('padding','0px')
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
 				this.app.showLoading('Loading Booking...',this.$el);
-				//$(window).scroll(_.bind(this.lazyLoading, this));
-               // $(window).resize(_.bind(this.lazyLoading, this));
+				$(window).scroll(_.bind(this.lazyLoading, this));
+                $(window).resize(_.bind(this.lazyLoading, this));
                 this.fetchBookings(); 
                 var that = this;
                 var id = null;
@@ -34,33 +34,47 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
              
 			},
 			 
-			fetchBookings:function(){ 
+			fetchBookings:function(offset){ 
 				 var that = this;
 				 var _data = {}; 
+				 if(this.options.customer){
+					 _data['customer'] = this.options.customer;
+				 }
 				 _data['search'] = this.searchText;
-				 _data['branchid'] = this.branchid; 
+				 _data['branchid'] = this.branchid;
+				 if(this.options.dashboard == true){
+					 _data['today'] = true;
+				 }
 				 if(this.request)
 	                    this.request.abort();
-				 that.$el.find('tbody').empty();
-				     this.request = this.objBookingLists.fetch({data: _data, success: function(data) {
+				 if(offset){
+					
+					 _data['offset'] = this.offsetLength + offset;
+				 }else{
+					 that.$el.find('tbody').empty();
+				 }
+				   this.request = this.objBookingLists.fetch({data: _data, success: function(data) {
 					_.each(data.models,function(model){
 						var objBookingList = new BookingList({model:model,page:that,app:that.app});
 						that.$el.find('tbody').append(objBookingList.$el);
 					})
-					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="8">';
-							trNoRecord += '<div class="col-lg-9 pull-right"><P>No booking found ';
+					var more = "";
+					if(offset){
+						more = " more";
+					}
+					if(data.length == 0){
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="1">';
+							trNoRecord += '<div class="col-lg-9 pull-right"><P>No '+more+' booking found ';
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';
 						that.$el.find("table tbody").append(trNoRecord);
-					}
+					} 
 					that.app.showLoading(false,that.$el);
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
-					
-					 if (that.fetched < parseInt(11)) {
-                      //  that.$el.find("tbody tr:last").attr("data-load", "true");
-                       // that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
+					if (data.length > 0) {
+                       that.$el.find("tbody tr:last").attr("data-load", "true");
+                       that.$el.find("tbody").append("<tr id='tr_loading'><td colspan='6'><div class='gridLoading fa fa-spinner spinner' style='text-align:center; margin-left:auto;'></div></td>");
                          
                      } 
 					 var id = null;
@@ -76,7 +90,6 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
 					that.$el.append(objAddUpdate.$el);
 				})
 			},
-			 
 			lazyLoading: function() {
                 var $w = $(window);
                 var th = 200;
@@ -92,36 +105,35 @@ define(['text!booking/tpl/lists.html','booking/collections/bookings','booking/vi
                 if (inview.length && inview.attr("data-load") && this.$el.height() > 0) {
                     inview.removeAttr("data-load"); 
                     this.$el.find("#tr_loading").remove();
-                    this.fetchJobTypes(this.offsetLength);
+                    this.fetchBookings(this.offsetLength);
                 }
             },
             searchBooking:function(ev){ 
-                     this.searchText = ''; 
-                     this.timer = 0;
-                     var that = this;
-                     var text = $(ev.target).val(); 
-                     var code = ev.keyCode ? ev.keyCode : ev.which;
-                    
-                     var nonKey =[17, 40 , 38 , 37 , 39 , 16, 46];
-                     if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
-                           return;
-                     }
-                     
-                     if($.inArray(code, nonKey)!==-1) return;  
-                           if(code == 8 || code == 46){
-                             if(text){ 
+            	 this.searchText = ''; 
+                 this.timer = 0;
+                 var that = this;
+                 var text = $(ev.target).val(); 
+                 var code = ev.keyCode ? ev.keyCode : ev.which;
+                 var nonKey =[17, 40 , 38 , 37 , 39 , 16, 46];
+                 if ((ev.ctrlKey==true)&& (code == '65' || code == '97')) {
+                       return;
+                 }
+                 if($.inArray(code, nonKey)!==-1) return;
+                      if(code == 8 || code == 46){
+                             if(!text || text.length > 3){ 
 	                        	 that.searchText = text;
 		                          that.fetchBookings();
 	                         }
-                            }else{
-	                          this.searchText = text;
+                       }else{
+	                   
+	                        this.searchText = text;
 	                          clearTimeout(that.timer); // Clear the timer so we don't end up with dupes.
 	                            that.timer = setTimeout(function() { // assign timer a new timeout 
-	                                if (text.length < 2) return;
+	                                if (text.length < 3) return;
 	                                that.searchText = text;
-	                                that.fetchBookings(that.langaugeFilter);
+	                                that.fetchBookings();
 	                           }, 500); // 2000ms delay, tweak for faster/slower
-                            }
+                 }
             } 
            
            

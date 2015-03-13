@@ -55,10 +55,10 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
 	                    this.request.abort();
 				 
 				 this.request = this.objEmployees.fetch({data: _data,reset: true, success: function(data) {
-					 that.$el.find('.employees-table tbody').empty();
+					 that.$el.find('table tbody').empty();
 					_.each(data.models,function(model){
 						var objEmployee = new Employee({model:model,page:that,setting:that.setting});
-						that.$el.find('.employees-table tbody').append(objEmployee.$el);
+						that.$el.find('table tbody').append(objEmployee.$el);
 					})
 					that.offsetLength = data.length;
 					that.fetched = that.fetched + data.length;
@@ -69,7 +69,7 @@ define(['text!employees/tpl/lists.html','employees/collections/employees','emplo
                          
                     //} 
 					if(data.length < 1){
-						var trNoRecord = '<tr id="tr_norecord"><td colspan="6">  <div class="col-lg-9 pull-right"><P>No Employee Found ';
+						var trNoRecord = '<tr id="tr_norecord"><td colspan="1">  <div class="col-lg-9 pull-right"><P>No Employee Found ';
  
 						trNoRecord += '</div></td>';	
 						trNoRecord += '</tr>';

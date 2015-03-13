@@ -239,7 +239,7 @@ class Branches
     		$employees->franchiseid = $franid;
     		$employees->roleid = $rid;
     		$id = R::store($employees);
-    		 
+    		echo json_encode($id);
     	} catch(PDOException $e) {
     		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
     		echo '{"error":{"text":'. $e->getMessage() .'}}';

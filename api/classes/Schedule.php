@@ -77,7 +77,7 @@ class Schedule
     			 where ej.jobtypeid = $jobtypeid
     			 and s.schedulegroupid = $schedulegroupid
     			 and s.branchid = $branchid
-    			 GROUP BY e.firstname";
+    			 GROUP BY e.firstname  ";
     	try {
     	$schedules = R::getAll($sql);
     	// Include support for JSONP requests
@@ -130,10 +130,15 @@ class Schedule
     	}
     function getScheduleByGroupId(){
     	$groupid = @$_GET['groupid'];
+    	$limit = " limit 20";
+    	if(isset($_GET['offset']) && !empty($_GET['offset'])){
+    		$offset = $_GET['offset'];
+    		$limit = " limit $offset,20";
+    	}
     	$sql = "select sc.*, j.name as jobtype,s.* ,s.id as sid from schedulegroup sc
     			inner join schedule s on s.schedulegroupid = sc.id
     				left join jobtypes j on j.id = s.jobtypeid
-    			 where s.schedulegroupid ='".$groupid."'  ";
+    			 where s.schedulegroupid ='".$groupid."' order by createdon $limit ";
     	try {
     		$schedules = R::getAll($sql);
     		// Include support for JSONP requests
@@ -177,12 +182,17 @@ class Schedule
     		$branchid = $_GET['branchid'];
     
     	}
+    	$limit = " limit 20";
+    	if(isset($_GET['offset']) && !empty($_GET['offset'])){
+    		$offset = $_GET['offset'];
+    		$limit = " limit $offset,20";
+    	}
     	$sql = "SELECT sg.*,s.schedulegroupid,GROUP_CONCAT(DISTINCT j.name ORDER BY j.name ASC  )  as jobtypes,GROUP_CONCAT(DISTINCT e.firstname ORDER BY e.firstname ASC  )  as employee,  MIN(st.`dayid`) AS datefrom, MAX(st.`dayid`) AS dateto FROM schedulegroup sg
-  INNER JOIN schedule s ON s.`schedulegroupid` = sg.`id`
-  inner join jobtypes j on j.id = s.jobtypeid
-  left join employees e on e.id = s.employeeid
-  INNER JOIN scheduletiming st ON st.`scheduleid` = s.id 
-    			where s.branchid ='".$branchid."'  $search GROUP BY sg.id order by id desc ";
+				  INNER JOIN schedule s ON s.`schedulegroupid` = sg.`id`
+				  inner join jobtypes j on j.id = s.jobtypeid
+				  left join employees e on e.id = s.employeeid
+				  INNER JOIN scheduletiming st ON st.`scheduleid` = s.id 
+    			where s.branchid ='".$branchid."'  $search GROUP BY sg.id order by id desc $limit";
     	try {
     		$schedules = R::getAll($sql);
     		 
@@ -327,6 +337,7 @@ class Schedule
     		$schedulegroup = R::dispense( 'schedulegroup' );
     		$schedulegroup->title = $_GET['title'];
     		$schedulegroup->isdeleted = 0;
+    		$schedulegroup->createdon = R::isoDateTime();
     		$schedulegroup->branchid = $_GET['branchid'];
     		$id = R::store($schedulegroup);
     		echo json_encode($id);

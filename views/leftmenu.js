@@ -43,7 +43,11 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 			    if(typeof folder == "undefined") return;
 			    this.options.setting.showLoading('Loading ...',$('#page-wrapper').find('.page-content'));
 			    require([folder+'/views/lists'],function(Lists){ 
-			    	var objLists = new Lists({setting:that.options.setting});
+			    	var isemployee = false;
+			    	if($(ev.target).text().trim().toLowerCase() == "employee calendar"){
+			    		isemployee = true;
+			    	}
+			    	var objLists = new Lists({setting:that.options.setting,isemployee:isemployee});
 			    	var objBreadCrumb = new BreadCrumb({title:folder,setting:that.options.setting,show:show});
 			    	$('#page-wrapper').find('.page-content').html(objLists.$el); 
 			    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
@@ -78,8 +82,14 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				 var dashboard = this.options.setting.modules.filter(function(el){
 					 return el.name == "dashboard";
 				}) 
+				 var bookings = this.options.setting.modules.filter(function(el){
+					 return el.childof == "booking";
+				}) 
+				 var schedules = this.options.setting.modules.filter(function(el){
+					 return el.childof == "schedule";
+				}) 
 				var others = this.options.setting.modules.filter(function(el){
-					 return el.childof == "";
+					 return el.childof == "" && el.text !="";
 				}) 
 				if(typeof dashboard[0] !="undefined" && dashboard[0].name){
 					html += ' <li data-folder="'+dashboard[0].name+'" >';
@@ -101,26 +111,58 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 	                    html +='  <i class="fa fa-'+name+'" data-show="n"></i>'+text
 	                    html +=' </a>  </li>'; 
                    }) 
-                      html += '</ul></li>'
-                	    html += '<li class="panel">'
-      					html +=  '  <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#ul_setting">';
-      					html +=   '  <i class="fa fa-bar-chart-o"></i> Setting <i class="fa fa-caret-down"></i>';
-      					html +=  '  </a> <ul class="collapse nav nav-col" id="ul_setting">';
-      				  _.each(settings,function(value, key, list){
-      						var text = value.text;
-      						var name = value.name;
-      				      	html += ' <li data-folder="'+name+'" class=" ">';
-      					    html +=' <a  data-folder="'+name+'" data-show="n">';
-      	                    html +='  <i class="fa fa-'+name+'" data-show="n"></i>'+text
-      	                    html +=' </a>  </li>'; 
-                         }) 
-                        html += '</ul></li>'
-                        	 _.each(others,function(value, key, list){
+                   
+                            html += '</ul></li>';
+      				        html += '<li class="panel">'
+        					html +=  '<a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#ul_booking">';
+        					html +=  '<i class="fa fa-bar-chart-o"></i> Booking <i class="fa fa-caret-down"></i>';
+        					html +=  '</a> <ul class="collapse nav nav-col" id="ul_booking">';
+        					 
+        					_.each(bookings,function(value, key, list){
+        						var text = value.text;
+        						var name = value.name;
+        				      	html += '<li data-folder="'+name+'" class=" ">';
+        					    html +=' <a  data-folder="'+name+'" data-show="n">';
+        	                    html +=' <i class="fa fa-'+name+'" data-show="n"></i>'+text
+        	                    html +=' </a></li>'; 
+                           }) 
+                           html += '</ul></li>'; 
+       				        html += '<li class="panel">'
+         					html +=  '<a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#ul_schedules">';
+         					html +=  '<i class="fa fa-bar-chart-o"></i> Schedules <i class="fa fa-caret-down"></i>';
+         					html +=  '</a> <ul class="collapse nav nav-col" id="ul_schedules">';
+         					 
+         					_.each(schedules,function(value, key, list){
+         						var text = value.text;
+         						var name = value.name;
+         				      	html += '<li data-folder="'+name+'" class=" ">';
+         					    html +=' <a  data-folder="'+name+'" data-show="n">';
+         	                    html +=' <i class="fa fa-'+name+'" data-show="n"></i>'+text
+         	                    html +=' </a></li>'; 
+                            }) 
+                            html += '</ul></li>';
+         					
+                       	    html += '<li class="panel">'
+             					html +=  '  <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#ul_setting">';
+             					html +=   '  <i class="fa fa-bar-chart-o"></i> Setting <i class="fa fa-caret-down"></i>';
+             					html +=  '  </a> <ul class="collapse nav nav-col" id="ul_setting">';
+             				  _.each(settings,function(value, key, list){
+             						var text = value.text;
+             						var name = value.name;
+             				      	html += ' <li data-folder="'+name+'" class=" ">';
+             					    html +=' <a  data-folder="'+name+'" data-show="n">';
+             	                    html +='  <i class="fa fa-'+name+'" data-show="n"></i>'+text
+             	                    html +=' </a>  </li>'; 
+                                }) 
+                                
+         					
+         				   html += '</ul></li>'
+      				    	 _.each(others,function(value, key, list){
          						var text = value.text;
          						var name = value.name;
          				      	html += ' <li data-folder="'+name+'" class=" ">';
          					    html +=' <a  data-folder="'+name+'" data-show="n">';
-         	                    html +='  <i class="fa fa-'+name+'" data-show="n"></i>'+text
+         	                    html +='  <i class="fa fa-desktop data-show="n"></i>'+text
          	                    html +=' </a>  </li>'; 
                             }) 
 				return html;

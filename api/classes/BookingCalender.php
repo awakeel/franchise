@@ -54,38 +54,45 @@ class BookingCalender {
 	}
 	function getScheduleByGroupId() {
 		$branchid = @$_GET ['branchid'];
-		$filters = " where s.branchid = " . $branchid;
+		$filters = " where sb.branchid = " . $branchid;
 		$employeeid = @$_GET ['employeeid'];
 		$jobtypeid = @$_GET ['jobtypeid'];
-		$resourceid = "s.`jobtypeid` AS resourceId";
+		$resourceid = " sb.`jobtypeid` AS resourceId";
 		if (isset ( $jobtypeid ) && ! empty ( $jobtypeid )) {
 			if ($jobtypeid != "0") {
-				$filters .= " and s.jobtypeid=" . $jobtypeid;
-				$resourceid = "s.`jobtypeid` AS resourceId";
+				$filters .= " and sb.jobtypeid=" . $jobtypeid;
+				$resourceid = " sb.`jobtypeid` AS resourceId";
 			}
 		}
 		if (isset ( $employeeid ) && ! empty ( $employeeid )) {
-			if ($employeeid != "0") {
-				$filters .= " and s.employeeid=" . $employeeid;
-				$resourceid = "s.`employeeid` AS resourceId";
+			if ($employeeid != "0" && $employeeid !="-1") {
+				$filters .= " and sb.employeeid=" . $employeeid;
+				$resourceid = " sb.`employeeid` AS resourceId";
 			}
-		}
-		
+			if($employeeid == "-1"){
+				///$filters .= " and s.employeeid=" . $employeeid;
+				$resourceid = " sb.`employeeid` AS resourceId";
+				
+			}
+		}  
 		$sql = "select * from (SELECT * FROM  (SELECT CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`start`) COLLATE latin1_danish_ci AS start ,
                 CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`end`) COLLATE latin1_danish_ci AS end,
-                '#e6edf7' AS backgroundColor, '' as service  ,' ' AS title,s.jobtypeid as resourceId, '' AS employee,'' as customer ,0 AS booking
+                '#e6edf7' AS backgroundColor, sb.jobtypeid,'' as service  ,' ' AS title,$resourceid, '' AS employee,'' as customer ,0 AS booking
                 FROM scheduletiming AS st
-                INNER JOIN schedule s ON s.id = st.`scheduleid` 
+                INNER JOIN schedule sb ON sb.id = st.`scheduleid` 
+                $filters
                ) tbl1
                UNION  
 SELECT * FROM(
-    SELECT CONCAT(CONCAT_WS('-',SUBSTR(b.dayid, 1,4),SUBSTR(b.dayid, 5,2),SUBSTR(b.dayid, 7,2)),'T',b.`timestart`) COLLATE latin1_danish_ci AS start,
-    CONCAT(CONCAT_WS('-',SUBSTR(b.dayid, 1,4),SUBSTR(b.dayid, 5,2),SUBSTR(b.dayid, 7,2)),'T',b.`timeend`)  COLLATE latin1_danish_ci AS end  ,
-    s.color AS backgroundColor ,s.name as service,'' AS title,b.jobtypeid as resourceId,IFNULL(CONCAT(e.firstname),'None') AS employee,ifnull(c.name,'Anonymous') as customer, 1 AS booking FROM bookings b 
-    LEFT JOIN services s ON s.id = b.serviceid
-	INNER JOIN customers c on c.id = b.customerid
-    LEFT JOIN employees e ON e.id = b.employeeid
+    SELECT CONCAT(CONCAT_WS('-',SUBSTR(sb.dayid, 1,4),SUBSTR(sb.dayid, 5,2),SUBSTR(sb.dayid, 7,2)),'T',sb.`timestart`) COLLATE latin1_danish_ci AS start,
+    CONCAT(CONCAT_WS('-',SUBSTR(sb.dayid, 1,4),SUBSTR(sb.dayid, 5,2),SUBSTR(sb.dayid, 7,2)),'T',sb.`timeend`)  COLLATE latin1_danish_ci AS end  ,
+    s.color AS backgroundColor ,s.name as service,sb.jobtypeid,'' AS title,$resourceid,IFNULL(CONCAT(e.firstname),'None') AS employee,ifnull(c.name,'Anonymous') as customer, 1 AS booking FROM bookings sb 
+    LEFT JOIN services s ON s.id = sb.serviceid
+	INNER JOIN customers c on c.id = sb.customerid
+    LEFT JOIN employees e ON e.id = sb.employeeid
+    $filters
     ) tbl2) tbl3 ";
+		 
 		try {
 			$schedules = R::getAll ( $sql );
 			  
