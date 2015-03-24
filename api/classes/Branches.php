@@ -190,6 +190,7 @@ class Branches {
 			$branch->address = $params->address;
 			$branch->notes = $params->notes;
 			$branch->id = $params->id;
+			$id = R::store ( $branch );
 		} else {
 			
 			$branch->name = $params->name;
@@ -202,11 +203,13 @@ class Branches {
 			$branch->franchiseid = $this->auth->getFranchiseId ();
 			$branch->isactivated = 1;
 			$branch->isdeleted = 0;
+			$id = R::store ( $branch );
+			$this->addEmployeeDepartments ( @$_SESSION ['employeeid'], $id, $this->auth->getFranchiseId () );
 		}
-		$id = R::store ( $branch );
+		
 		echo json_encode ( $id );
 		$this->updateIsNew ( @$_SESSION ['employeeid'] );
-		$this->addEmployeeDepartments ( @$_SESSION ['employeeid'], $id, $this->auth->getFranchiseId () );
+		
 		$this->doLogic ( $params->timing, $id );
 	}
 	function doLogic($timing, $branchid) {

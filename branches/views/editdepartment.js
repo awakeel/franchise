@@ -95,7 +95,7 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 				}) 
 
 				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i'  ,
-							    'showDuration': true});
+							    'useSelect':false});
 				this.$el.find('.days').on('click',function(){
 					if($(this).prop('checked')!= true){
 						that.$el.find("#txts"+$(this).attr('id')).attr('disabled',true);

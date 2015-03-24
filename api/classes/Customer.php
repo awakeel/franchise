@@ -3,13 +3,13 @@ class Customers
 {  
 	function __construct($app,$auth){
 		 
-	    	$app->get('/customers', function () { 
-	    		$this->getAllCustomers( );
-	    	});
-    		$app->post('/customers',function(){
-	    		$request = Slim::getInstance()->request();
-	    		$this->saveCustomer1($request);
-    		});
+		    	$app->get('/customers', function () { 
+		    		$this->getAllCustomers( );
+		    	});
+	    		$app->post('/customers',function(){
+		    		$request = Slim::getInstance()->request();
+		    		$this->saveCustomer1($request);
+	    		});
     			$app->get('/bookingbyid', function () {
     				$this->getAllBookings();
     			});

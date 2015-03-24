@@ -238,7 +238,7 @@ class Employees
     	$departments = rtrim($roleid, ',');
     	$this->deleteEmployeeJobTypes($eid);
     	$this->deleteEmployeeServices($eid);
-    	$this->deleteEmployeeDepartments($eid);
+    	$this->deleteEmployeeDepartments($eid,$franid);
     	$services = explode(',',$services);
     	$jobtypes = explode(',',$jobtypes);
     	$departments = explode(',',$roleid);
@@ -349,9 +349,9 @@ class Employees
     			echo json_encode(['error'=>'Integrity constraint'] );
     	}
     }
-    function deleteEmployeeDepartments($id){
+    function deleteEmployeeDepartments($id,$f){
     
-    	$sql = "delete from employeedepartments where employeeid = $id";
+    	$sql = "delete from employeedepartments where employeeid = $id and branchid not in(select id from branches where isactivated = 0 and franchiseid = $f)";
     
     	try {
     		R::exec($sql);

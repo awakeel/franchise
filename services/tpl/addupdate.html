@@ -1,90 +1,99 @@
- 
-			<div class="row">
-				<div class="col-sm-11">
-					<form class="form-horizontal" role="form" >
-						<fieldset>
 
-							<!-- Form Name -->
-							<legend> </legend>
-							<div class="form-group">
-								<label class="col-sm-2 control-label" for="textinput">Job type</label>
-								<div class="col-sm-10">
-									<div class='jobtypes-list' style="border: 1px solid #eee;padding: 10px;"></div>
-										<span class="help-block hide jobtypes-error hide"><i class="fa fa-warning"></i> Select job type!</span>
-								</div>
-							</div>
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-sm-2 control-label" for="textinput">Name *</label>
-								<div class="col-sm-10">
-									<input type="text" id="txtservice" placeholder="Hair dressing"
-										class="form-control">
-										<span class="help-block hide name-error hide"><i class="fa fa-warning"></i> You must name service eg Cleaner etc etc!</span>
-								</div>
-							</div>
-								<div class="form-group">
-									<label class="col-sm-2 control-label" for="textinput">Color</label>
-									<div class="col-sm-10">
-										<input type="color" id="txtcolor" class='color' value="#333333" list="colors">
-										<datalist id=colors>
-										<option>#ffffff</option>
-										<option>#ff0000</option>
-										<option>#ff7700</option>
-										</datalist>
-								</div>
-							</div>
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-sm-2 control-label" for="textinput">Notes</label>
-								<div class="col-sm-10">
-									<input type="text" id="txtcomments" placeholder="Hair cutting and other hair related work."
-										class="form-control">
-								</div>
-							</div>
+<div class="row">
+	<div class="col-sm-11">
+		<form class="form-horizontal" role="form">
+			<fieldset>
+				<!-- Form Name -->
+				<legend> </legend>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="textinput">Job
+						type</label>
+					<div class="col-sm-10">
+						<div class='jobtypes-list'
+							style="border: 1px solid #eee; padding: 10px;"></div>
+						<span class="help-block hide jobtypes-error hide"><i
+							class="fa fa-warning"></i> Select job type!</span>
+					</div>
+				</div>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="textinput">Name
+						*</label>
+					<div class="col-sm-10">
+						<input type="text" id="txtservice" placeholder="Hair dressing"
+							class="form-control"> <span
+							class="help-block hide name-error hide"><i
+							class="fa fa-warning"></i> You must name service eg Cleaner etc
+							etc!</span>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="textinput">Color</label>
+					<div class="col-sm-10">
+						<input type="color" id="txtcolor" class='color' value="#333333"
+							list="colors">
+						<datalist id=colors>
+							<option>#ffffff</option>
+							<option>#ff0000</option>
+							<option>#ff7700</option>
+						</datalist>
+					</div>
+				</div>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="textinput">Notes</label>
+					<div class="col-sm-10">
+						<input type="text" id="txtcomments"
+							placeholder="Hair cutting and other hair related work."
+							class="form-control">
+					</div>
+				</div>
 
-							<!-- Text input-->
-							<div class="form-group">
-								<label class="col-sm-2 control-label" for="textinput">Type</label>
-								<div class="col-sm-10">
-									<div class="input-group">
-										<div id="radioBtn" class="btn-group">
-											<a class="btn btn-success btn-sm active"
-												data-toggle="bookable" data-title="Y">Bookable</a> <a
-												class="btn btn-red btn-sm notActive"
-												data-toggle="non bookable" data-title="N">None Bookable</a>
-										</div>
-										<input type="hidden" name="bookable" id="bookable">
-									</div>
-								</div>
-							</div>
- 
-							<!-- Text input-->
-							<div class="form-group show-bookable " style=" ;">
-								<label class="col-sm-3 control-label" for="textinput">Price($) *</label>
-								<div class="col-sm-2">
-									<input type="text" id="txtprice" placeholder="20"
-										class="form-control">
-										<span class="help-block hide price-error hide"><i class="fa fa-warning"></i> Enter price, eg 30$!</span>
-								</div>
+				<!-- Text input-->
+				<div class="form-group">
+					<label class="col-sm-2 control-label" for="textinput">Type</label>
+					<div class="col-sm-10">
 
-								<label class="col-sm-3 control-label" for="textinput">Time(min) *</label>
-								<div class="col-sm-2">
-									<input type="text" id="txttime" placeholder="20"
-										class="form-control"> 
-										<span class="help-block hide time-error hide"><i class="fa fa-warning"></i>Time must be greater than 15, eg 30 (should be in min)!</span>
-								</div>
-							</div>
+						<input id="rdobookable" type="radio" name="group1"
+							value="bookable" /><label for="rdobookable" style="padding: 5px;">
+							Bookable</label> <input type="radio" name="group1" id="rdononebookable"
+							value="none bookable" /><label for="rdononebookable"
+							style="padding: 5px;"> None Bookable</label>
+					</div>
 
-							<div class="modal-footer">
-					<button type="button" class="btn btn-default close-pp"
-						 >Close</button>
+				</div>
+
+				<!-- Text input-->
+				<div class="form-group show-bookable " style="">
+					<label class="col-sm-3 control-label" for="textinput">Price($)
+						*</label>
+					<div class="col-sm-2">
+						<input type="text" id="txtprice" placeholder="20"
+							class="form-control"> <span
+							class="help-block hide price-error hide"><i
+							class="fa fa-warning"></i> Enter price, eg 30$!</span>
+					</div>
+
+					<label class="col-sm-3 control-label" for="textinput">Time(min)
+						*</label>
+					<div class="col-sm-2">
+						<input type="text" id="txttime" placeholder="20"
+							class="form-control"> <span
+							class="help-block hide time-error hide"><i
+							class="fa fa-warning"></i>Time must be greater than 15, eg 30
+							(should be in min)!</span>
+					</div>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default close-pp">Close</button>
 					<button type="button" class="btn btn-green save-p">Save
 						changes</button>
 				</div>
 
 
 
-						</fieldset>
-					</form>
-				</div> 
+			</fieldset>
+		</form>
 	</div>
+</div>

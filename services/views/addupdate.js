@@ -58,27 +58,20 @@ define(
 						render : function() {
 							this.$el.html(this.template());
 							var that = this;
-							this.$el.find('#radioBtn a').on('click',
-									function() {
-										var sel = $(this).data('title');
-										var tog = $(this).data('toggle');
-										that.$el.find('#' + tog).prop('value',sel);
-										that.$el.find('a').addClass('notActive').removeClass('active');
-												that.$el.find(
-												'a[data-toggle="' + tog
-														+ '"][data-title="'
-														+ sel + '"]')
-												.removeClass('notActive')
-												.addClass('active');
-										 
-
-									})
+							$('.btn-toggle').click(function() {
+							    $(this).find('.btn').toggleClass('active');  
+							    
+							    if ($(this).find('.btn-danger').size()>0) {
+							    	$(this).find('.btn').toggleClass('btn-danger');
+							    }
+							    $(this).find('.btn').toggleClass('btn-grey');
+							});
 							that.$el.find("#txtservice").typeahead({
 								hint : true,
 
 								local : that.app.globalservices
 							});
-						 
+							this.$el.find('#rdobookable').attr('checked','checked');
 							if(typeof this.options.id  == "undefined"){
 								this.$el.find('#txtservice').val(this.name);
 								this.$el.find("#txttime").val(this.time);
@@ -86,12 +79,11 @@ define(
 								this.$el.find("#txtcolor").val(this.color);
 								this.$el.find("#txtcomments").val(this.comments);
 								this.$el.find('#ddljobtypes').val(this.jobtypeid);
-								that.$el.find('a').addClass('notActive').removeClass('active');
-								that.$el.find(
-										'a[data-toggle="' + this.type.trim()
-												+ '"] ')
-										.removeClass('notActive')
-										.addClass('active');
+								if(this.type=="bookable")
+									this.$el.find('#rdobookable').attr('checked','checked');
+								else
+									this.$el.find('#rdononebookable').attr('checked','checked');
+								 
 								
 								 
 								that.$el.find("#txtservice").on('blur',function(){
@@ -132,8 +124,7 @@ define(
 						save : function() {
 							this.clearErrorFilter();
 							var name = this.$el.find('#txtservice').val();
-							var type = this.$el.find('#radioBtn .active').data(
-									'toggle')
+							var type = this.$el.find('input[name=group1]:checked').val();
 							var comments = this.$el.find('#txtcomments').val();
 							var time = this.$el.find('#txttime').val();
 							var t = this.$el.find(".color").spectrum("get") ;

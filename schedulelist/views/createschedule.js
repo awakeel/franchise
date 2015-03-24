@@ -250,7 +250,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 									objScheduleModel.set('schedulegroupid',groupid); 
 										objScheduleModel.save(null,{success:function(){
 											that.app.showLoading(false, that.$el.find('.schedule-row')); 
-											that.app.successMessage('Schedule '+ l + ' Saved Successfully' );
+											that.app.successMessage('Schedule  Saved Successfully' );
 									       	that.closeView();
 										}} );
 									})

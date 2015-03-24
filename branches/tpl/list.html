@@ -5,8 +5,12 @@
 	<p>
 		<strong> <% if(this.model.get('city') != "null"){%>
 				<%=this.model.get('city') %>    
-				<%=  this.model.get('zip') %>
+				
 			<%}%>
+			 <% if(this.model.get('zip') != "null"){%>
+				<%=this.model.get('zip') %>    
+				
+			<%}%> 
 			</strong> <%=this.getStatus()%>
 	</p>
 	<div class="pull-right" style="vertical-align: top">

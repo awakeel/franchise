@@ -113,8 +113,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							this.$el.find('#txtdatebooking').val(this.start)
 							 
 							this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i' , 'minTime':this.startTime,
-							    'maxTime': this.endTime,
-							    'showDuration': true});
+							    'maxTime': this.endTime });
 							this.$el.find("#txtstartbooking").on('changeTime', function() {
 			            		var end =	that.$el.find("#ddlservices").val();
 			            	 		var newEnd = that.addMinutes($(this).val(), end);
@@ -153,7 +152,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							var customerid = this.$el.find("#txtcustomername").data('id');
 							var email = this.$el.find("#txtemail").val();
 							var phone = this.$el.find("#txtphone").val();
-							var status = "Present";
+							var status = "Scheduled";
 							
 							this.app.showLoading('Wait a moment....', this.$el );
 							this.objBookingModel.set('employeeid', employeeid);
