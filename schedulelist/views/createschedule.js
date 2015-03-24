@@ -224,9 +224,11 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 							 this.app.showLoading('Saving Schedule....', this.$el.find('.schedule-row'));
 							 $.getJSON(URL,data,  function (tsv, state, xhr) {
 	   	 		                var groupid = jQuery.parseJSON(xhr.responseText);
+	   	 		                var l = 0;
 	   	 		                that.$el.find('.schedule-div:not(:last-child)').each(function(index){
 	   	 		                	var data = that.getScheduleTiming($(this));
 	   	 		                	var days = "";
+	   	 		                	l = l + 1;
 	   	 		                    $(this).find('.timings-div-schedule .days:checked').each(function() {
 							    	 days +=($(this).val())+",";
 							        });
@@ -246,14 +248,15 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 									objScheduleModel.set('data',data);
 									objScheduleModel.set('days',days);
 									objScheduleModel.set('schedulegroupid',groupid); 
-									objScheduleModel.save(null,{success:function(){
-										that.app.showLoading(false, that.$el.find('.schedule-row')); 
-										that.app.successMessage();
-								       	that.closeView();
-									}} );
+										objScheduleModel.save(null,{success:function(){
+											that.app.showLoading(false, that.$el.find('.schedule-row')); 
+											that.app.successMessage('Schedule '+ l + ' Saved Successfully' );
+									       	that.closeView();
+										}} );
 									})
+									
 	   	 				     });
-							
+							 
 								
 						},
 						calculate:function(time1,time2) {

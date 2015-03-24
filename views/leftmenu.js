@@ -47,7 +47,8 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 			    	if($(ev.target).text().trim().toLowerCase() == "employee calendar"){
 			    		isemployee = true;
 			    	}
-			    	var objLists = new Lists({setting:that.options.setting,isemployee:isemployee});
+
+			    	var objLists = new Lists({show:show,setting:that.options.setting,isemployee:isemployee});
 			    	var objBreadCrumb = new BreadCrumb({title:folder,setting:that.options.setting,show:show});
 			    	$('#page-wrapper').find('.page-content').html(objLists.$el); 
 			    	 $('#page-wrapper').find('.page-content').prepend(objBreadCrumb.$el); 
@@ -61,16 +62,34 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				})
 			},
 			getMenu:function(){ 
+				  var that = this;
+				if(typeof this.app.modules == "undefined"){
+					 var URL = "api/modules";
+		           
+		             var data = {};
+		             if(this.app.user_branch_id){
+		            	 data = {branchid:this.app.user_branch_id} 
+		             }
+		             jQuery.getJSON(URL,data,  function (tsv, state, xhr) {
+		                 var _json = jQuery.parseJSON(xhr.responseText);
+		                 that.app.modules = _json;
+		                return that.showMenu();
+		             }); 
+				}else{
+					return that.showMenu();
+				}
+			}, 
+			showMenu:function(){
+
 				var that = this; 
 				var total = this.options.setting.modules.length;
 				var iterator = 0;
 				var html = "<li class='nav-search'> <span></span> </li>";
 				var which_child = "";
-				console.log(this.app.modules );
-				if(typeof this.app.modules == "undefined"){
-					return;
+				if(!this.app.modules){
+					this.getMenu();
+					return false;
 				}
-				
 				var departments = this.app.modules.filter(function(el){
 					
 					return el.childof == "management";
@@ -87,6 +106,9 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				}) 
 				 var schedules = this.options.setting.modules.filter(function(el){
 					 return el.childof == "schedule";
+				}) 
+				 var packages = this.options.setting.modules.filter(function(el){
+					 return el.childof == "packages";
 				}) 
 				var others = this.options.setting.modules.filter(function(el){
 					 return el.childof == "" && el.text !="";
@@ -157,6 +179,22 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
                                 
          					
          				   html += '</ul></li>'
+         					   
+         					    html += '<li class="panel">'
+               					html +=  '  <a href="javascript:;" data-parent="#side" data-toggle="collapse" class="accordion-toggle" data-target="#ul_packages">';
+               					html +=   '  <i class="fa fa-bar-chart-o"></i> Packages <i class="fa fa-caret-down"></i>';
+               					html +=  '  </a> <ul class="collapse nav nav-col" id="ul_packages">';
+               				    _.each(packages,function(value, key, list){
+               						var text = value.text;
+               						var name = value.name;
+               				      	html += ' <li data-folder="'+name+'" class=" ">';
+               					    html +=' <a  data-folder="'+name+'" data-show="'+value.description+'">';
+               	                    html +='  <i class="fa fa-'+name+'" data-show="'+value.description+'"></i>'+text
+               	                    html +=' </a>  </li>'; 
+                                 }) 
+                                  
+           					
+           				   html += '</ul></li>'
       				    	 _.each(others,function(value, key, list){
          						var text = value.text;
          						var name = value.name;
@@ -166,7 +204,7 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
          	                    html +=' </a>  </li>'; 
                             }) 
 				return html;
-			}, 
+			},
 			getBranchName:function(){ 
 				if(this.app.current_branch !=""){
 					return this.app.current_branch;

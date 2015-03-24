@@ -2,6 +2,7 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 	function (template,BookingCalender,calendar,timepicker,daterangepicker,typeahead,datepicker,jqueryui,qtip,NewBooking,moment) {
 		'use strict';
 		return Backbone.View.extend({  
+			className:'cslg',
 			events:{
 			  
 			 	"click .close-p":"closeSchedule", 
@@ -101,7 +102,7 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 		        if(this.from){
 		        	btns = "";
 		        }
-		        this.$el.find('#calendar').html(''); 
+		        this.$el.find('#calendar').empty(''); 
 		        $('#calendar').fullCalendar({
 		          header: {
 		            left: btns,
@@ -151,10 +152,10 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
                     eventDrop: function( event, dayDelta, minuteDelta, allDay) {
                        console.log("@@ drag/drop event " + event.title + ", start " + event.start + ", end " + event.end + ", resource " + event.resourceId);
                     },
-                    
-		            eventRender: function(event, element,view) { 
+                     
+		            eventRender: function(event, element,view) {   
 		            	$(this).css('width','100%')
-		            	if(event.booking !="1"){
+		            	if(event.booking =="0"){
 		                  	element.find('.fc-event-time').empty();
 		                    var one_day = 1000 * 60 * 60 * 24;
 		                    var _Diff = Math.ceil((event.start.getTime() - view.visStart.getTime())/(one_day));
@@ -164,15 +165,15 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 		                  	return;
 		            	}else{
 		            		element.find('.fc-event-inner').empty();
-	                    	var content = '<h4> Service : '+event.service+'</h4><h4>Customer: '+event.customer+'</h4>' + 
-	                    	'<p> <h4>Assign to :  '+event.employee+'</h4><br />' + 
-	        				'<p><b>Start:</b> '+moment(event.start).format("LLL")+'<br />' + 
-	        				(event.end && '<p><b>End:</b> '+moment(event.end).format("LLL")+'</p>' || '');
+		            			var c= '<table cellpadding="0" cellspacing="0" class="bubble-table bubble">';
+		            		c+='<tbody><tr><td class="bubble-cell-side"><div class="bubble-corner" id="tl:1"><div class="bubble-sprite bubble-tl"></div></div></td>';
+		            		c+='<td class="bubble-cell-main"><div class="bubble-top"></div></td><td class="bubble-cell-side"><div class="bubble-corner" id="tr:1"><div class="bubble-sprite bubble-tr"></div></div></td></tr>';
+		            		c+='<tr><td colspan="3" class="bubble-mid"><div style="overflow:hidden" id="bubbleContent:1"><div class="details"><span class="title" style="color: #125A12">'+event.service+'/'+event.employee+'</span><div class="detail-content"><div class="detail-item"><span class="event-details-label">When</span><span class="event-when">'+moment(event.start).format("LLL")+' - '+moment(event.end).format("LLL")+'</span></div> <div class="detail-item"><span class="event-details-label">Customer Info</span><span class="event-description"> ' + event.customer+ ' </span></div></div><div class="separator" style="background-color: #125A12;"></div><span class="links"><a class="more-detail" data-id='+event.booking+' data-cust='+event.customerid+' data-status='+event.status+'>more details»</a></span></div></div></td></tr><tr><td><div class="bubble-corner" id="bl:1"><div class="bubble-sprite bubble-bl"></div></div></td><td><div class="bubble-bottom"></div></td><td><div class="bubble-corner" id="br:1"><div class="bubble-sprite bubble-br"></div></div></td></tr>';
+		            		c+='</tbody></table>';
+		            		
+	                     
 	                    	 	 element.qtip({ 
-	                             content:content,
-	                             style: {
-	                                 classes: "qtip-light"
-	                             },
+	                             content:c, 
 	                             hide: {
 	                                 delay: 200,
 	                                 fixed: true, // <--- add this
@@ -187,12 +188,37 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 		    			    				mouse: false,
 		    			    				scroll: false
 		    			    			}
+	                             },
+	                             events: {
+	                                 show: function(event, api) {
+	                                	 $(".more-detail").on('click',function(ev){
+	    	                    	 		 var id = $(ev.target).data('id');
+	    	                    	 		 that.viewBooking(id,$(ev.target).data('cust'),$(ev.target).data('status'));
+	    	                    	 	 })
+	                                 }
 	                             }
 	                         }); 
+	                    	 	
 		            	} 
                   	}
 		        });
 		        this.app.showLoading(false,this.$el);
+		},
+		viewBooking : function(id,customerid,status) { 
+			var that = this; 
+			var obj = Backbone.Model.extend({});
+			var obj = new obj();
+			obj.set('id',id);
+			obj.set('customerid',customerid);
+			obj.set('status',status);
+			 
+			require([ 'booking/views/createbooking' ],	function(Lists) { 
+					var objLists = new Lists({model:obj,page:that,app:that.app}) 
+					$('#page-wrapper').find('.page-content .cslg').remove()
+					$('#page-wrapper').find('.page-content').append(objLists.$el); 
+				 
+					
+				})
 		},
 		getJobTypeValue:function(id){
 			

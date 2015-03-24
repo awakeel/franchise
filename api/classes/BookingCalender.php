@@ -77,7 +77,7 @@ class BookingCalender {
 		}  
 		$sql = "select * from (SELECT * FROM  (SELECT CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`start`) COLLATE latin1_danish_ci AS start ,
                 CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`end`) COLLATE latin1_danish_ci AS end,
-                '#e6edf7' AS backgroundColor, sb.jobtypeid,'' as service  ,' ' AS title,$resourceid, '' AS employee,'' as customer ,0 AS booking
+                '#e6edf7' AS backgroundColor, sb.jobtypeid,'' as service  ,' ' AS title,$resourceid, '' AS employee,'' as customer ,0 AS booking,'' as customerid,'' as status
                 FROM scheduletiming AS st
                 INNER JOIN schedule sb ON sb.id = st.`scheduleid` 
                 $filters
@@ -86,7 +86,7 @@ class BookingCalender {
 SELECT * FROM(
     SELECT CONCAT(CONCAT_WS('-',SUBSTR(sb.dayid, 1,4),SUBSTR(sb.dayid, 5,2),SUBSTR(sb.dayid, 7,2)),'T',sb.`timestart`) COLLATE latin1_danish_ci AS start,
     CONCAT(CONCAT_WS('-',SUBSTR(sb.dayid, 1,4),SUBSTR(sb.dayid, 5,2),SUBSTR(sb.dayid, 7,2)),'T',sb.`timeend`)  COLLATE latin1_danish_ci AS end  ,
-    s.color AS backgroundColor ,s.name as service,sb.jobtypeid,'' AS title,$resourceid,IFNULL(CONCAT(e.firstname),'None') AS employee,ifnull(c.name,'Anonymous') as customer, 1 AS booking FROM bookings sb 
+    s.color AS backgroundColor,sb.jobtypeid,s.name as service,'' AS title,$resourceid,IFNULL(CONCAT(e.firstname),'None') AS employee,ifnull(c.name,'Anonymous') as customer, sb.id AS booking ,sb.customerid , sb.status FROM bookings sb 
     LEFT JOIN services s ON s.id = sb.serviceid
 	INNER JOIN customers c on c.id = sb.customerid
     LEFT JOIN employees e ON e.id = sb.employeeid

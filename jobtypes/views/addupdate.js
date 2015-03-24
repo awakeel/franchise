@@ -7,7 +7,7 @@ define(
 					.extend({
 						events : {
 							'click .close-pp' : "closeView",
-							"click .save-p" : "save"
+							"click .save-p" : "save", 
 						},
 						initialize : function() {
 							this.template = _.template(template);
@@ -19,6 +19,7 @@ define(
 							this.franchiseid  = this.app. user_franchise_id;
 							this.render(); 
 						},
+						 
 						render : function() {
 							this.$el.html(this.template());
 							var that = this;
@@ -69,30 +70,46 @@ define(
 						}, 
 						save : function() {
 							var name = this.$el.find('#txtname').val();
-							var t = this.$el.find(".color").spectrum("get") ;
-							var color = t.toHexString() // "#ff0000"
-							var comments = this.$el.find('#txtcomments').val()
-							if (!name) {
-								this.$el.find('.name-error').removeClass('hide')
-								return false;
+							var name = this.$el.find('#txtname').val();
+							var a = '';
+							if(typeof this.options.id != "undefined"){
+							 a = this.options.page.objJobTypes.where({ name: name});
 							}
-							this.app.showLoading('Wait a moment....', this.$el);
-							
-							this.objjobtype.set('franchiseid', this.franchiseid);
-							this.objjobtype.set('name', name);
-							this.objjobtype.set('color', color);
-							this.objjobtype.set('comments', comments);
-							var that = this;
-							 this.objjobtype.save(null,{success:function(){
-								that.options.page.setting.jobTypes[that.options.page.setting.jobTypes.length - 1] = name;
+							if(a.length > 0){
+								  swal({
+								      title: "Warning?",
+								      text: "Job Type Already Exists",
+								      type: "error",
+								     });
+								return false;
 								
-								that.options.page.setting.successMessage();
-								that.$el.find('#txtname').val('');
-								that.$el.find('#txtcomments').val('');
-								that.app.showLoading(false, that.$el);
-								that.closeView();
-								$("#tr_norecord").remove();
-							}});
+							}else{
+								var t = this.$el.find(".color").spectrum("get") ;
+								var color = t.toHexString() // "#ff0000"
+								var comments = this.$el.find('#txtcomments').val()
+								if (!name) {
+									this.$el.find('.name-error').removeClass('hide')
+									return false;
+								}
+								this.app.showLoading('Wait a moment....', this.$el);
+								
+								this.objjobtype.set('franchiseid', this.franchiseid);
+								this.objjobtype.set('name', name);
+								this.objjobtype.set('color', color);
+								this.objjobtype.set('comments', comments);
+								var that = this;
+								 this.objjobtype.save(null,{success:function(){
+									that.options.page.setting.jobTypes[that.options.page.setting.jobTypes.length - 1] = name;
+									
+									that.options.page.setting.successMessage();
+									that.$el.find('#txtname').val('');
+									that.$el.find('#txtcomments').val('');
+									that.app.showLoading(false, that.$el);
+									that.closeView();
+									$("#tr_norecord").remove();
+								}}); 
+							}
+							
 							 
 							// this.closePopup();
 							

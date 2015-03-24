@@ -33,7 +33,22 @@ define(
 							
 						},
 						showPrint:function(){
-							this.$el.find(".print-area").print();
+								var data = this.$el.find(".print-area");
+							  var mywindow = window.open('', 'Invoice', 'height=800,width=1024');
+						        mywindow.document.write('<html><head><title>Printing Invoice</title>');
+						        /*optional stylesheet*/ //mywindow.document.write('<link rel="stylesheet" href="main.css" type="text/css" />');
+						        mywindow.document.write('</head><body >');
+						        mywindow.document.write(data.html());
+						        mywindow.document.write('</body></html>');
+
+						        mywindow.document.close(); // necessary for IE >= 10
+						        mywindow.focus(); // necessary for IE >= 10
+
+						        mywindow.print();
+						        mywindow.close();
+
+						        return true;
+						    
 						},
 						closeView : function() { 
 							var that = this; 

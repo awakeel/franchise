@@ -22,6 +22,14 @@ class Revenue
     	if(isset($_GET['franchiseid']) && !empty($_GET['franchiseid'])){
     		$filters .= " and b.franchiseid =".$_GET['franchiseid'] ;
     	}
+    	if(isset($_GET['serviceid']) && !empty($_GET['serviceid'])){
+    		if($_GET['serviceid'] != "0")
+    		$filters .= " and b.serviceid =".$_GET['serviceid'] ;
+    	}
+    	if(isset($_GET['employeeid']) && !empty($_GET['employeeid'])){
+    		if($_GET['employeeid'] != "0")
+    		$filters .= " and b.employeeid =".$_GET['employeeid'] ;
+    	}
     	if(isset($_GET['offset']) && !empty($_GET['offset'])){
     		$offset = $_GET['offset'];
     		$limit = " limit $offset,20";

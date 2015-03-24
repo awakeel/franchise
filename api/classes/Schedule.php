@@ -175,7 +175,7 @@ class Schedule
     	$search = "";
     	if(isset($_GET['search']) && !empty($_GET['search'])){
     		$search = $_GET['search'];
-    		$search =  "  AND  (j.name LIKE '%". $search ."%' OR e.firstname LIKE '%". $search ."%')";
+    		$search =  "  AND  (sg.title LIKE '%". $search ."%' OR j.name LIKE '%". $search ."%' OR e.firstname LIKE '%". $search ."%')";
     	}
     	$branchid = 0;
     	if(isset($_GET['branchid'])  && !empty($_GET['branchid'])){

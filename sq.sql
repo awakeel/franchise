@@ -12,24 +12,29 @@ MySQL - 5.6.17 : Database - franchise
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-CREATE DATABASE /*!32312 IF NOT EXISTS*/`franchise` /*!40100 DEFAULT CHARACTER SET latin1 */;
+CREATE DATABASE /*!32312 IF NOT EXISTS*/`franchise` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE `franchise`;
 
-/*Table structure for table `book` */
+/*Table structure for table `bookinglogs` */
 
-DROP TABLE IF EXISTS `book`;
+DROP TABLE IF EXISTS `bookinglogs`;
 
-CREATE TABLE `book` (
-  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
-  `title` varchar(191) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `rating` int(11) unsigned DEFAULT NULL,
+CREATE TABLE `bookinglogs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) DEFAULT NULL,
+  `text` text,
+  `createdon` datetime DEFAULT NULL,
+  `franchiseid` int(11) DEFAULT NULL,
+  `branchid` int(11) DEFAULT NULL,
+  `customerid` int(11) unsigned DEFAULT NULL,
+  `bookingid` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8;
 
-/*Data for the table `book` */
+/*Data for the table `bookinglogs` */
 
-insert  into `book`(`id`,`title`,`rating`) values (1,'Learn to Program',10),(2,'Learn to Program',10),(3,'Learn to Program',10),(4,'Learn to Program',10),(5,'Learn to Program',10);
+insert  into `bookinglogs`(`id`,`title`,`text`,`createdon`,`franchiseid`,`branchid`,`customerid`,`bookingid`) values (1,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(2,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(3,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(4,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(5,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(6,'Booking  changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(7,'Booking employees changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(8,'Booking employees changed','Booking of customer id38 has been changed',NULL,2,5,38,38),(9,'Booking employees changed','Booking of customer id38 has been changed',NULL,2,5,38,33),(10,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:10:06',2,5,38,33),(11,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:11:15',2,5,38,33),(12,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:11:22',2,5,38,33),(13,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:11:25',2,5,38,33),(14,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:12:34',2,5,38,33),(15,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:14:24',2,5,38,33),(16,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:14:52',2,5,38,33),(17,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:16:11',2,5,38,33),(18,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:16:27',2,5,38,33),(19,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:17:03',2,5,38,33),(20,'Booking employees changed','Booking of customer id38 has been changed','2015-03-05 11:17:06',2,5,38,33),(21,'Booking services changed','Booking of customer id53 has been changed','2015-03-05 17:56:52',2,5,53,55),(22,'Booking employees changed','Booking of customer id38 has been changed','2015-03-06 06:59:07',2,5,38,33),(23,'Booking services changed','Booking of customer id54 has been changed','2015-03-06 11:29:12',2,5,54,56),(24,'Booking employees changed','Booking of customer id38 has been changed','2015-03-06 14:42:51',2,5,38,33),(25,'Booking employees changed','Booking of customer id38 has been changedJan','2015-03-06 14:46:34',2,5,38,33),(26,'Booking employees changed','Booking of customer id38 has been changed  <strong style=\'color:green\'>Not Assign</strong>','2015-03-06 14:47:32',2,5,38,33),(27,'Booking employees changed','Booking of customer id38 has been changed  <strong style=\'color:green\'> None Jan Emly</strong>','2015-03-06 14:48:41',2,5,38,33),(28,'Booking employees changed','Booking of customer id38 has been changed  <strong style=\'color:green\'>Jan Emly</strong>','2015-03-06 14:51:20',2,5,38,33),(29,'Booking employees changed','Booking of customer id38 has been changed  <strong style=\'color:green\'> None </strong>','2015-03-06 14:51:27',2,5,38,33),(30,'Booking employees changed','Booking of customer id38 has been changed  <strong style=\'color:green\'>Jan Emly</strong>','2015-03-06 16:58:37',2,5,38,33);
 
 /*Table structure for table `bookings` */
 
@@ -37,29 +42,48 @@ DROP TABLE IF EXISTS `bookings`;
 
 CREATE TABLE `bookings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(200) COLLATE latin1_danish_ci DEFAULT NULL,
+  `title` varchar(200) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
   `employeeid` int(11) DEFAULT NULL,
   `jobtypeid` int(11) DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
   `franchiseid` int(11) DEFAULT NULL,
   `serviceid` int(11) DEFAULT NULL,
-  `timestart` varchar(20) COLLATE latin1_danish_ci DEFAULT NULL,
-  `timeend` varchar(20) COLLATE latin1_danish_ci DEFAULT NULL,
-  `bookingtype` varchar(30) COLLATE latin1_danish_ci DEFAULT NULL,
-  `price` varchar(10) COLLATE latin1_danish_ci DEFAULT NULL,
-  `bookingdate` date DEFAULT NULL,
+  `timestart` varchar(20) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `timeend` varchar(20) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `bookingtype` varchar(30) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `price` varchar(10) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `dayid` int(11) DEFAULT NULL,
   `createdon` datetime DEFAULT NULL,
   `createdbyid` int(11) DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   `customerid` int(11) DEFAULT NULL,
-  `status` enum('Show','Present','Not Show','Cancelled','Completed') COLLATE latin1_danish_ci DEFAULT NULL,
+  `status` varchar(50) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
   `isactivated` int(11) unsigned DEFAULT NULL,
+  `bookingid` int(11) unsigned DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1 COLLATE=latin1_danish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=87 DEFAULT CHARSET=utf8;
 
 /*Data for the table `bookings` */
 
-insert  into `bookings`(`id`,`title`,`employeeid`,`jobtypeid`,`branchid`,`franchiseid`,`serviceid`,`timestart`,`timeend`,`bookingtype`,`price`,`bookingdate`,`createdon`,`createdbyid`,`isdeleted`,`customerid`,`status`,`isactivated`) values (13,'',6,0,7,3,10,'13:30','15:30','phone','','2015-02-06','2015-02-05 00:00:00',3,0,16,'Present',0),(14,'',6,0,7,3,10,'13:30','15:30','phone','','2015-02-06','2015-02-05 00:00:00',3,0,17,'Present',0),(15,'',6,0,6,3,10,'13:00','14:00','phone','','2015-02-06','2015-02-05 00:00:00',3,0,18,'Present',0),(16,'',6,0,6,3,10,'13:00','14:00','phone','','2015-02-06','2015-02-05 00:00:00',3,0,19,'Present',0),(17,'',6,0,6,3,10,'13:00','14:00','phone','','2015-02-06','2015-02-05 00:00:00',3,0,20,'Present',0),(18,'',6,0,6,3,10,'13:00','14:00','phone','','2015-02-11','2015-02-05 00:00:00',3,0,21,'Present',0),(19,'',16,0,7,3,9,'13:00','14:30','phone','3','2015-02-05','2015-02-05 00:00:00',3,0,22,'Present',0),(20,'',6,0,6,3,10,'','','phone','','1970-01-01','2015-02-06 00:00:00',3,0,23,'Present',0),(21,'',6,0,6,3,10,'11:0','11:43','phone','43','2015-01-07','2015-02-07 00:00:00',3,0,24,'Present',0),(22,'',6,0,6,3,10,'5:0','05:43','phone','43','1970-01-01','2015-02-07 00:00:00',3,0,25,'Present',0),(23,'',6,0,6,3,10,'6:0','06:43','phone','43','2015-07-01','2015-02-07 00:00:00',3,0,26,'Present',0),(24,'',6,0,6,3,10,'2:0','02:43','phone','43','2015-07-01','2015-02-07 00:00:00',3,0,27,'Present',0);
+insert  into `bookings`(`id`,`title`,`employeeid`,`jobtypeid`,`branchid`,`franchiseid`,`serviceid`,`timestart`,`timeend`,`bookingtype`,`price`,`dayid`,`createdon`,`createdbyid`,`isdeleted`,`customerid`,`status`,`isactivated`,`bookingid`) values (33,'',9,23,5,2,33,'14:22','14:44','phone','22',20150306,'2015-03-04 00:00:00',2,0,38,'Present',0,NULL),(36,'',0,23,5,2,0,'01:20','01:20','phone','0',20150306,'2015-03-04 00:00:00',2,0,41,'Present',0,NULL),(37,'',0,23,5,2,0,'03:02','03:02','phone','0',20150305,'2015-03-04 00:00:00',2,0,42,'Present',0,NULL),(39,'',0,23,5,2,0,'14:42','14:42','phone','0',20150305,'2015-03-04 00:00:00',2,0,44,'Present',0,NULL),(40,'',0,23,5,2,0,'19:13','19:13','phone','0',20150304,'2015-03-04 00:00:00',2,0,45,'Present',0,NULL),(45,'',0,23,5,2,33,'11:00','15:01','phone','22',20150306,'2015-03-04 00:00:00',2,0,50,'Cancelled',0,NULL),(46,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(47,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(48,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(49,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(50,NULL,NULL,NULL,NULL,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(51,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(52,NULL,0,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(53,'',0,24,5,2,0,'09:00','03:14','phone','0',20150305,'2015-03-05 00:00:00',2,0,51,'Present',0,NULL),(56,'',0,24,5,2,33,'10:00','10:15','Drop-In','2',20150306,'2015-03-06 00:00:00',2,0,54,'Completed',0,NULL),(57,'',0,24,5,2,34,'09:00','09:45','Drop-In','2',20150306,'2015-03-06 00:00:00',2,0,55,'Completed',0,NULL),(58,'',0,24,5,2,34,'09:00','09:45','phone','2',20150306,'2015-03-06 00:00:00',2,0,56,'Completed',0,NULL),(59,'',0,24,5,2,34,'09:00','09:45','phone','2',20150306,'2015-03-06 00:00:00',2,0,57,'Present',0,NULL),(60,'',0,24,5,2,33,'09:00','09:22','phone','22',20150306,'2015-03-06 00:00:00',2,0,58,'Present',0,NULL),(61,'',0,24,5,2,33,'09:00','09:22','phone','22',20150306,'2015-03-06 00:00:00',2,0,38,'Present',0,NULL),(62,'',0,24,5,2,33,'09:00','09:22','Drop-In','22',20150306,'2015-03-06 00:00:00',2,0,58,'Present',0,NULL),(63,'',0,24,5,2,33,'09:00','09:22','phone','22',20150306,'2015-03-06 00:00:00',2,0,59,'Present',0,NULL),(64,'',0,24,5,2,33,'09:00','09:22','phone','22',20150306,'2015-03-06 00:00:00',2,0,60,'Present',0,NULL),(65,'',0,23,5,2,33,'11:00','11:22','phone','22',20150306,'2015-03-06 00:00:00',2,0,61,'Completed',0,NULL),(66,'',0,23,5,2,0,'10:00','10:00','phone','0',20150309,'2015-03-09 00:00:00',2,0,62,'Present',0,NULL),(67,'',0,23,5,2,0,'10:00','10:00','phone','0',20150309,'2015-03-09 00:00:00',2,0,63,'Present',0,NULL),(68,'',0,23,5,2,0,'10:00','10:00','phone','0',20150309,'2015-03-09 00:00:00',2,0,64,'Present',0,NULL),(69,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,65,'Completed',0,NULL),(70,'',0,23,5,2,33,'10:00','10:22','phone','22',20150309,'2015-03-09 00:00:00',2,0,66,'Completed',0,NULL),(71,'',0,23,5,2,33,'10:00','10:22','phone','22',20150309,'2015-03-09 00:00:00',2,0,67,'Completed',0,NULL),(72,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,68,'Completed',0,NULL),(73,'',0,23,5,2,33,'10:00','10:22','phone','22',20150309,'2015-03-09 00:00:00',2,0,69,'Completed',0,NULL),(74,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,70,'Completed',0,NULL),(75,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,71,'Present',0,NULL),(76,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,72,'Completed',0,NULL),(77,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,73,'Completed',0,NULL),(78,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,74,'Completed',0,NULL),(80,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,76,'Completed',0,NULL),(81,'',0,23,5,2,33,'10:00','10:22','phone','22',20150310,'2015-03-09 00:00:00',2,0,77,'Completed',0,NULL),(82,'',9,23,5,2,33,'09:00','09:22','phone','22',20150309,'2015-03-09 00:00:00',2,0,78,'Completed',0,NULL),(83,'',9,23,5,2,33,'09:00','09:22','phone','22',20150311,'2015-03-11 00:00:00',2,0,79,'Scheduled',0,NULL),(84,'',0,23,5,2,33,'09:00','09:22','phone','22',20150319,'2015-03-19 00:00:00',2,0,58,'Present',0,NULL),(85,'',9,23,5,2,33,'09:00','09:22','phone','22',20150319,'2015-03-19 00:00:00',2,0,80,'Present',0,NULL),(86,'',9,23,5,2,33,'09:00','09:22','phone','22',20150319,'2015-03-19 00:00:00',2,0,81,'Present',0,NULL);
+
+/*Table structure for table `bookingsms` */
+
+DROP TABLE IF EXISTS `bookingsms`;
+
+CREATE TABLE `bookingsms` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `customerid` int(11) NOT NULL,
+  `bookingid` int(11) DEFAULT NULL,
+  `text` text,
+  `createdon` datetime DEFAULT NULL,
+  `email` varchar(191) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+
+/*Data for the table `bookingsms` */
+
+insert  into `bookingsms`(`id`,`customerid`,`bookingid`,`text`,`createdon`,`email`) values (1,79,83,'ITHNI Se Hain',NULL,'khurramali@gmail.com'),(2,79,83,'logs','2015-03-17 06:59:58','khurramali@gmail.com'),(3,79,83,'allaho','2015-03-17 07:02:58','khurramali@gmail.com'),(4,79,83,'Holdon','2015-03-17 07:10:06','khurramali@gmail.com'),(5,65,69,'Customers','2015-03-17 07:13:18','itsprogrammer@gmail.com'),(6,65,69,'Customers','2015-03-17 07:13:59','itsprogrammer@gmail.com'),(7,68,72,'sms','2015-03-17 07:14:22','sms@gmail.com'),(8,79,83,'testx','2015-03-17 10:37:24','khurramali@gmail.com');
 
 /*Table structure for table `branches` */
 
@@ -67,24 +91,41 @@ DROP TABLE IF EXISTS `branches`;
 
 CREATE TABLE `branches` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `notes` text NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `notes` text CHARACTER SET latin1 NOT NULL,
   `franchiseid` int(11) NOT NULL,
   `createdby` int(11) NOT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isdeleted` tinyint(2) NOT NULL,
   `isactivated` tinyint(2) NOT NULL,
-  `address` varchar(200) DEFAULT NULL,
-  `city` varchar(100) DEFAULT NULL,
-  `zip` varchar(50) DEFAULT NULL,
+  `address` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `city` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `zip` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `franchiseid` (`franchiseid`),
   CONSTRAINT `branches_ibfk_1` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 /*Data for the table `branches` */
 
-insert  into `branches`(`id`,`name`,`notes`,`franchiseid`,`createdby`,`createdon`,`isdeleted`,`isactivated`,`address`,`city`,`zip`) values (5,'Abdullah Shah Zaloosn','',2,2,'2015-01-26 00:00:00',0,1,'G8-2 Islamabad pakistan','Thimphu','44000'),(6,'Alex department 11','',3,3,'2015-01-28 00:00:00',0,1,'3','1','2'),(7,'Alex Dep 2','Description',3,3,'2015-01-28 00:00:00',0,1,'Alex Dep 2','Alex Dep 2','Alex Dep 2'),(8,'Mine Department 3','Dep',2,2,'2015-01-28 00:00:00',0,1,'Dep','Dep 3','Dep '),(9,'Mine 4','R',2,2,'2015-01-28 00:00:00',0,1,'','Mine 4',''),(10,'H7 Comb Branch 1','Description',2,2,'2015-02-02 00:00:00',0,0,'G8','Islamabad','4400'),(11,'Department 1','Descrption',3,3,'2015-02-02 00:00:00',0,1,'Addr','City','Zip'),(14,'abc','',3,3,'2015-02-09 00:00:00',0,1,'xyz','def','ghz'),(15,'akv','',3,3,'2015-02-09 00:00:00',0,1,'tessts','test','teest'),(16,'Test','',3,3,'2015-02-09 00:00:00',0,1,'ATZ','TTT','TZ'),(29,'Test','',4,4,'2015-02-10 00:00:00',0,1,'','Francistown',''),(30,'abc','',5,5,'2015-02-10 00:00:00',0,1,'','',''),(31,'Department','',6,6,'2015-02-10 00:00:00',0,1,'','',''),(32,'kkk','',2,2,'2015-02-10 00:00:00',0,1,'','Bandar Seri Begawan',''),(33,'ggg','',2,2,'2015-02-10 00:00:00',0,1,'','Francistown',''),(34,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(35,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(36,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(37,'Department','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(38,'Abdul','',7,7,'2015-02-11 00:00:00',0,1,'','Francistown',''),(39,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(40,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(41,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(42,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(43,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(44,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(45,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(46,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(47,'sss','',8,8,'2015-02-12 00:00:00',0,1,'','Thimphu',''),(48,'sss','',8,8,'2015-02-12 00:00:00',0,1,'','Thimphu',''),(49,'test','',2,2,'2015-02-13 00:00:00',0,1,'test','Bandar Seri Begawan','test');
+insert  into `branches`(`id`,`name`,`notes`,`franchiseid`,`createdby`,`createdon`,`isdeleted`,`isactivated`,`address`,`city`,`zip`) values (5,'Abdullah Shah Zaloosn','',2,2,'2015-01-26 00:00:00',0,1,'G8-2 Islamabad pakistan','Thimphu','44000'),(6,'Alex department 11','',3,3,'2015-01-28 00:00:00',0,1,'3','1','2'),(7,'Alex Dep 2','Description',3,3,'2015-01-28 00:00:00',0,1,'Alex Dep 2','Alex Dep 2','Alex Dep 2'),(8,'Mine Department 3','Dep',2,2,'2015-01-28 00:00:00',0,1,'Dep','Dep 3','Dep '),(9,'Mine 4','',2,2,'2015-01-28 00:00:00',0,1,'','Thimphu',''),(10,'H7 Comb Branch 1','Description',2,2,'2015-02-02 00:00:00',0,0,'G8','Islamabad','4400'),(11,'Department 1','Descrption',3,3,'2015-02-02 00:00:00',0,1,'Addr','City','Zip'),(14,'abc','',3,3,'2015-02-09 00:00:00',0,1,'xyz','def','ghz'),(15,'akv','',3,3,'2015-02-09 00:00:00',0,1,'tessts','test','teest'),(16,'Test','',3,3,'2015-02-09 00:00:00',0,1,'ATZ','TTT','TZ'),(29,'Test','',4,4,'2015-02-10 00:00:00',0,1,'','Francistown',''),(30,'abc','',5,5,'2015-02-10 00:00:00',0,1,'','',''),(31,'Department','',6,6,'2015-02-10 00:00:00',0,1,'','',''),(32,'kkk','',2,2,'2015-02-10 00:00:00',0,1,'','Bandar Seri Begawan',''),(33,'ggg','',2,2,'2015-02-10 00:00:00',0,1,'','Francistown',''),(34,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(35,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(36,'sss','',2,2,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(37,'Department','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(38,'Abdul','',7,7,'2015-02-11 00:00:00',0,1,'','Francistown',''),(39,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(40,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(41,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(42,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(43,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(44,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(45,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(46,'Zaida Depart','',7,7,'2015-02-11 00:00:00',0,1,'','Thimphu',''),(47,'sss','',8,8,'2015-02-12 00:00:00',0,1,'','Thimphu',''),(48,'sss','',8,8,'2015-02-12 00:00:00',0,1,'','Thimphu',''),(49,'test','',2,2,'2015-02-13 00:00:00',0,1,'test','Bandar Seri Begawan','test'),(50,'Dep1','',10,10,'2015-02-25 00:00:00',0,1,'',NULL,''),(52,'De3','',10,10,'2015-02-25 00:00:00',0,1,'',NULL,''),(53,'d3','',10,10,'2015-02-25 00:00:00',0,1,'',NULL,''),(54,'ABC','',2,2,'2015-02-25 00:00:00',0,1,'','Thimphu','');
+
+/*Table structure for table `comments` */
+
+DROP TABLE IF EXISTS `comments`;
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `comments` text,
+  `customerid` int(11) DEFAULT NULL,
+  `createddate` datetime DEFAULT NULL,
+  `createdbyid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
+
+/*Data for the table `comments` */
+
+insert  into `comments`(`id`,`comments`,`customerid`,`createddate`,`createdbyid`) values (1,'I am abdul wakeel, This is testing pleease ignore this.',38,'2015-03-04 16:09:14',NULL),(2,'Please ignore this, please trying to change',38,NULL,NULL),(3,'sss',38,'2015-03-04 16:53:27',NULL),(4,'Test',38,'2015-03-04 16:58:40',NULL),(5,'Few Moment ago',38,'2015-03-04 17:00:21',NULL),(6,'Testing Please ignore this',38,'2015-03-04 17:00:37',NULL),(7,'Test',53,'2015-03-05 21:57:26',NULL),(8,'Khurram sahb review of service',38,'2015-03-06 15:35:29',NULL),(9,'testing',38,'2015-03-06 18:42:34',NULL),(10,'',75,'2015-03-16 18:49:49',NULL),(11,'test',79,'2015-03-17 09:37:26',NULL);
 
 /*Table structure for table `countries` */
 
@@ -92,17 +133,17 @@ DROP TABLE IF EXISTS `countries`;
 
 CREATE TABLE `countries` (
   `id` int(11) NOT NULL,
-  `short` varchar(20) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `fullname` varchar(200) DEFAULT NULL,
-  `short1` varchar(20) DEFAULT NULL,
-  `memcode` varchar(20) DEFAULT NULL,
-  `number` varchar(20) DEFAULT NULL,
-  `caling` varchar(20) DEFAULT NULL,
-  `domain` varchar(20) DEFAULT NULL,
-  `password` varchar(20) DEFAULT NULL,
+  `short` varchar(20) CHARACTER SET latin1 NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `fullname` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `short1` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `memcode` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `number` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `caling` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `domain` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `password` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `countries` */
 
@@ -152,20 +193,22 @@ DROP TABLE IF EXISTS `customers`;
 
 CREATE TABLE `customers` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(200) COLLATE latin1_danish_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE latin1_danish_ci DEFAULT NULL,
-  `phone` varchar(25) COLLATE latin1_danish_ci DEFAULT NULL,
+  `name` varchar(200) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `email` varchar(100) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
+  `phone` varchar(25) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   `createdon` datetime DEFAULT NULL,
   `createdbyid` int(11) DEFAULT NULL,
   `franchiseid` int(11) DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
+  `comments` text,
+  `isregistered` tinyint(2) DEFAULT '1',
   KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=latin1 COLLATE=latin1_danish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 
 /*Data for the table `customers` */
 
-insert  into `customers`(`id`,`name`,`email`,`phone`,`isdeleted`,`createdon`,`createdbyid`,`franchiseid`,`branchid`) values (3,'DAS','DES','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(4,'DAS','DES','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(5,'SSS','SS','SSS',NULL,'2015-02-05 00:00:00',NULL,3,7),(6,'SSS','SS','SSS',NULL,'2015-02-05 00:00:00',NULL,3,7),(7,'Losefer','losefer@gmail.com','921',NULL,'2015-02-05 00:00:00',NULL,3,7),(8,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6),(9,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6),(10,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6),(11,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6),(12,'S','F','E',NULL,'2015-02-05 00:00:00',NULL,3,7),(13,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(14,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(15,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(16,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(17,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7),(18,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6),(19,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6),(20,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6),(21,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6),(22,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,7),(23,'','','',NULL,'2015-02-06 00:00:00',NULL,3,6),(24,'Customer123','Customer123','Customer123',NULL,'2015-02-07 00:00:00',NULL,3,6),(25,'SS','SS','SS',NULL,'2015-02-07 00:00:00',NULL,3,6),(26,'ss','ss','ss',NULL,'2015-02-07 00:00:00',NULL,3,6),(27,'SCS','CS','SCS',NULL,'2015-02-07 00:00:00',NULL,3,6);
+insert  into `customers`(`id`,`name`,`email`,`phone`,`isdeleted`,`createdon`,`createdbyid`,`franchiseid`,`branchid`,`comments`,`isregistered`) values (3,'DAS','DES','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(4,'DAS','DES','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(5,'SSS','SS','SSS',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(6,'SSS','SS','SSS',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(7,'Losefer','losefer@gmail.com','921',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(8,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(9,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(10,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(11,'CS','CS','CS',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(12,'S','F','E',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(13,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(14,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(15,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(16,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(17,'FE','AS','SE',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(18,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(19,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(20,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(21,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,6,NULL,1),(22,'ss','ss','ss',NULL,'2015-02-05 00:00:00',NULL,3,7,NULL,1),(23,'','','',NULL,'2015-02-06 00:00:00',NULL,3,6,NULL,1),(24,'Customer123','Customer123','Customer123',NULL,'2015-02-07 00:00:00',NULL,3,6,NULL,1),(25,'SS','SS','SS',NULL,'2015-02-07 00:00:00',NULL,3,6,NULL,1),(26,'ss','ss','ss',NULL,'2015-02-07 00:00:00',NULL,3,6,NULL,1),(27,'SCS','CS','SCS',NULL,'2015-02-07 00:00:00',NULL,3,6,NULL,1),(28,'Test','1','1',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(29,'','','',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(30,'','','',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(31,'ss','ss','ss',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(32,'Test','Test','Test',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(33,'A','A','A',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(34,'AB','F','DE',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(35,'ab','av','ab',NULL,'2015-03-03 00:00:00',NULL,2,5,NULL,1),(36,'Test','Test','Test',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(37,'t','t','t',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(38,'Abdul Wakeel Khan','itsprogrammer@gmail.com','00923139986357',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(39,'AA','AA','AA',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(40,'G','G','G',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(41,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(42,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(43,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(44,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(45,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(46,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(47,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(48,'Khurram Ali','khurram@gmail.ocom','00928112828',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(49,'','','',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(50,'Peterson','','P',NULL,'2015-03-04 00:00:00',NULL,2,5,NULL,1),(51,'','','',NULL,'2015-03-05 00:00:00',NULL,2,5,NULL,1),(52,'Test','Test3','Test1',NULL,'2015-03-05 00:00:00',NULL,2,5,NULL,1),(53,'AB','AV','AD',NULL,'2015-03-05 00:00:00',NULL,2,5,NULL,1),(54,'Peter','peter@gmail.com','0910091901',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(55,'A','A','A',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(56,'B','B','B',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(57,'','','',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(58,'Abdul Wakeel Khan','itsprogrammer@gmail.com','00923139986357',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(59,'','','',NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(60,NULL,NULL,NULL,NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,1),(61,NULL,NULL,NULL,NULL,'2015-03-06 00:00:00',NULL,2,5,NULL,0),(62,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(63,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(64,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(65,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(66,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(67,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(68,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(69,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(70,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(71,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(72,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(73,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(74,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(75,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(76,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(77,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(78,NULL,NULL,NULL,NULL,'2015-03-09 00:00:00',NULL,2,5,NULL,0),(79,'Javed Shah12','khurramali@gmail.com','898902',NULL,'2015-03-11 00:00:00',NULL,2,5,NULL,1),(80,NULL,NULL,NULL,NULL,'2015-03-19 00:00:00',NULL,2,5,NULL,0),(81,NULL,NULL,NULL,NULL,'2015-03-19 00:00:00',NULL,2,5,NULL,0);
 
 /*Table structure for table `d_day` */
 
@@ -175,14 +218,14 @@ CREATE TABLE `d_day` (
   `d_dayid` int(9) NOT NULL,
   `thedate` date NOT NULL,
   `otherid` int(9) NOT NULL,
-  `theday` varchar(30) DEFAULT NULL,
-  `themonth` varchar(30) DEFAULT NULL,
+  `theday` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
+  `themonth` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
   `theyear` smallint(4) DEFAULT NULL,
   `dayofmonth` smallint(3) DEFAULT NULL,
   `weekofyear` int(4) DEFAULT NULL,
   `monthofyear` smallint(2) DEFAULT NULL,
-  `quarter` varchar(2) DEFAULT NULL,
-  `fiscalperiod` varchar(30) DEFAULT NULL,
+  `quarter` varchar(2) CHARACTER SET latin1 DEFAULT NULL,
+  `fiscalperiod` varchar(30) CHARACTER SET latin1 DEFAULT NULL,
   `dayofweek` int(2) DEFAULT NULL,
   `dayofyear` int(3) DEFAULT NULL,
   `yearweek` int(5) unsigned DEFAULT NULL,
@@ -190,7 +233,7 @@ CREATE TABLE `d_day` (
   PRIMARY KEY (`d_dayid`),
   KEY `thedate` (`thedate`),
   KEY `otherid` (`otherid`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `d_day` */
 
@@ -232,11 +275,11 @@ CREATE TABLE `employeedepartments` (
   CONSTRAINT `employeedepartments_ibfk_2` FOREIGN KEY (`branchid`) REFERENCES `branches` (`id`),
   CONSTRAINT `employeedepartments_ibfk_3` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`),
   CONSTRAINT `employeedepartments_ibfk_4` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=160 DEFAULT CHARSET=latin1 COLLATE=latin1_danish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=178 DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeedepartments` */
 
-insert  into `employeedepartments`(`id`,`employeeid`,`branchid`,`franchiseid`,`roleid`) values (40,7,7,3,6),(41,7,6,3,8),(43,6,7,3,7),(44,6,6,3,6),(45,8,11,3,6),(46,15,6,3,7),(47,16,7,3,7),(48,17,7,3,7),(49,18,6,3,7),(50,19,6,3,7),(51,21,6,3,7),(52,22,7,3,7),(53,22,6,3,8),(54,23,6,3,7),(55,24,6,3,8),(56,24,11,3,7),(57,25,7,3,7),(58,26,7,3,7),(59,27,7,3,7),(60,28,11,3,6),(61,29,6,3,7),(62,30,6,3,7),(63,31,6,3,7),(64,32,6,3,7),(66,33,6,3,7),(67,34,7,3,7),(68,34,6,3,8),(73,36,6,3,7),(74,37,15,3,6),(75,37,7,3,7),(76,37,6,3,8),(77,37,11,3,6),(78,37,16,3,7),(80,48,31,6,12),(81,49,31,6,12),(82,50,31,6,12),(83,51,31,6,12),(84,52,31,6,12),(85,53,31,6,12),(86,54,31,6,12),(87,55,31,6,12),(88,56,31,6,12),(89,57,31,6,12),(90,58,31,6,12),(91,59,31,6,12),(92,60,31,6,12),(93,61,31,6,12),(94,62,31,6,12),(95,63,31,6,12),(96,64,31,6,12),(97,65,31,6,12),(98,66,31,6,12),(99,67,31,6,12),(100,68,31,6,12),(101,69,31,6,12),(102,70,31,6,12),(103,71,31,6,12),(104,72,31,6,12),(105,73,31,6,12),(106,74,31,6,12),(113,5,5,2,5),(114,5,9,2,1),(115,5,8,2,3),(116,76,8,2,2),(120,14,29,4,11),(123,38,29,4,11),(129,77,29,4,11),(133,78,29,4,11),(134,79,46,7,12),(135,5,49,2,1),(140,5,5,2,1),(141,5,5,2,1),(142,5,5,2,1),(143,5,5,2,1),(144,5,5,2,1),(145,5,5,2,1),(146,5,5,2,1),(147,5,5,2,1),(149,5,5,2,1),(153,5,5,2,1),(154,5,5,2,1),(155,9,5,2,5),(156,9,9,2,1),(157,83,5,2,2),(158,83,9,2,2),(159,81,5,2,1);
+insert  into `employeedepartments`(`id`,`employeeid`,`branchid`,`franchiseid`,`roleid`) values (40,7,7,3,6),(41,7,6,3,8),(43,6,7,3,7),(44,6,6,3,6),(45,8,11,3,6),(46,15,6,3,7),(47,16,7,3,7),(48,17,7,3,7),(49,18,6,3,7),(50,19,6,3,7),(51,21,6,3,7),(52,22,7,3,7),(53,22,6,3,8),(54,23,6,3,7),(55,24,6,3,8),(56,24,11,3,7),(57,25,7,3,7),(58,26,7,3,7),(59,27,7,3,7),(60,28,11,3,6),(61,29,6,3,7),(62,30,6,3,7),(63,31,6,3,7),(64,32,6,3,7),(66,33,6,3,7),(67,34,7,3,7),(68,34,6,3,8),(73,36,6,3,7),(74,37,15,3,6),(75,37,7,3,7),(76,37,6,3,8),(77,37,11,3,6),(78,37,16,3,7),(80,48,31,6,12),(81,49,31,6,12),(82,50,31,6,12),(83,51,31,6,12),(84,52,31,6,12),(85,53,31,6,12),(86,54,31,6,12),(87,55,31,6,12),(88,56,31,6,12),(89,57,31,6,12),(90,58,31,6,12),(91,59,31,6,12),(92,60,31,6,12),(93,61,31,6,12),(94,62,31,6,12),(95,63,31,6,12),(96,64,31,6,12),(97,65,31,6,12),(98,66,31,6,12),(99,67,31,6,12),(100,68,31,6,12),(101,69,31,6,12),(102,70,31,6,12),(103,71,31,6,12),(104,72,31,6,12),(105,73,31,6,12),(106,74,31,6,12),(120,14,29,4,11),(123,38,29,4,11),(129,77,29,4,11),(133,78,29,4,11),(134,79,46,7,12),(155,9,5,2,5),(156,9,9,2,1),(160,85,53,10,13),(162,85,52,10,13),(163,85,52,10,13),(164,85,52,10,13),(173,5,54,2,1),(174,5,5,2,5),(175,5,9,2,1),(176,5,8,2,3),(177,5,49,2,1);
 
 /*Table structure for table `employeejobtypes` */
 
@@ -256,11 +299,11 @@ CREATE TABLE `employeejobtypes` (
   CONSTRAINT `employeejobtypes_ibfk_1` FOREIGN KEY (`jobtypeid`) REFERENCES `jobtypes` (`id`),
   CONSTRAINT `employeejobtypes_ibfk_2` FOREIGN KEY (`employeeid`) REFERENCES `employees` (`id`),
   CONSTRAINT `employeejobtypes_ibfk_3` FOREIGN KEY (`branchid`) REFERENCES `branches` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=175 DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeejobtypes` */
 
-insert  into `employeejobtypes`(`id`,`jobtypeid`,`employeeid`,`branchid`,`eid`,`franchiseid`) values (1,1,NULL,NULL,7,2),(2,2,NULL,NULL,7,2),(46,5,7,NULL,NULL,3),(47,4,7,NULL,NULL,3),(48,3,7,NULL,NULL,3),(50,4,6,NULL,NULL,3),(51,5,8,NULL,NULL,3),(52,4,8,NULL,NULL,3),(53,3,8,NULL,NULL,3),(54,5,10,NULL,NULL,3),(55,5,15,NULL,NULL,3),(56,4,16,NULL,NULL,3),(57,5,17,NULL,NULL,3),(58,5,18,NULL,NULL,3),(59,4,18,NULL,NULL,3),(60,5,19,NULL,NULL,3),(61,4,19,NULL,NULL,3),(62,4,20,NULL,NULL,3),(63,4,21,NULL,NULL,3),(64,4,22,NULL,NULL,3),(65,4,23,NULL,NULL,3),(66,5,24,NULL,NULL,3),(67,5,25,NULL,NULL,3),(68,4,25,NULL,NULL,3),(69,5,26,NULL,NULL,3),(70,4,26,NULL,NULL,3),(71,5,27,NULL,NULL,3),(72,4,27,NULL,NULL,3),(73,4,28,NULL,NULL,3),(74,5,29,NULL,NULL,3),(75,4,29,NULL,NULL,3),(76,4,30,NULL,NULL,3),(77,5,31,NULL,NULL,3),(78,4,32,NULL,NULL,3),(80,3,33,NULL,NULL,3),(81,4,34,NULL,NULL,3),(84,3,36,NULL,NULL,3),(85,3,37,NULL,NULL,3),(86,4,37,NULL,NULL,3),(87,5,37,NULL,NULL,3),(88,9,37,NULL,NULL,3),(89,10,37,NULL,NULL,3),(90,11,37,NULL,NULL,3),(94,13,40,NULL,NULL,5),(95,17,42,NULL,NULL,6),(96,17,43,NULL,NULL,6),(97,17,44,NULL,NULL,6),(98,17,45,NULL,NULL,6),(99,17,46,NULL,NULL,6),(100,17,47,NULL,NULL,6),(101,18,48,NULL,NULL,6),(102,18,49,NULL,NULL,6),(103,18,50,NULL,NULL,6),(104,18,51,NULL,NULL,6),(105,18,52,NULL,NULL,6),(106,18,53,NULL,NULL,6),(107,18,54,NULL,NULL,6),(108,18,55,NULL,NULL,6),(109,18,56,NULL,NULL,6),(110,18,57,NULL,NULL,6),(111,18,58,NULL,NULL,6),(112,18,59,NULL,NULL,6),(113,18,60,NULL,NULL,6),(114,18,61,NULL,NULL,6),(115,18,62,NULL,NULL,6),(116,18,63,NULL,NULL,6),(117,18,64,NULL,NULL,6),(118,18,65,NULL,NULL,6),(119,18,66,NULL,NULL,6),(120,18,67,NULL,NULL,6),(121,18,68,NULL,NULL,6),(122,18,69,NULL,NULL,6),(123,18,70,NULL,NULL,6),(124,18,71,NULL,NULL,6),(125,18,72,NULL,NULL,6),(126,18,73,NULL,NULL,6),(127,18,74,NULL,NULL,6),(128,18,75,NULL,NULL,6),(133,2,5,NULL,NULL,2),(134,1,5,NULL,NULL,2),(135,1,76,NULL,NULL,2),(139,7,14,NULL,NULL,4),(142,7,38,NULL,NULL,4),(148,12,77,NULL,NULL,4),(152,12,78,NULL,NULL,4),(165,26,9,NULL,NULL,2),(166,25,9,NULL,NULL,2),(167,24,9,NULL,NULL,2),(168,23,9,NULL,NULL,2),(169,2,9,NULL,NULL,2),(170,1,9,NULL,NULL,2),(171,25,83,NULL,NULL,2),(172,24,83,NULL,NULL,2),(173,2,83,NULL,NULL,2),(174,24,81,NULL,NULL,2);
+insert  into `employeejobtypes`(`id`,`jobtypeid`,`employeeid`,`branchid`,`eid`,`franchiseid`) values (1,1,NULL,NULL,7,2),(2,2,NULL,NULL,7,2),(46,5,7,NULL,NULL,3),(47,4,7,NULL,NULL,3),(48,3,7,NULL,NULL,3),(50,4,6,NULL,NULL,3),(51,5,8,NULL,NULL,3),(52,4,8,NULL,NULL,3),(53,3,8,NULL,NULL,3),(54,5,10,NULL,NULL,3),(55,5,15,NULL,NULL,3),(56,4,16,NULL,NULL,3),(57,5,17,NULL,NULL,3),(58,5,18,NULL,NULL,3),(59,4,18,NULL,NULL,3),(60,5,19,NULL,NULL,3),(61,4,19,NULL,NULL,3),(62,4,20,NULL,NULL,3),(63,4,21,NULL,NULL,3),(64,4,22,NULL,NULL,3),(65,4,23,NULL,NULL,3),(66,5,24,NULL,NULL,3),(67,5,25,NULL,NULL,3),(68,4,25,NULL,NULL,3),(69,5,26,NULL,NULL,3),(70,4,26,NULL,NULL,3),(71,5,27,NULL,NULL,3),(72,4,27,NULL,NULL,3),(73,4,28,NULL,NULL,3),(74,5,29,NULL,NULL,3),(75,4,29,NULL,NULL,3),(76,4,30,NULL,NULL,3),(77,5,31,NULL,NULL,3),(78,4,32,NULL,NULL,3),(80,3,33,NULL,NULL,3),(81,4,34,NULL,NULL,3),(84,3,36,NULL,NULL,3),(85,3,37,NULL,NULL,3),(86,4,37,NULL,NULL,3),(87,5,37,NULL,NULL,3),(88,9,37,NULL,NULL,3),(89,10,37,NULL,NULL,3),(90,11,37,NULL,NULL,3),(94,13,40,NULL,NULL,5),(95,17,42,NULL,NULL,6),(96,17,43,NULL,NULL,6),(97,17,44,NULL,NULL,6),(98,17,45,NULL,NULL,6),(99,17,46,NULL,NULL,6),(100,17,47,NULL,NULL,6),(101,18,48,NULL,NULL,6),(102,18,49,NULL,NULL,6),(103,18,50,NULL,NULL,6),(104,18,51,NULL,NULL,6),(105,18,52,NULL,NULL,6),(106,18,53,NULL,NULL,6),(107,18,54,NULL,NULL,6),(108,18,55,NULL,NULL,6),(109,18,56,NULL,NULL,6),(110,18,57,NULL,NULL,6),(111,18,58,NULL,NULL,6),(112,18,59,NULL,NULL,6),(113,18,60,NULL,NULL,6),(114,18,61,NULL,NULL,6),(115,18,62,NULL,NULL,6),(116,18,63,NULL,NULL,6),(117,18,64,NULL,NULL,6),(118,18,65,NULL,NULL,6),(119,18,66,NULL,NULL,6),(120,18,67,NULL,NULL,6),(121,18,68,NULL,NULL,6),(122,18,69,NULL,NULL,6),(123,18,70,NULL,NULL,6),(124,18,71,NULL,NULL,6),(125,18,72,NULL,NULL,6),(126,18,73,NULL,NULL,6),(127,18,74,NULL,NULL,6),(128,18,75,NULL,NULL,6),(139,7,14,NULL,NULL,4),(142,7,38,NULL,NULL,4),(148,12,77,NULL,NULL,4),(152,12,78,NULL,NULL,4),(165,26,9,NULL,NULL,2),(166,25,9,NULL,NULL,2),(167,24,9,NULL,NULL,2),(168,23,9,NULL,NULL,2),(169,2,9,NULL,NULL,2),(170,1,9,NULL,NULL,2),(173,2,5,NULL,NULL,2),(174,1,5,NULL,NULL,2);
 
 /*Table structure for table `employeeleaves` */
 
@@ -277,7 +320,7 @@ CREATE TABLE `employeeleaves` (
   KEY `leaveid` (`leaveid`),
   CONSTRAINT `employeeleaves_ibfk_1` FOREIGN KEY (`employeeid`) REFERENCES `employees` (`id`),
   CONSTRAINT `employeeleaves_ibfk_2` FOREIGN KEY (`leaveid`) REFERENCES `leaves` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeeleaves` */
 
@@ -317,11 +360,11 @@ CREATE TABLE `employees` (
   KEY `branchid` (`branchid`),
   KEY `franchiseid` (`franchiseid`),
   CONSTRAINT `employees_ibfk_3` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=85 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 
 /*Data for the table `employees` */
 
-insert  into `employees`(`id`,`firstname`,`lastname`,`phone`,`email`,`password`,`branchid`,`franchiseid`,`isdeleted`,`isactivated`,`createdon`,`createdby`,`lastlogined`,`ip`,`modifiedby`,`image`,`address`,`about`,`type`,`isfranchise`,`roleid`,`isnew`,`picture`,`passwordchanged`,`country`,`city`) values (5,'abc','def','112','1','112',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,1,0,'1.png',0,'DK','Delhi'),(6,'Alex','Hunter','2','2','3',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,1,1,NULL,1,'DK','Delhi'),(7,'Munt','Zir','3','','3',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',0,NULL,1,NULL,0,'DK','Delhi'),(8,'Wakeel','Khan','4','','4',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',0,NULL,1,NULL,0,'DK','Delhi'),(9,'Jan','Emly','09','itsprogrammer@gmail.com','23',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',0,NULL,1,NULL,0,'DK','Delhi'),(10,'Qamar','Ali','901','','901',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','G8','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(14,'Imran','Khan','9','9','12',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,NULL,0,'2.jpg',0,'DK','Delhi'),(15,'Test','Test','333','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,10,NULL,0,'DK','Delhi'),(16,'ss','ss','sss','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(17,'DES','DES','DES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(18,'Joh Adm','Dam','908','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(19,'Joh Adm','Dam','908','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(20,'DE','ED','DE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(21,'ad','desc','yu','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(22,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(23,'DES','SED','DDD','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(24,'MMS','AW','MMD','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(25,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(26,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(27,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(28,'SSS','SS','SSS','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(29,'SLOW','SLOW','SLOW','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(30,'SSS','SSS','SSS','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(31,'EES','EES','EEES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(32,'DEES','ERES','DDDES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(33,'yh','yh','hy','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(34,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(35,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(36,'js','js','09231','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(37,'HU','GE','092','TT','000',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','22','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(38,'John Smith','A','093','','SS',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(39,'Moed','Ahmed','99','99','1',0,5,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,NULL,0,NULL,1,'DK','Delhi'),(40,'test','test','test','','',0,5,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(41,'Peter','Waignright','p','p','p',0,6,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,NULL,0,NULL,0,'DK','Delhi'),(42,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(43,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(44,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(45,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(46,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(47,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(48,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(49,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(50,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(51,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(52,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(53,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(54,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(55,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(56,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(57,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(58,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(59,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(60,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(61,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(62,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(63,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(64,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(65,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(66,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(67,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(68,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(69,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(70,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(71,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(72,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(73,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(74,'333','33','333','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(75,'23','23','32','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(76,'32','32','32','','32',0,2,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(77,'2323','323232','3223','','32',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(78,'32232','12','3332','','23',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(79,'Abdul','Wakeel','90','','90',0,7,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,1,0,'1',0,'DK','Delhi'),(80,'Mohammad','Raiz','91','','91',0,8,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,1,0,'1',0,'DK','Delhi'),(81,'23','23','23','itsprogra@gai.com','23',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(82,'222','22','322','itsprogrammer@gmail.com','password123',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(83,'23','23','23','itsprogrammer@gmail.com','gmail',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(84,'een/één','een/één','22','','22',0,9,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',NULL,NULL,1,NULL,0,'DK','Delhi');
+insert  into `employees`(`id`,`firstname`,`lastname`,`phone`,`email`,`password`,`branchid`,`franchiseid`,`isdeleted`,`isactivated`,`createdon`,`createdby`,`lastlogined`,`ip`,`modifiedby`,`image`,`address`,`about`,`type`,`isfranchise`,`roleid`,`isnew`,`picture`,`passwordchanged`,`country`,`city`) values (5,'abc','def','112','sadf@gmail.com','112',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,1,0,'1.png',0,'DK','Delhi'),(6,'Alex','Hunter','2','2','3',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,1,1,NULL,1,'DK','Delhi'),(7,'Munt','Zir','3','','3',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',0,NULL,1,NULL,0,'DK','Delhi'),(8,'Wakeel','Khan','4','','4',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',0,NULL,1,NULL,0,'DK','Delhi'),(9,'Jan','Emly','09','itsprogrammer@gmail.com','23',0,2,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',0,NULL,1,NULL,0,'DK','Delhi'),(10,'Qamar','Ali','901','','901',0,3,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','G8','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(14,'Imran','Khan','9','9','12',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',1,NULL,0,'2.jpg',0,'DK','Delhi'),(15,'Test','Test','333','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,10,NULL,0,'DK','Delhi'),(16,'ss','ss','sss','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(17,'DES','DES','DES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(18,'Joh Adm','Dam','908','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(19,'Joh Adm','Dam','908','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(20,'DE','ED','DE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(21,'ad','desc','yu','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(22,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(23,'DES','SED','DDD','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(24,'MMS','AW','MMD','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(25,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(26,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(27,'Fargosan','Jims','Jimmy ','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(28,'SSS','SS','SSS','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(29,'SLOW','SLOW','SLOW','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(30,'SSS','SSS','SSS','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(31,'EES','EES','EEES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(32,'DEES','ERES','DDDES','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(33,'yh','yh','hy','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(34,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(35,'DDEEE','DEEE','DEEE','admin@hrmis.com','admin',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(36,'js','js','09231','','',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(37,'HU','GE','092','TT','000',0,3,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','22','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(38,'John Smith','A','093','','SS',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(39,'Moed','Ahmed','99','99','1',0,5,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,NULL,0,NULL,1,'DK','Delhi'),(40,'test','test','test','','',0,5,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(41,'Peter','Waignright','p','p','p',0,6,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,NULL,0,NULL,0,'DK','Delhi'),(42,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(43,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(44,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(45,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(46,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(47,'ss','s','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Hourly',NULL,NULL,1,NULL,0,'DK','Delhi'),(48,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(49,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(50,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(51,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(52,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(53,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(54,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(55,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(56,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(57,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(58,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(59,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(60,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(61,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(62,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(63,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(64,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(65,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(66,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(67,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(68,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(69,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(70,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(71,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(72,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(73,'ss','ss','ss','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(74,'333','33','333','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(75,'23','23','32','','',0,6,0,0,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(77,'2323','323232','3223','','32',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(78,'32232','12','3332','','23',0,4,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','about','Full Time',NULL,NULL,1,NULL,0,'DK','Delhi'),(79,'Abdul','Wakeel','90','','90',0,7,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,1,0,'1',0,'DK','Delhi'),(80,'Mohammad','Raiz','91','','91',0,8,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,1,1,'1',1,'DK','Delhi'),(84,'een/één','een/één','22','','22',0,9,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',NULL,NULL,1,NULL,0,'DK','Delhi'),(85,'Shamim ','Anwar','323','323','323',0,10,0,1,'0000-00-00 00:00:00',0,'0000-00-00 00:00:00','',0,'','','','P',1,1,0,'1',1,'1','1');
 
 /*Table structure for table `employeeservices` */
 
@@ -339,7 +382,7 @@ CREATE TABLE `employeeservices` (
   KEY `serviceid` (`serviceid`),
   CONSTRAINT `employeeservices_ibfk_2` FOREIGN KEY (`employeeid`) REFERENCES `employees` (`id`),
   CONSTRAINT `employeeservices_ibfk_3` FOREIGN KEY (`serviceid`) REFERENCES `services` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeeservices` */
 
@@ -352,7 +395,7 @@ CREATE TABLE `employeesschedule` (
   `employee_id` int(11) DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeesschedule` */
 
@@ -362,16 +405,16 @@ DROP TABLE IF EXISTS `employeetimings`;
 
 CREATE TABLE `employeetimings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `opened` varchar(20) DEFAULT NULL,
-  `closed` varchar(20) DEFAULT NULL,
+  `opened` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `closed` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   `createdon` datetime DEFAULT NULL,
   `employeeid` int(11) NOT NULL,
-  `day` varchar(20) DEFAULT NULL,
+  `day` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `employeeid` (`employeeid`),
   CONSTRAINT `employeetimings_ibfk_1` FOREIGN KEY (`employeeid`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8;
 
 /*Data for the table `employeetimings` */
 
@@ -383,30 +426,31 @@ DROP TABLE IF EXISTS `franchises`;
 
 CREATE TABLE `franchises` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `logo` varchar(100) NOT NULL,
+  `logo` varchar(100) CHARACTER SET latin1 NOT NULL,
   `packageid` int(11) NOT NULL,
   `isactivated` tinyint(2) NOT NULL,
   `isdeleted` tinyint(2) NOT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `createdby` int(11) NOT NULL,
-  `color` varchar(20) DEFAULT NULL,
+  `color` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `dateofbirth` datetime DEFAULT NULL,
-  `securityquestion` varchar(200) DEFAULT NULL,
-  `securitanswer` varchar(20) DEFAULT NULL,
+  `securityquestion` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `securitanswer` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `isdemo` tinyint(2) DEFAULT NULL,
-  `websitename` varchar(100) DEFAULT NULL,
-  `company` varchar(200) DEFAULT NULL,
+  `websitename` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `company` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
   `countryid` int(11) DEFAULT NULL,
   `languageid` int(11) DEFAULT NULL,
   `currencyid` int(11) DEFAULT NULL,
+  `noofsms` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `packageid` (`packageid`),
   CONSTRAINT `franchises_ibfk_1` FOREIGN KEY (`packageid`) REFERENCES `packages` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 /*Data for the table `franchises` */
 
-insert  into `franchises`(`id`,`logo`,`packageid`,`isactivated`,`isdeleted`,`createdon`,`createdby`,`color`,`dateofbirth`,`securityquestion`,`securitanswer`,`isdemo`,`websitename`,`company`,`countryid`,`languageid`,`currencyid`) values (2,'ABC',1,1,0,'2015-01-26 13:12:25',0,'RED','0000-00-00 00:00:00',NULL,NULL,NULL,NULL,'My Company',1,1,1),(3,'CDF',1,1,0,'2015-01-28 10:37:15',0,'Green',NULL,NULL,NULL,NULL,NULL,NULL,1,1,1),(4,'DEJ',1,1,0,'2015-02-02 11:20:14',0,NULL,NULL,NULL,NULL,NULL,NULL,'Diamond',1,1,1),(5,'DD',1,1,0,'2015-02-10 15:29:50',0,NULL,NULL,NULL,NULL,NULL,NULL,'Islamad Inc',1,1,1),(6,'SNG',1,1,0,'2015-02-10 20:54:36',0,NULL,NULL,NULL,'',NULL,NULL,NULL,1,1,1),(7,'SNS',1,1,0,'2015-02-11 21:07:27',0,NULL,NULL,NULL,NULL,NULL,NULL,'DK1',1,1,1),(8,'DNMK',1,1,0,'2015-02-12 12:23:16',0,NULL,NULL,NULL,NULL,NULL,NULL,'Margalla Views',1,1,1),(9,'YareDev',1,1,0,'2015-02-16 12:24:16',0,'Green',NULL,'Security','Questions',1,NULL,'YareDev',1,1,1);
+insert  into `franchises`(`id`,`logo`,`packageid`,`isactivated`,`isdeleted`,`createdon`,`createdby`,`color`,`dateofbirth`,`securityquestion`,`securitanswer`,`isdemo`,`websitename`,`company`,`countryid`,`languageid`,`currencyid`,`noofsms`) values (2,'ABC',1,1,0,'2015-01-26 13:12:25',0,'RED','0000-00-00 00:00:00',NULL,NULL,NULL,NULL,'My Company',1,1,1,1964),(3,'CDF',1,1,0,'2015-01-28 10:37:15',0,'Green',NULL,NULL,NULL,NULL,NULL,NULL,1,1,1,NULL),(4,'DEJ',1,1,0,'2015-02-02 11:20:14',0,NULL,NULL,NULL,NULL,NULL,NULL,'Diamond',1,1,1,NULL),(5,'DD',1,1,0,'2015-02-10 15:29:50',0,NULL,NULL,NULL,NULL,NULL,NULL,'Islamad Inc',1,1,1,NULL),(6,'SNG',1,1,0,'2015-02-10 20:54:36',0,NULL,NULL,NULL,'',NULL,NULL,NULL,1,1,1,NULL),(7,'SNS',1,1,0,'2015-02-11 21:07:27',0,NULL,NULL,NULL,NULL,NULL,NULL,'DK1',1,1,1,NULL),(8,'DNMK',1,1,0,'2015-02-12 12:23:16',0,NULL,NULL,NULL,NULL,NULL,NULL,'Margalla Views',1,1,1,NULL),(9,'YareDev',1,1,0,'2015-02-16 12:24:16',0,'Green',NULL,'Security','Questions',1,NULL,'YareDev',1,1,1,NULL),(10,'Yare Dev 2',1,1,0,'2015-02-25 10:38:14',0,'0','0000-00-00 00:00:00','0','0',0,'0','company 1',1,1,1,NULL);
 
 /*Table structure for table `globaljobtypes` */
 
@@ -414,11 +458,11 @@ DROP TABLE IF EXISTS `globaljobtypes`;
 
 CREATE TABLE `globaljobtypes` (
   `id` tinyint(4) NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(50) NOT NULL,
   `languageid` int(11) NOT NULL,
   `isdeleted` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `globaljobtypes` */
 
@@ -430,12 +474,12 @@ DROP TABLE IF EXISTS `globalservices`;
 
 CREATE TABLE `globalservices` (
   `id` tinyint(3) NOT NULL,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) CHARACTER SET latin1 NOT NULL,
   `languageid` int(11) NOT NULL,
   `isdeleted` tinyint(3) NOT NULL DEFAULT '0',
   `jobtypeid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `globalservices` */
 
@@ -445,22 +489,22 @@ DROP TABLE IF EXISTS `jobtypes`;
 
 CREATE TABLE `jobtypes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `comments` varchar(200) NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `comments` varchar(200) CHARACTER SET latin1 NOT NULL,
   `createdon` datetime NOT NULL,
   `isdeleted` tinyint(2) NOT NULL,
   `createdby` int(11) NOT NULL,
   `franchiseid` int(11) NOT NULL,
   `isactivated` int(11) unsigned DEFAULT NULL,
-  `color` varchar(20) DEFAULT NULL,
+  `color` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `jobtypes_ibfk_1` (`franchiseid`),
   CONSTRAINT `jobtypes_ibfk_1` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
 
 /*Data for the table `jobtypes` */
 
-insert  into `jobtypes`(`id`,`name`,`comments`,`createdon`,`isdeleted`,`createdby`,`franchiseid`,`isactivated`,`color`) values (1,'Hair dresser 133s','Hair dresser 1','2015-01-26 00:00:00',0,2,2,0,NULL),(2,'Hair Dresser Apnass','Hair Dresser 1','2015-01-26 00:00:00',0,2,2,0,'#f71616'),(3,'Alex Job type 1','Alex Job type 1','2015-01-28 00:00:00',0,3,3,0,'#808000'),(4,'Alex Job Typ 2','Alex Job type','2015-01-30 00:00:00',0,3,3,0,'#ffff00'),(5,'Alex Job Type 3','','2015-01-30 00:00:00',0,3,3,0,'#00ff00'),(7,'Hair / Makeup Trainer','','2015-02-02 00:00:00',0,4,4,0,'#333333'),(8,'Front Desk Assistant','a','2015-02-09 00:00:00',0,3,3,0,'#333333'),(9,'Guest Care Specialist','','2015-02-09 00:00:00',0,3,3,0,'#333333'),(10,'Office Assistant','Assitant','2015-02-09 00:00:00',0,3,3,0,'#333333'),(11,'Guest Care Specialist','test2','2015-02-09 00:00:00',0,3,3,0,'#130b5b'),(12,'Barber Instructor/Educator','Test 1234','2015-02-09 00:00:00',0,4,4,0,'#408080'),(13,'ColorProof Specialist','test','2015-02-10 00:00:00',0,5,5,0,'#333333'),(15,'ColorProof Specialist','test','2015-02-10 00:00:00',0,6,6,0,'#333333'),(16,'Hair Stylist','sss','2015-02-10 00:00:00',0,6,6,0,'#333333'),(17,'Hair Stylist','s','2015-02-10 00:00:00',0,6,6,0,'#333333'),(18,'Guest Care Specialist','tst','2015-02-10 00:00:00',0,6,6,0,'#333333'),(19,'Hair Stylist','sss','2015-02-10 00:00:00',0,6,6,0,'#333333'),(20,'ps','pol','2015-02-12 00:00:00',0,4,4,0,'hsv(0, 100%, 100%)'),(21,'Guest Care Specialist','test','2015-02-12 00:00:00',0,4,4,0,'#e82222'),(22,'ss','','2015-02-12 00:00:00',0,4,4,0,'#ef1515'),(23,'ColorProof Specialist','Test','2015-02-16 00:00:00',0,2,2,0,'#e4ff00'),(24,'Front Desk Assistant','test','2015-02-17 00:00:00',0,2,2,0,'#fb00f1'),(25,'Hair Stylist','sss','2015-02-17 00:00:00',0,2,2,0,'#177ee3'),(26,'2s','test','2015-02-17 00:00:00',0,2,2,0,'#0a851e');
+insert  into `jobtypes`(`id`,`name`,`comments`,`createdon`,`isdeleted`,`createdby`,`franchiseid`,`isactivated`,`color`) values (1,'Hair dresser 133s','Hair dresser 1','2015-01-26 00:00:00',0,2,2,0,NULL),(2,'Hair Dresser Apnass','Hair Dresser 1','2015-01-26 00:00:00',0,2,2,0,'#f71616'),(3,'Alex Job type 1','Alex Job type 1','2015-01-28 00:00:00',0,3,3,0,'#808000'),(4,'Alex Job Typ 2','Alex Job type','2015-01-30 00:00:00',0,3,3,0,'#ffff00'),(5,'Alex Job Type 3','','2015-01-30 00:00:00',0,3,3,0,'#00ff00'),(7,'Hair / Makeup Trainer','','2015-02-02 00:00:00',0,4,4,0,'#333333'),(8,'Front Desk Assistant','a','2015-02-09 00:00:00',0,3,3,0,'#333333'),(9,'Guest Care Specialist','','2015-02-09 00:00:00',0,3,3,0,'#333333'),(10,'Office Assistant','Assitant','2015-02-09 00:00:00',0,3,3,0,'#333333'),(11,'Guest Care Specialist','test2','2015-02-09 00:00:00',0,3,3,0,'#130b5b'),(12,'Barber Instructor/Educator','Test 1234','2015-02-09 00:00:00',0,4,4,0,'#408080'),(13,'ColorProof Specialist','test','2015-02-10 00:00:00',0,5,5,0,'#333333'),(15,'ColorProof Specialist','test','2015-02-10 00:00:00',0,6,6,0,'#333333'),(16,'Hair Stylist','sss','2015-02-10 00:00:00',0,6,6,0,'#333333'),(17,'Hair Stylist','s','2015-02-10 00:00:00',0,6,6,0,'#333333'),(18,'Guest Care Specialist','tst','2015-02-10 00:00:00',0,6,6,0,'#333333'),(19,'Hair Stylist','sss','2015-02-10 00:00:00',0,6,6,0,'#333333'),(20,'ps','pol','2015-02-12 00:00:00',0,4,4,0,'hsv(0, 100%, 100%)'),(21,'Guest Care Specialist','test','2015-02-12 00:00:00',0,4,4,0,'#e82222'),(22,'ss','','2015-02-12 00:00:00',0,4,4,0,'#ef1515'),(23,'ColorProof Specialist','Test','2015-02-16 00:00:00',0,2,2,0,'#e4ff00'),(24,'Front Desk Assistant','test','2015-02-17 00:00:00',0,2,2,0,'#fb00f1'),(25,'Hair Stylist','sss','2015-02-17 00:00:00',0,2,2,0,'#177ee3'),(26,'2s','test','2015-02-17 00:00:00',0,2,2,0,'#0a851e'),(27,'Guest Care Specialist','','2015-02-25 00:00:00',0,10,10,0,'#333333'),(28,'Hair Stylist','','2015-03-19 00:00:00',0,2,2,0,'#333333'),(29,'Hair Dresser','','2015-03-19 00:00:00',0,2,2,0,'#333333');
 
 /*Table structure for table `jobtypesschedule` */
 
@@ -471,7 +515,7 @@ CREATE TABLE `jobtypesschedule` (
   `jobtypes_id` int(11) DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `jobtypesschedule` */
 
@@ -481,12 +525,12 @@ DROP TABLE IF EXISTS `languages`;
 
 CREATE TABLE `languages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(64) NOT NULL,
+  `title` varchar(64) CHARACTER SET latin1 NOT NULL,
   `createdon` datetime NOT NULL,
   `isdeleted` tinyint(4) NOT NULL,
   `isactive` tinyint(4) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 /*Data for the table `languages` */
 
@@ -499,16 +543,16 @@ DROP TABLE IF EXISTS `languagetranslate`;
 CREATE TABLE `languagetranslate` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `languageid` int(11) NOT NULL,
-  `title` varchar(64) NOT NULL,
-  `languagetitle` varchar(64) DEFAULT NULL,
+  `title` varchar(64) CHARACTER SET latin1 NOT NULL,
+  `languagetitle` varchar(64) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `ss` (`languageid`),
   CONSTRAINT `ss` FOREIGN KEY (`languageid`) REFERENCES `languages` (`id`) ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
 
 /*Data for the table `languagetranslate` */
 
-insert  into `languagetranslate`(`id`,`languageid`,`title`,`languagetitle`) values (1,1,'dashboard','Dashboard'),(2,1,'delete','Delete'),(3,1,'edit','Edit'),(5,1,'departments','Department'),(7,1,'employees','Employees'),(8,1,'jobtypes','Job Types'),(9,1,'services','Services'),(10,1,'roles','Roles'),(11,1,'schedule','Schedules'),(13,1,'branches','Departments'),(14,1,'active','Activate'),(16,1,'inactive','Deactivate');
+insert  into `languagetranslate`(`id`,`languageid`,`title`,`languagetitle`) values (1,1,'dashboard','Dashboard'),(2,1,'delete','Delete'),(3,1,'edit','Edit'),(5,1,'departments','Department'),(7,1,'employees','Employees'),(8,1,'jobtypes','Job Types'),(9,1,'services','Services'),(10,1,'roles','Roles'),(11,1,'schedule','Schedules'),(13,1,'branches','Departments'),(14,1,'active','Activate'),(16,1,'inactive','Deactivate'),(17,1,'revenue','Revenue'),(19,1,'customers','Customers');
 
 /*Table structure for table `leaves` */
 
@@ -516,12 +560,12 @@ DROP TABLE IF EXISTS `leaves`;
 
 CREATE TABLE `leaves` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `branchid` (`branchid`),
   CONSTRAINT `leaves_ibfk_1` FOREIGN KEY (`branchid`) REFERENCES `branches` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `leaves` */
 
@@ -532,18 +576,18 @@ DROP TABLE IF EXISTS `loginhistory`;
 CREATE TABLE `loginhistory` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `employeeid` int(11) DEFAULT NULL,
-  `ip` varchar(50) DEFAULT NULL,
+  `ip` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
   `time` datetime DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `employeeid` (`employeeid`),
   KEY `branchid` (`branchid`),
   CONSTRAINT `loginhistory_ibfk_1` FOREIGN KEY (`employeeid`) REFERENCES `employees` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=263 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=322 DEFAULT CHARSET=utf8;
 
 /*Data for the table `loginhistory` */
 
-insert  into `loginhistory`(`id`,`employeeid`,`ip`,`time`,`branchid`) values (1,5,'::1','2015-01-26 13:14:50',0),(2,5,'::1','2015-01-27 10:24:24',0),(3,5,'::1','2015-01-27 15:45:21',0),(4,5,'::1','2015-01-27 15:46:21',0),(5,5,'::1','2015-01-28 10:36:07',0),(6,6,'::1','2015-01-28 10:38:13',0),(7,6,'::1','2015-01-28 10:40:41',0),(8,6,'::1','2015-01-28 10:53:13',0),(9,7,'::1','2015-01-28 10:56:39',0),(10,6,'::1','2015-01-28 10:56:48',0),(11,7,'::1','2015-01-28 10:57:08',0),(12,6,'::1','2015-01-28 10:57:13',0),(13,7,'::1','2015-01-28 10:57:23',0),(14,7,'::1','2015-01-28 11:00:18',0),(15,6,'::1','2015-01-28 15:05:59',0),(16,6,'::1','2015-01-28 15:09:00',0),(17,7,'::1','2015-01-28 15:09:23',0),(18,6,'::1','2015-01-28 15:10:02',0),(19,8,'::1','2015-01-28 15:11:10',0),(20,6,'::1','2015-01-28 15:11:25',0),(21,8,'::1','2015-01-28 15:11:45',0),(22,6,'::1','2015-01-28 15:12:01',0),(23,7,'::1','2015-01-28 15:13:11',0),(24,6,'::1','2015-01-28 16:11:44',0),(25,8,'::1','2015-01-28 16:24:58',0),(26,8,'::1','2015-01-28 16:26:31',0),(27,5,'::1','2015-01-28 20:58:50',0),(28,5,'::1','2015-01-28 20:58:51',0),(29,5,'::1','2015-01-28 20:58:55',0),(30,6,'::1','2015-01-28 20:58:57',0),(31,8,'::1','2015-01-28 20:59:04',0),(32,5,'::1','2015-01-28 20:59:40',0),(33,5,'::1','2015-01-28 21:00:01',0),(34,5,'::1','2015-01-28 21:00:06',0),(35,5,'::1','2015-01-28 21:00:06',0),(36,5,'::1','2015-01-28 21:00:07',0),(37,5,'::1','2015-01-28 21:00:13',0),(38,8,'::1','2015-01-28 21:00:30',0),(39,5,'::1','2015-01-28 21:03:19',0),(40,5,'::1','2015-01-28 21:05:55',0),(41,6,'::1','2015-01-28 21:14:08',0),(42,7,'::1','2015-01-28 21:14:28',0),(43,8,'::1','2015-01-28 21:17:03',0),(44,5,'::1','2015-01-28 22:11:39',0),(45,8,'::1','2015-01-28 22:12:12',0),(46,5,'::1','2015-01-28 22:12:22',0),(47,8,'::1','2015-01-28 22:13:22',0),(48,5,'::1','2015-01-28 22:14:21',0),(49,8,'::1','2015-01-28 22:32:51',0),(50,8,'::1','2015-01-28 22:33:05',0),(51,5,'::1','2015-01-28 22:33:11',0),(52,5,'::1','2015-01-28 22:33:15',0),(53,5,'::1','2015-01-28 22:34:25',0),(54,5,'::1','2015-01-28 22:34:44',0),(55,5,'::1','2015-01-29 16:51:59',0),(56,6,'::1','2015-01-29 18:54:05',0),(57,8,'::1','2015-01-29 19:02:49',0),(58,5,'::1','2015-01-29 23:55:25',0),(59,5,'::1','2015-01-30 10:21:25',0),(60,8,'::1','2015-01-30 11:00:07',0),(61,8,'::1','2015-01-30 11:00:09',0),(62,8,'::1','2015-01-30 11:00:19',0),(63,5,'::1','2015-01-30 11:02:44',0),(64,5,'::1','2015-01-30 11:08:14',0),(65,8,'::1','2015-01-30 11:08:21',0),(66,5,'::1','2015-01-30 11:15:28',0),(67,6,'::1','2015-01-30 11:15:55',0),(68,8,'::1','2015-01-30 11:16:41',0),(69,8,'::1','2015-01-30 11:19:14',0),(70,8,'::1','2015-01-30 11:19:55',0),(71,8,'::1','2015-01-30 11:21:37',0),(72,6,'::1','2015-01-30 11:53:28',0),(73,8,'::1','2015-01-30 11:56:35',0),(74,6,'::1','2015-01-30 11:57:59',0),(75,8,'::1','2015-01-30 11:58:18',0),(76,5,'::1','2015-01-30 14:22:03',0),(77,5,'::1','2015-01-30 15:26:49',0),(78,6,'::1','2015-01-30 15:26:55',0),(79,6,'::1','2015-01-30 15:26:57',0),(80,6,'::1','2015-01-30 15:27:17',0),(81,6,'::1','2015-01-30 15:27:21',0),(82,6,'::1','2015-01-30 15:27:47',0),(83,6,'::1','2015-01-30 15:28:25',0),(84,6,'::1','2015-01-30 15:28:43',0),(85,6,'::1','2015-01-30 15:29:33',0),(86,8,'::1','2015-01-30 15:30:33',0),(87,8,'::1','2015-01-30 15:30:48',0),(88,7,'::1','2015-01-30 15:31:48',0),(89,6,'::1','2015-01-30 19:09:51',0),(90,8,'::1','2015-01-30 19:10:46',0),(91,7,'::1','2015-01-30 19:10:58',0),(92,6,'::1','2015-01-30 19:14:41',0),(93,6,'::1','2015-01-30 19:14:41',0),(94,7,'::1','2015-01-30 19:15:54',0),(95,5,'::1','2015-01-30 19:16:08',0),(96,7,'::1','2015-01-30 19:42:39',0),(97,5,'::1','2015-01-30 19:44:11',0),(98,5,'::1','2015-01-31 10:43:25',0),(99,5,'::1','2015-01-31 10:43:26',0),(100,8,'::1','2015-01-31 10:43:30',0),(101,8,'::1','2015-01-31 10:43:42',0),(102,8,'::1','2015-01-31 10:43:55',0),(103,7,'::1','2015-01-31 10:44:13',0),(104,6,'::1','2015-01-31 10:45:15',0),(105,8,'::1','2015-01-31 10:45:58',0),(106,7,'::1','2015-01-31 10:46:12',0),(107,6,'::1','2015-01-31 10:47:36',0),(108,10,'::1','2015-01-31 10:57:09',0),(109,6,'::1','2015-01-31 10:58:01',0),(110,10,'::1','2015-01-31 10:59:28',0),(111,10,'::1','2015-01-31 11:00:48',0),(112,6,'::1','2015-01-31 11:06:00',0),(113,8,'::1','2015-01-31 11:39:02',0),(114,7,'::1','2015-01-31 11:39:07',0),(115,6,'::1','2015-01-31 11:39:14',0),(116,7,'::1','2015-01-31 11:39:44',0),(117,6,'::1','2015-01-31 11:39:56',0),(118,7,'::1','2015-01-31 11:40:08',0),(119,6,'::1','2015-01-31 12:11:22',0),(120,7,'::1','2015-01-31 12:22:42',0),(121,6,'::1','2015-01-31 12:27:17',0),(122,7,'::1','2015-01-31 12:37:52',0),(123,6,'::1','2015-01-31 13:20:48',0),(124,6,'::1','2015-01-31 16:51:11',0),(125,6,'::1','2015-01-31 16:51:34',0),(126,6,'::1','2015-01-31 17:09:36',0),(127,6,'::1','2015-01-31 17:09:54',0),(128,8,'::1','2015-01-31 17:12:39',0),(129,7,'::1','2015-01-31 17:12:52',0),(130,6,'::1','2015-01-31 17:49:33',0),(131,5,'::1','2015-02-02 10:12:00',0),(132,5,'::1','2015-02-02 10:45:03',0),(133,6,'::1','2015-02-02 10:45:12',0),(134,6,'::1','2015-02-02 10:51:45',0),(135,6,'::1','2015-02-02 10:52:15',0),(136,6,'::1','2015-02-02 10:53:10',0),(137,6,'::1','2015-02-02 11:09:17',0),(138,14,'::1','2015-02-02 11:21:13',0),(139,6,'::1','2015-02-02 11:33:41',0),(140,14,'::1','2015-02-02 12:27:38',0),(141,14,'::1','2015-02-02 12:27:41',0),(142,6,'::1','2015-02-02 12:29:09',0),(143,6,'::1','2015-02-03 10:04:13',0),(144,6,'::1','2015-02-03 12:56:09',0),(145,6,'::1','2015-02-03 15:15:00',0),(146,6,'::1','2015-02-04 09:49:44',0),(147,6,'::1','2015-02-04 14:44:07',0),(148,6,'::1','2015-02-04 14:44:07',0),(149,6,'::1','2015-02-04 16:29:38',0),(150,6,'::1','2015-02-04 16:29:43',0),(151,6,'::1','2015-02-04 17:18:33',0),(152,6,'::1','2015-02-05 13:01:27',0),(153,6,'::1','2015-02-06 18:57:52',0),(154,6,'::1','2015-02-07 10:32:08',0),(155,6,'::1','2015-02-09 09:59:37',0),(156,6,'::1','2015-02-09 11:06:22',0),(157,6,'::1','2015-02-09 12:27:25',0),(158,6,'::1','2015-02-09 13:39:16',0),(159,14,'::1','2015-02-09 15:12:00',0),(160,14,'::1','2015-02-09 15:59:09',0),(161,14,'::1','2015-02-09 16:40:10',0),(162,14,'::1','2015-02-09 16:40:31',0),(163,14,'::1','2015-02-09 16:43:36',0),(164,14,'::1','2015-02-09 16:44:12',0),(165,14,'::1','2015-02-09 16:48:42',0),(166,14,'::1','2015-02-09 17:03:02',0),(167,14,'::1','2015-02-09 17:04:07',0),(168,14,'::1','2015-02-09 23:25:07',0),(169,14,'::1','2015-02-09 23:26:29',0),(170,14,'::1','2015-02-10 11:40:53',0),(171,14,'::1','2015-02-10 11:41:29',0),(172,6,'::1','2015-02-10 14:52:48',0),(173,6,'::1','2015-02-10 14:53:21',0),(174,6,'::1','2015-02-10 15:08:21',0),(175,39,'::1','2015-02-10 15:31:54',0),(176,41,'::1','2015-02-10 20:55:38',0),(177,41,'::1','2015-02-10 20:55:38',0),(178,5,'::1','2015-02-10 22:18:08',0),(179,8,'::1','2015-02-11 00:26:08',0),(180,5,'::1','2015-02-11 00:34:35',0),(181,5,'::1','2015-02-11 01:46:02',0),(182,5,'::1','2015-02-11 01:48:01',0),(183,5,'::1','2015-02-11 01:52:50',0),(184,5,'::1','2015-02-11 13:53:41',0),(185,14,'::1','2015-02-11 14:34:43',0),(186,14,'::1','2015-02-11 14:43:56',0),(187,14,'::1','2015-02-11 14:45:10',0),(188,14,'::1','2015-02-11 15:30:14',0),(189,14,'::1','2015-02-11 15:42:00',0),(190,14,'::1','2015-02-11 15:53:34',0),(191,14,'::1','2015-02-11 19:41:45',0),(192,79,'::1','2015-02-11 21:08:39',0),(193,79,'::1','2015-02-11 21:09:28',0),(194,79,'::1','2015-02-11 21:10:33',0),(195,79,'::1','2015-02-11 21:10:33',0),(196,79,'::1','2015-02-11 21:18:36',0),(197,14,'::1','2015-02-12 11:08:08',0),(198,14,'::1','2015-02-12 11:20:14',0),(199,80,'::1','2015-02-12 12:24:12',0),(200,14,'::1','2015-02-12 19:46:07',0),(201,5,'::1','2015-02-13 10:47:52',0),(202,5,'::1','2015-02-13 11:31:28',0),(203,5,'::1','2015-02-13 11:33:46',0),(204,5,'::1','2015-02-16 10:19:32',0),(205,5,'::1','2015-02-16 10:19:40',0),(206,5,'::1','2015-02-16 10:28:40',0),(207,5,'::1','2015-02-16 10:28:45',0),(208,5,'::1','2015-02-16 10:30:26',0),(209,5,'::1','2015-02-16 10:30:31',0),(210,5,'::1','2015-02-16 10:30:41',0),(211,5,'::1','2015-02-16 11:06:46',0),(212,5,'::1','2015-02-16 11:07:39',0),(213,5,'::1','2015-02-16 11:07:59',0),(214,5,'::1','2015-02-16 11:40:48',0),(215,5,'::1','2015-02-16 11:46:48',0),(216,5,'::1','2015-02-16 11:55:45',0),(217,5,'::1','2015-02-16 11:55:59',0),(218,5,'::1','2015-02-16 11:56:13',0),(219,5,'::1','2015-02-16 11:58:09',0),(220,5,'::1','2015-02-16 12:04:33',0),(221,5,'::1','2015-02-16 12:09:24',0),(222,5,'::1','2015-02-16 12:15:14',0),(223,5,'::1','2015-02-16 12:15:17',0),(224,5,'::1','2015-02-16 12:18:43',0),(225,5,'::1','2015-02-16 12:19:01',0),(226,5,'::1','2015-02-16 12:19:20',0),(227,5,'::1','2015-02-16 12:21:45',0),(228,5,'::1','2015-02-16 12:22:52',0),(229,5,'::1','2015-02-16 12:23:00',0),(230,5,'::1','2015-02-16 12:23:07',0),(231,84,'::1','2015-02-16 12:25:04',0),(232,84,'::1','2015-02-16 12:25:25',0),(233,84,'::1','2015-02-16 12:25:26',0),(234,84,'::1','2015-02-16 12:25:39',0),(235,84,'::1','2015-02-16 12:26:49',0),(236,84,'::1','2015-02-16 12:37:26',0),(237,84,'::1','2015-02-16 12:37:43',0),(238,84,'::1','2015-02-16 12:37:50',0),(239,84,'::1','2015-02-16 12:38:45',0),(240,84,'::1','2015-02-16 12:39:08',0),(241,84,'::1','2015-02-16 12:41:37',0),(242,84,'::1','2015-02-16 12:52:06',0),(243,84,'::1','2015-02-16 12:52:41',0),(244,84,'::1','2015-02-16 12:55:30',0),(245,84,'::1','2015-02-16 12:55:48',0),(246,5,'::1','2015-02-16 16:04:27',0),(247,5,'::1','2015-02-17 09:40:22',0),(248,5,'::1','2015-02-17 10:05:00',0),(249,5,'::1','2015-02-17 10:26:58',0),(250,5,'::1','2015-02-17 10:28:18',0),(251,5,'::1','2015-02-17 10:32:55',0),(252,5,'::1','2015-02-17 10:39:27',0),(253,5,'::1','2015-02-17 10:43:59',0),(254,5,'::1','2015-02-17 13:18:08',0),(255,5,'::1','2015-02-18 10:46:54',0),(256,5,'::1','2015-02-18 14:23:39',0),(257,5,'::1','2015-02-19 13:36:47',0),(258,5,'::1','2015-02-20 09:37:56',0),(259,5,'::1','2015-02-23 09:46:49',0),(260,5,'::1','2015-02-23 13:59:29',0),(261,5,'::1','2015-02-23 19:02:48',0),(262,5,'::1','2015-02-24 11:20:17',0);
+insert  into `loginhistory`(`id`,`employeeid`,`ip`,`time`,`branchid`) values (1,5,'::1','2015-01-26 13:14:50',0),(2,5,'::1','2015-01-27 10:24:24',0),(3,5,'::1','2015-01-27 15:45:21',0),(4,5,'::1','2015-01-27 15:46:21',0),(5,5,'::1','2015-01-28 10:36:07',0),(6,6,'::1','2015-01-28 10:38:13',0),(7,6,'::1','2015-01-28 10:40:41',0),(8,6,'::1','2015-01-28 10:53:13',0),(9,7,'::1','2015-01-28 10:56:39',0),(10,6,'::1','2015-01-28 10:56:48',0),(11,7,'::1','2015-01-28 10:57:08',0),(12,6,'::1','2015-01-28 10:57:13',0),(13,7,'::1','2015-01-28 10:57:23',0),(14,7,'::1','2015-01-28 11:00:18',0),(15,6,'::1','2015-01-28 15:05:59',0),(16,6,'::1','2015-01-28 15:09:00',0),(17,7,'::1','2015-01-28 15:09:23',0),(18,6,'::1','2015-01-28 15:10:02',0),(19,8,'::1','2015-01-28 15:11:10',0),(20,6,'::1','2015-01-28 15:11:25',0),(21,8,'::1','2015-01-28 15:11:45',0),(22,6,'::1','2015-01-28 15:12:01',0),(23,7,'::1','2015-01-28 15:13:11',0),(24,6,'::1','2015-01-28 16:11:44',0),(25,8,'::1','2015-01-28 16:24:58',0),(26,8,'::1','2015-01-28 16:26:31',0),(27,5,'::1','2015-01-28 20:58:50',0),(28,5,'::1','2015-01-28 20:58:51',0),(29,5,'::1','2015-01-28 20:58:55',0),(30,6,'::1','2015-01-28 20:58:57',0),(31,8,'::1','2015-01-28 20:59:04',0),(32,5,'::1','2015-01-28 20:59:40',0),(33,5,'::1','2015-01-28 21:00:01',0),(34,5,'::1','2015-01-28 21:00:06',0),(35,5,'::1','2015-01-28 21:00:06',0),(36,5,'::1','2015-01-28 21:00:07',0),(37,5,'::1','2015-01-28 21:00:13',0),(38,8,'::1','2015-01-28 21:00:30',0),(39,5,'::1','2015-01-28 21:03:19',0),(40,5,'::1','2015-01-28 21:05:55',0),(41,6,'::1','2015-01-28 21:14:08',0),(42,7,'::1','2015-01-28 21:14:28',0),(43,8,'::1','2015-01-28 21:17:03',0),(44,5,'::1','2015-01-28 22:11:39',0),(45,8,'::1','2015-01-28 22:12:12',0),(46,5,'::1','2015-01-28 22:12:22',0),(47,8,'::1','2015-01-28 22:13:22',0),(48,5,'::1','2015-01-28 22:14:21',0),(49,8,'::1','2015-01-28 22:32:51',0),(50,8,'::1','2015-01-28 22:33:05',0),(51,5,'::1','2015-01-28 22:33:11',0),(52,5,'::1','2015-01-28 22:33:15',0),(53,5,'::1','2015-01-28 22:34:25',0),(54,5,'::1','2015-01-28 22:34:44',0),(55,5,'::1','2015-01-29 16:51:59',0),(56,6,'::1','2015-01-29 18:54:05',0),(57,8,'::1','2015-01-29 19:02:49',0),(58,5,'::1','2015-01-29 23:55:25',0),(59,5,'::1','2015-01-30 10:21:25',0),(60,8,'::1','2015-01-30 11:00:07',0),(61,8,'::1','2015-01-30 11:00:09',0),(62,8,'::1','2015-01-30 11:00:19',0),(63,5,'::1','2015-01-30 11:02:44',0),(64,5,'::1','2015-01-30 11:08:14',0),(65,8,'::1','2015-01-30 11:08:21',0),(66,5,'::1','2015-01-30 11:15:28',0),(67,6,'::1','2015-01-30 11:15:55',0),(68,8,'::1','2015-01-30 11:16:41',0),(69,8,'::1','2015-01-30 11:19:14',0),(70,8,'::1','2015-01-30 11:19:55',0),(71,8,'::1','2015-01-30 11:21:37',0),(72,6,'::1','2015-01-30 11:53:28',0),(73,8,'::1','2015-01-30 11:56:35',0),(74,6,'::1','2015-01-30 11:57:59',0),(75,8,'::1','2015-01-30 11:58:18',0),(76,5,'::1','2015-01-30 14:22:03',0),(77,5,'::1','2015-01-30 15:26:49',0),(78,6,'::1','2015-01-30 15:26:55',0),(79,6,'::1','2015-01-30 15:26:57',0),(80,6,'::1','2015-01-30 15:27:17',0),(81,6,'::1','2015-01-30 15:27:21',0),(82,6,'::1','2015-01-30 15:27:47',0),(83,6,'::1','2015-01-30 15:28:25',0),(84,6,'::1','2015-01-30 15:28:43',0),(85,6,'::1','2015-01-30 15:29:33',0),(86,8,'::1','2015-01-30 15:30:33',0),(87,8,'::1','2015-01-30 15:30:48',0),(88,7,'::1','2015-01-30 15:31:48',0),(89,6,'::1','2015-01-30 19:09:51',0),(90,8,'::1','2015-01-30 19:10:46',0),(91,7,'::1','2015-01-30 19:10:58',0),(92,6,'::1','2015-01-30 19:14:41',0),(93,6,'::1','2015-01-30 19:14:41',0),(94,7,'::1','2015-01-30 19:15:54',0),(95,5,'::1','2015-01-30 19:16:08',0),(96,7,'::1','2015-01-30 19:42:39',0),(97,5,'::1','2015-01-30 19:44:11',0),(98,5,'::1','2015-01-31 10:43:25',0),(99,5,'::1','2015-01-31 10:43:26',0),(100,8,'::1','2015-01-31 10:43:30',0),(101,8,'::1','2015-01-31 10:43:42',0),(102,8,'::1','2015-01-31 10:43:55',0),(103,7,'::1','2015-01-31 10:44:13',0),(104,6,'::1','2015-01-31 10:45:15',0),(105,8,'::1','2015-01-31 10:45:58',0),(106,7,'::1','2015-01-31 10:46:12',0),(107,6,'::1','2015-01-31 10:47:36',0),(108,10,'::1','2015-01-31 10:57:09',0),(109,6,'::1','2015-01-31 10:58:01',0),(110,10,'::1','2015-01-31 10:59:28',0),(111,10,'::1','2015-01-31 11:00:48',0),(112,6,'::1','2015-01-31 11:06:00',0),(113,8,'::1','2015-01-31 11:39:02',0),(114,7,'::1','2015-01-31 11:39:07',0),(115,6,'::1','2015-01-31 11:39:14',0),(116,7,'::1','2015-01-31 11:39:44',0),(117,6,'::1','2015-01-31 11:39:56',0),(118,7,'::1','2015-01-31 11:40:08',0),(119,6,'::1','2015-01-31 12:11:22',0),(120,7,'::1','2015-01-31 12:22:42',0),(121,6,'::1','2015-01-31 12:27:17',0),(122,7,'::1','2015-01-31 12:37:52',0),(123,6,'::1','2015-01-31 13:20:48',0),(124,6,'::1','2015-01-31 16:51:11',0),(125,6,'::1','2015-01-31 16:51:34',0),(126,6,'::1','2015-01-31 17:09:36',0),(127,6,'::1','2015-01-31 17:09:54',0),(128,8,'::1','2015-01-31 17:12:39',0),(129,7,'::1','2015-01-31 17:12:52',0),(130,6,'::1','2015-01-31 17:49:33',0),(131,5,'::1','2015-02-02 10:12:00',0),(132,5,'::1','2015-02-02 10:45:03',0),(133,6,'::1','2015-02-02 10:45:12',0),(134,6,'::1','2015-02-02 10:51:45',0),(135,6,'::1','2015-02-02 10:52:15',0),(136,6,'::1','2015-02-02 10:53:10',0),(137,6,'::1','2015-02-02 11:09:17',0),(138,14,'::1','2015-02-02 11:21:13',0),(139,6,'::1','2015-02-02 11:33:41',0),(140,14,'::1','2015-02-02 12:27:38',0),(141,14,'::1','2015-02-02 12:27:41',0),(142,6,'::1','2015-02-02 12:29:09',0),(143,6,'::1','2015-02-03 10:04:13',0),(144,6,'::1','2015-02-03 12:56:09',0),(145,6,'::1','2015-02-03 15:15:00',0),(146,6,'::1','2015-02-04 09:49:44',0),(147,6,'::1','2015-02-04 14:44:07',0),(148,6,'::1','2015-02-04 14:44:07',0),(149,6,'::1','2015-02-04 16:29:38',0),(150,6,'::1','2015-02-04 16:29:43',0),(151,6,'::1','2015-02-04 17:18:33',0),(152,6,'::1','2015-02-05 13:01:27',0),(153,6,'::1','2015-02-06 18:57:52',0),(154,6,'::1','2015-02-07 10:32:08',0),(155,6,'::1','2015-02-09 09:59:37',0),(156,6,'::1','2015-02-09 11:06:22',0),(157,6,'::1','2015-02-09 12:27:25',0),(158,6,'::1','2015-02-09 13:39:16',0),(159,14,'::1','2015-02-09 15:12:00',0),(160,14,'::1','2015-02-09 15:59:09',0),(161,14,'::1','2015-02-09 16:40:10',0),(162,14,'::1','2015-02-09 16:40:31',0),(163,14,'::1','2015-02-09 16:43:36',0),(164,14,'::1','2015-02-09 16:44:12',0),(165,14,'::1','2015-02-09 16:48:42',0),(166,14,'::1','2015-02-09 17:03:02',0),(167,14,'::1','2015-02-09 17:04:07',0),(168,14,'::1','2015-02-09 23:25:07',0),(169,14,'::1','2015-02-09 23:26:29',0),(170,14,'::1','2015-02-10 11:40:53',0),(171,14,'::1','2015-02-10 11:41:29',0),(172,6,'::1','2015-02-10 14:52:48',0),(173,6,'::1','2015-02-10 14:53:21',0),(174,6,'::1','2015-02-10 15:08:21',0),(175,39,'::1','2015-02-10 15:31:54',0),(176,41,'::1','2015-02-10 20:55:38',0),(177,41,'::1','2015-02-10 20:55:38',0),(178,5,'::1','2015-02-10 22:18:08',0),(179,8,'::1','2015-02-11 00:26:08',0),(180,5,'::1','2015-02-11 00:34:35',0),(181,5,'::1','2015-02-11 01:46:02',0),(182,5,'::1','2015-02-11 01:48:01',0),(183,5,'::1','2015-02-11 01:52:50',0),(184,5,'::1','2015-02-11 13:53:41',0),(185,14,'::1','2015-02-11 14:34:43',0),(186,14,'::1','2015-02-11 14:43:56',0),(187,14,'::1','2015-02-11 14:45:10',0),(188,14,'::1','2015-02-11 15:30:14',0),(189,14,'::1','2015-02-11 15:42:00',0),(190,14,'::1','2015-02-11 15:53:34',0),(191,14,'::1','2015-02-11 19:41:45',0),(192,79,'::1','2015-02-11 21:08:39',0),(193,79,'::1','2015-02-11 21:09:28',0),(194,79,'::1','2015-02-11 21:10:33',0),(195,79,'::1','2015-02-11 21:10:33',0),(196,79,'::1','2015-02-11 21:18:36',0),(197,14,'::1','2015-02-12 11:08:08',0),(198,14,'::1','2015-02-12 11:20:14',0),(199,80,'::1','2015-02-12 12:24:12',0),(200,14,'::1','2015-02-12 19:46:07',0),(201,5,'::1','2015-02-13 10:47:52',0),(202,5,'::1','2015-02-13 11:31:28',0),(203,5,'::1','2015-02-13 11:33:46',0),(204,5,'::1','2015-02-16 10:19:32',0),(205,5,'::1','2015-02-16 10:19:40',0),(206,5,'::1','2015-02-16 10:28:40',0),(207,5,'::1','2015-02-16 10:28:45',0),(208,5,'::1','2015-02-16 10:30:26',0),(209,5,'::1','2015-02-16 10:30:31',0),(210,5,'::1','2015-02-16 10:30:41',0),(211,5,'::1','2015-02-16 11:06:46',0),(212,5,'::1','2015-02-16 11:07:39',0),(213,5,'::1','2015-02-16 11:07:59',0),(214,5,'::1','2015-02-16 11:40:48',0),(215,5,'::1','2015-02-16 11:46:48',0),(216,5,'::1','2015-02-16 11:55:45',0),(217,5,'::1','2015-02-16 11:55:59',0),(218,5,'::1','2015-02-16 11:56:13',0),(219,5,'::1','2015-02-16 11:58:09',0),(220,5,'::1','2015-02-16 12:04:33',0),(221,5,'::1','2015-02-16 12:09:24',0),(222,5,'::1','2015-02-16 12:15:14',0),(223,5,'::1','2015-02-16 12:15:17',0),(224,5,'::1','2015-02-16 12:18:43',0),(225,5,'::1','2015-02-16 12:19:01',0),(226,5,'::1','2015-02-16 12:19:20',0),(227,5,'::1','2015-02-16 12:21:45',0),(228,5,'::1','2015-02-16 12:22:52',0),(229,5,'::1','2015-02-16 12:23:00',0),(230,5,'::1','2015-02-16 12:23:07',0),(231,84,'::1','2015-02-16 12:25:04',0),(232,84,'::1','2015-02-16 12:25:25',0),(233,84,'::1','2015-02-16 12:25:26',0),(234,84,'::1','2015-02-16 12:25:39',0),(235,84,'::1','2015-02-16 12:26:49',0),(236,84,'::1','2015-02-16 12:37:26',0),(237,84,'::1','2015-02-16 12:37:43',0),(238,84,'::1','2015-02-16 12:37:50',0),(239,84,'::1','2015-02-16 12:38:45',0),(240,84,'::1','2015-02-16 12:39:08',0),(241,84,'::1','2015-02-16 12:41:37',0),(242,84,'::1','2015-02-16 12:52:06',0),(243,84,'::1','2015-02-16 12:52:41',0),(244,84,'::1','2015-02-16 12:55:30',0),(245,84,'::1','2015-02-16 12:55:48',0),(246,5,'::1','2015-02-16 16:04:27',0),(247,5,'::1','2015-02-17 09:40:22',0),(248,5,'::1','2015-02-17 10:05:00',0),(249,5,'::1','2015-02-17 10:26:58',0),(250,5,'::1','2015-02-17 10:28:18',0),(251,5,'::1','2015-02-17 10:32:55',0),(252,5,'::1','2015-02-17 10:39:27',0),(253,5,'::1','2015-02-17 10:43:59',0),(254,5,'::1','2015-02-17 13:18:08',0),(255,5,'::1','2015-02-18 10:46:54',0),(256,5,'::1','2015-02-18 14:23:39',0),(257,5,'::1','2015-02-19 13:36:47',0),(258,5,'::1','2015-02-20 09:37:56',0),(259,5,'::1','2015-02-23 09:46:49',0),(260,5,'::1','2015-02-23 13:59:29',0),(261,5,'::1','2015-02-23 19:02:48',0),(262,5,'::1','2015-02-24 11:20:17',0),(263,5,'::1','2015-02-24 23:30:15',0),(264,5,'::1','2015-02-24 23:31:46',0),(265,5,'::1','2015-02-25 10:34:30',0),(266,85,'::1','2015-02-25 10:40:06',0),(267,85,'::1','2015-02-25 10:50:40',0),(268,85,'::1','2015-02-25 10:51:10',0),(269,5,'::1','2015-02-25 11:58:00',0),(270,5,'::1','2015-02-25 12:36:55',0),(271,5,'::1','2015-02-25 16:30:55',0),(272,5,'::1','2015-02-26 11:17:38',0),(273,5,'::1','2015-02-26 16:29:16',0),(274,5,'::1','2015-02-26 16:30:51',0),(275,5,'::1','2015-02-26 16:31:20',0),(276,5,'::1','2015-02-26 16:35:34',0),(277,5,'::1','2015-02-26 16:37:07',0),(278,5,'::1','2015-02-26 16:38:31',0),(279,5,'::1','2015-02-26 16:39:02',0),(280,5,'::1','2015-02-26 16:39:20',0),(281,5,'::1','2015-03-02 10:01:17',0),(282,5,'::1','2015-03-02 10:40:47',0),(283,5,'::1','2015-03-02 10:45:10',0),(284,5,'::1','2015-03-02 16:05:15',0),(285,5,'::1','2015-03-04 09:26:11',0),(286,5,'::1','2015-03-04 09:26:16',0),(287,5,'::1','2015-03-05 16:54:34',0),(288,5,'::1','2015-03-06 09:37:43',0),(289,5,'::1','2015-03-06 09:37:45',0),(290,5,'::1','2015-03-06 19:46:31',0),(291,5,'::1','2015-03-06 19:46:44',0),(292,5,'::1','2015-03-06 19:46:44',0),(293,5,'::1','2015-03-06 19:52:55',0),(294,5,'::1','2015-03-07 10:35:52',0),(295,5,'::1','2015-03-09 09:39:59',0),(296,5,'::1','2015-03-09 15:03:40',0),(297,5,'::1','2015-03-09 15:12:01',0),(298,5,'::1','2015-03-09 15:12:01',0),(299,5,'::1','2015-03-10 11:51:16',0),(300,5,'::1','2015-03-11 09:47:14',0),(301,5,'::1','2015-03-11 11:26:21',0),(302,5,'::1','2015-03-11 11:27:31',0),(303,5,'::1','2015-03-11 11:28:19',0),(304,5,'::1','2015-03-12 09:37:48',0),(305,5,'::1','2015-03-13 00:54:40',0),(306,5,'::1','2015-03-13 10:11:30',0),(307,5,'::1','2015-03-13 10:11:33',0),(308,5,'::1','2015-03-13 10:11:37',0),(309,5,'::1','2015-03-16 09:44:57',0),(310,5,'::1','2015-03-17 09:37:04',0),(311,5,'::1','2015-03-17 12:31:57',0),(312,5,'::1','2015-03-18 10:10:06',0),(313,5,'::1','2015-03-18 10:12:20',0),(314,5,'::1','2015-03-19 10:35:54',0),(315,5,'::1','2015-03-19 10:37:58',0),(316,5,'::1','2015-03-19 15:12:53',0),(317,5,'::1','2015-03-20 11:09:16',0),(318,5,'::1','2015-03-20 11:09:18',0),(319,5,'::1','2015-03-20 11:09:21',0),(320,5,'::1','2015-03-24 10:07:24',0),(321,5,'::1','2015-03-24 10:07:25',0);
 
 /*Table structure for table `modules` */
 
@@ -551,17 +595,17 @@ DROP TABLE IF EXISTS `modules`;
 
 CREATE TABLE `modules` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  `text` varchar(200) DEFAULT NULL,
-  `childof` varchar(200) DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `description` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `text` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `childof` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
   `sortorder` tinyint(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
 
 /*Data for the table `modules` */
 
-insert  into `modules`(`id`,`name`,`description`,`text`,`childof`,`sortorder`) values (1,'dashboard','dashboard','Dashboard',NULL,1),(2,'management','Managemetn','Management',NULL,3),(3,'employees','Employee','Employees','management',4),(4,'schedule','schedule','Schedule','management',5),(5,'jobtypes','jobtypes','Job Types','management',2),(6,'services','services','Services','management',3),(7,'settin','Setting','Setting','',NULL),(8,'roles','roles','Roles','setting',NULL),(9,'branches','department','Departments','management',1),(10,'schedulelist','schedulelist','Schedule List','management',7),(11,'booking','booking','Bookings','management',9),(12,'bookingcalender','booking calender','Booking Calender','management',11);
+insert  into `modules`(`id`,`name`,`description`,`text`,`childof`,`sortorder`) values (1,'dashboard','dashboard','Dashboard',NULL,1),(2,'management','Managemetn','Management',NULL,3),(3,'employees','Employee','Employees','management',4),(4,'schedule','schedule','Schedule','schedule',5),(5,'jobtypes','jobtypes','Job Types','management',2),(6,'services','services','Services','management',3),(7,'','','','',NULL),(8,'roles','roles','Roles','setting',NULL),(9,'branches','department','Departments','management',1),(10,'schedulelist','schedulelist','Schedule List','schedule',7),(11,'booking','booking','Bookings','booking',9),(12,'bookingcalender','booking calender','Job Types Calendar','booking',11),(13,'bookingcalender','booking calender','Employee Calendar','booking',NULL),(14,'tasks','Task','Task','',11),(15,'revenue','Revenue','Revenue','',NULL),(16,'customers','Customers','Customers','',2),(17,'packages','My Packages','My Packages','',0);
 
 /*Table structure for table `packages` */
 
@@ -569,16 +613,37 @@ DROP TABLE IF EXISTS `packages`;
 
 CREATE TABLE `packages` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `monthlyprice` varchar(20) NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `monthlyprice` varchar(20) CHARACTER SET latin1 NOT NULL,
   `createdon` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `isdeleted` tinyint(2) NOT NULL,
+  `sms` int(11) DEFAULT NULL,
+  `email` int(11) DEFAULT NULL,
+  `support` int(11) DEFAULT NULL,
+  `dedicatedserver` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 /*Data for the table `packages` */
 
-insert  into `packages`(`id`,`name`,`monthlyprice`,`createdon`,`isdeleted`) values (1,'Gold','1200','2015-01-26 12:04:27',0),(2,'Silver','200','2015-01-26 12:07:18',0),(3,'','','2015-01-26 12:07:27',0);
+insert  into `packages`(`id`,`name`,`monthlyprice`,`createdon`,`isdeleted`,`sms`,`email`,`support`,`dedicatedserver`) values (1,'Gold','1200','2015-01-26 12:04:27',0,44,1,NULL,NULL),(2,'Silver','200','2015-01-26 12:07:18',0,212,1,NULL,NULL),(3,'Bronze','300','2015-01-26 12:07:27',0,321,1,NULL,NULL);
+
+/*Table structure for table `packageshistory` */
+
+DROP TABLE IF EXISTS `packageshistory`;
+
+CREATE TABLE `packageshistory` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `packageid` int(11) DEFAULT NULL,
+  `currentpackage` int(11) DEFAULT NULL,
+  `createdon` datetime DEFAULT NULL,
+  `franchiseid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8;
+
+/*Data for the table `packageshistory` */
+
+insert  into `packageshistory`(`id`,`packageid`,`currentpackage`,`createdon`,`franchiseid`) values (1,1,0,'2015-03-19 15:00:48',2),(2,1,0,'2015-03-19 15:20:17',2),(3,3,0,'2015-03-19 15:20:55',2),(4,3,0,'2015-03-19 15:24:45',2),(5,3,0,'2015-03-19 15:25:09',2),(6,1,0,'2015-03-19 15:26:27',2),(7,1,0,'2015-03-19 15:29:00',2),(8,3,0,'2015-03-19 15:29:31',2),(9,1,0,'2015-03-19 15:29:36',2),(10,2,0,'2015-03-19 15:30:05',2),(11,1,0,'2015-03-19 15:32:58',2),(12,1,0,'2015-03-19 15:33:20',2),(13,3,0,'2015-03-19 15:33:34',2),(14,2,0,'2015-03-19 15:34:03',2),(15,3,0,'2015-03-19 15:34:36',2),(16,3,0,'2015-03-19 15:34:36',2),(17,1,0,'2015-03-19 15:34:49',2),(18,3,0,'2015-03-19 15:40:55',2),(19,2,0,'2015-03-19 15:42:13',2),(20,3,1,'2015-03-19 15:44:22',2),(21,2,1,'2015-03-19 19:22:30',2);
 
 /*Table structure for table `products` */
 
@@ -586,11 +651,11 @@ DROP TABLE IF EXISTS `products`;
 
 CREATE TABLE `products` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
-  `childof` varchar(100) DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `description` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
+  `childof` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 /*Data for the table `products` */
 
@@ -600,17 +665,17 @@ DROP TABLE IF EXISTS `role`;
 
 CREATE TABLE `role` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) DEFAULT NULL,
-  `description` varchar(200) DEFAULT NULL,
+  `name` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `description` varchar(200) CHARACTER SET latin1 DEFAULT NULL,
   `franchiseid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `franchiseid` (`franchiseid`),
   CONSTRAINT `role_ibfk_1` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 
 /*Data for the table `role` */
 
-insert  into `role`(`id`,`name`,`description`,`franchiseid`) values (1,'Manager','1',2),(2,'Owner','Owner',2),(3,'Cleaner','',2),(4,'Editor','',2),(5,'Promoter','',2),(6,'Manager','Manager 1',3),(7,'Owner','Owner',3),(8,'reprt','re',3),(11,'Test','R',4),(12,'Manager','',7);
+insert  into `role`(`id`,`name`,`description`,`franchiseid`) values (1,'Manager','1',2),(2,'Owner','Owner',2),(3,'Cleaner','',2),(4,'Editor','',2),(5,'Promoter','',2),(6,'Manager','Manager 1',3),(7,'Owner','Owner',3),(8,'reprt','re',3),(11,'Test','R',4),(12,'Manager','',7),(13,'Manager','323',10);
 
 /*Table structure for table `rolemodules` */
 
@@ -629,11 +694,11 @@ CREATE TABLE `rolemodules` (
   CONSTRAINT `rolemodules_ibfk_1` FOREIGN KEY (`roleid`) REFERENCES `role` (`id`),
   CONSTRAINT `rolemodules_ibfk_2` FOREIGN KEY (`moduleid`) REFERENCES `modules` (`id`),
   CONSTRAINT `rolemodules_ibfk_3` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=86 DEFAULT CHARSET=utf8;
 
 /*Data for the table `rolemodules` */
 
-insert  into `rolemodules`(`id`,`roleid`,`moduleid`,`isallow`,`franchiseid`) values (9,7,5,1,2),(10,7,7,1,2),(35,1,1,1,3),(36,1,2,1,3),(37,1,3,1,3),(38,1,4,1,3),(39,1,5,1,3),(40,1,6,1,3),(41,1,7,1,3),(42,1,8,1,3),(43,1,9,1,3),(44,1,10,1,3),(45,2,2,1,3),(46,2,3,1,3),(47,2,4,1,3),(48,2,5,1,3),(49,2,6,1,3),(50,2,7,1,3),(51,2,9,1,3),(52,2,10,1,3),(58,4,10,1,3),(60,6,4,1,3),(61,6,5,1,3),(62,6,6,1,3),(63,6,12,1,3),(64,7,5,1,3),(65,7,6,1,3),(66,7,7,1,3),(67,7,12,1,3),(68,8,10,1,3),(69,8,12,1,3);
+insert  into `rolemodules`(`id`,`roleid`,`moduleid`,`isallow`,`franchiseid`) values (9,7,5,1,2),(10,7,7,1,2),(35,1,1,1,3),(36,1,2,1,3),(37,1,3,1,3),(38,1,4,1,3),(39,1,5,1,3),(40,1,6,1,3),(41,1,7,1,3),(42,1,8,1,3),(43,1,9,1,3),(44,1,10,1,3),(45,2,2,1,3),(46,2,3,1,3),(47,2,4,1,3),(48,2,5,1,3),(49,2,6,1,3),(50,2,7,1,3),(51,2,9,1,3),(52,2,10,1,3),(58,4,10,1,3),(60,6,4,1,3),(61,6,5,1,3),(62,6,6,1,3),(63,6,12,1,3),(64,7,5,1,3),(65,7,6,1,3),(66,7,7,1,3),(67,7,12,1,3),(68,8,10,1,3),(69,8,12,1,3),(70,1,1,1,2),(71,1,2,1,2),(72,1,3,1,2),(73,1,4,1,2),(74,1,5,1,2),(75,1,6,1,2),(76,1,7,1,2),(77,1,8,1,2),(78,1,9,1,2),(79,1,10,1,2),(80,1,11,1,2),(81,1,12,1,2),(82,1,13,1,2),(83,1,14,1,2),(84,1,15,1,2),(85,1,16,1,2);
 
 /*Table structure for table `schedule` */
 
@@ -644,7 +709,7 @@ CREATE TABLE `schedule` (
   `employeeid` int(11) DEFAULT NULL,
   `createdby` time DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
-  `title` varchar(50) DEFAULT NULL,
+  `title` varchar(50) CHARACTER SET latin1 DEFAULT NULL,
   `jobtypeid` int(11) DEFAULT NULL,
   `schedulegroupid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -653,11 +718,11 @@ CREATE TABLE `schedule` (
   KEY `jobtypeid` (`jobtypeid`),
   CONSTRAINT `schedule_ibfk_2` FOREIGN KEY (`branchid`) REFERENCES `branches` (`id`),
   CONSTRAINT `schedule_ibfk_3` FOREIGN KEY (`jobtypeid`) REFERENCES `jobtypes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=422 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=445 DEFAULT CHARSET=utf8;
 
 /*Data for the table `schedule` */
 
-insert  into `schedule`(`id`,`employeeid`,`createdby`,`branchid`,`title`,`jobtypeid`,`schedulegroupid`) values (409,83,'00:20:15',5,NULL,25,153),(410,9,'00:20:15',5,NULL,23,153),(411,9,'00:20:15',5,NULL,23,153),(419,9,'00:20:15',5,NULL,2,154),(420,83,'00:20:15',5,NULL,24,154);
+insert  into `schedule`(`id`,`employeeid`,`createdby`,`branchid`,`title`,`jobtypeid`,`schedulegroupid`) values (434,0,'00:20:15',5,NULL,23,161),(435,0,'00:20:15',5,NULL,23,161),(436,0,'00:20:15',5,NULL,26,161),(437,0,'00:20:15',5,NULL,1,161),(440,9,'00:20:15',5,NULL,23,162),(441,0,'00:20:15',5,NULL,24,163),(442,0,'00:20:15',5,NULL,24,163),(443,0,'00:20:15',5,NULL,26,164),(444,0,'00:20:15',5,NULL,23,165);
 
 /*Table structure for table `schedulegroup` */
 
@@ -665,16 +730,17 @@ DROP TABLE IF EXISTS `schedulegroup`;
 
 CREATE TABLE `schedulegroup` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `title` varchar(100) COLLATE latin1_danish_ci DEFAULT NULL,
+  `title` varchar(100) CHARACTER SET latin1 COLLATE latin1_danish_ci DEFAULT NULL,
   `isdelete` tinyint(2) DEFAULT NULL,
   `isdeleted` int(11) unsigned DEFAULT NULL,
   `branchid` int(11) DEFAULT NULL,
+  `createdon` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=155 DEFAULT CHARSET=latin1 COLLATE=latin1_danish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=166 DEFAULT CHARSET=utf8;
 
 /*Data for the table `schedulegroup` */
 
-insert  into `schedulegroup`(`id`,`title`,`isdelete`,`isdeleted`,`branchid`) values (153,'Schedule 1',NULL,0,5),(154,'Schedule 2',NULL,0,5);
+insert  into `schedulegroup`(`id`,`title`,`isdelete`,`isdeleted`,`branchid`,`createdon`) values (161,'s',NULL,0,5,NULL),(162,'Test',NULL,0,5,NULL),(163,'ABD',NULL,0,5,NULL),(164,'abc',NULL,0,5,'2015-03-09 06:39:34'),(165,'This is testing large title ignore this',NULL,0,5,'2015-03-09 08:33:09');
 
 /*Table structure for table `scheduletiming` */
 
@@ -683,16 +749,16 @@ DROP TABLE IF EXISTS `scheduletiming`;
 CREATE TABLE `scheduletiming` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `dayid` int(11) DEFAULT NULL,
-  `start` varchar(20) DEFAULT NULL,
-  `end` varchar(20) DEFAULT NULL,
+  `start` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `end` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `scheduleid` int(11) DEFAULT NULL,
   `ischanged` tinyint(2) DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2174 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2326 DEFAULT CHARSET=utf8;
 
 /*Data for the table `scheduletiming` */
 
-insert  into `scheduletiming`(`id`,`dayid`,`start`,`end`,`scheduleid`,`ischanged`) values (2025,20150228,'00:30','17:00',409,0),(2026,20150224,'00:30','17:00',410,0),(2027,20150223,'00:30','17:00',411,0),(2028,20150226,'00:30','17:00',411,0),(2029,20150228,'00:30','17:00',411,0),(2126,20150224,'00:30','17:00',419,0),(2127,20150225,'00:30','17:00',419,0),(2128,20150226,'00:30','17:00',419,0),(2129,20150227,'00:30','17:00',419,0),(2130,20150228,'00:30','17:00',419,0),(2131,20150301,'00:30','17:00',419,0),(2132,20150302,'00:30','17:00',419,0),(2133,20150303,'00:30','17:00',419,0),(2134,20150304,'00:30','17:00',419,0),(2135,20150305,'00:30','17:00',419,0),(2136,20150306,'00:30','17:00',419,0),(2137,20150307,'00:30','17:00',419,0),(2138,20150308,'00:30','17:00',419,0),(2139,20150309,'00:30','17:00',419,0),(2140,20150310,'00:30','17:00',419,0),(2141,20150311,'00:30','17:00',419,0),(2142,20150312,'00:30','17:00',419,0),(2143,20150313,'00:30','17:00',419,0),(2144,20150314,'00:30','17:00',419,0),(2145,20150315,'00:30','17:00',419,0),(2146,20150316,'00:30','17:00',419,0),(2147,20150317,'00:30','17:00',419,0),(2148,20150318,'00:30','17:00',419,0),(2149,20150319,'00:30','17:00',419,0),(2150,20150224,'00:30','17:00',420,0),(2151,20150225,'00:30','17:00',420,0),(2152,20150226,'00:30','17:00',420,0),(2153,20150227,'00:30','17:00',420,0),(2154,20150228,'00:30','17:00',420,0),(2155,20150301,'00:30','17:00',420,0),(2156,20150302,'00:30','17:00',420,0),(2157,20150303,'00:30','17:00',420,0),(2158,20150304,'00:30','17:00',420,0),(2159,20150305,'00:30','17:00',420,0),(2160,20150306,'00:30','17:00',420,0),(2161,20150307,'00:30','17:00',420,0),(2162,20150308,'00:30','17:00',420,0),(2163,20150309,'00:30','17:00',420,0),(2164,20150310,'00:30','17:00',420,0),(2165,20150311,'00:30','17:00',420,0),(2166,20150312,'00:30','17:00',420,0),(2167,20150313,'00:30','17:00',420,0),(2168,20150314,'00:30','17:00',420,0),(2169,20150315,'00:30','17:00',420,0),(2170,20150316,'00:30','17:00',420,0),(2171,20150317,'00:30','17:00',420,0),(2172,20150318,'00:30','17:00',420,0),(2173,20150319,'00:30','17:00',420,0);
+insert  into `scheduletiming`(`id`,`dayid`,`start`,`end`,`scheduleid`,`ischanged`) values (2270,20150226,'09:00','17:00',434,0),(2271,20150227,'09:00','17:00',434,0),(2272,20150226,'09:00','17:00',435,0),(2273,20150227,'09:00','17:00',435,0),(2274,20150226,'09:00','17:00',436,0),(2275,20150227,'09:00','17:00',436,0),(2276,20150226,'09:00','17:00',437,0),(2277,20150227,'09:00','17:00',437,0),(2290,20150303,'10:00','16:00',440,0),(2291,20150304,'09:00','12:30',440,0),(2292,20150305,'09:00','16:00',440,0),(2293,20150306,'11:00','18:00',440,0),(2294,20150309,'10:00','15:00',440,0),(2295,20150310,'10:00','16:00',440,0),(2296,20150311,'09:00','12:30',440,0),(2297,20150312,'09:00','16:00',440,0),(2298,20150313,'11:00','18:00',440,0),(2299,20150316,'10:00','15:00',440,0),(2300,20150317,'10:00','16:00',440,0),(2301,20150318,'09:00','12:30',440,0),(2302,20150319,'09:00','16:00',440,0),(2303,20150320,'11:00','18:00',440,0),(2304,20150323,'10:00','15:00',440,0),(2305,20150324,'10:00','16:00',440,0),(2306,20150325,'09:00','12:30',440,0),(2307,20150326,'09:00','16:00',440,0),(2308,20150327,'11:00','18:00',440,0),(2309,20150330,'10:00','15:00',440,0),(2310,20150331,'10:00','16:00',440,0),(2311,20150401,'09:00','12:30',440,0),(2312,20150305,'09:00','18:00',441,0),(2313,20150306,'09:00','18:00',441,0),(2314,20150305,'09:00','18:00',442,0),(2315,20150306,'09:00','18:00',442,0),(2316,20150309,'09:00','18:00',443,0),(2317,20150310,'09:00','18:00',443,0),(2318,20150311,'09:00','18:00',443,0),(2319,20150308,'09:00','18:00',444,0),(2320,20150309,'09:00','18:00',444,0),(2321,20150310,'09:00','18:00',444,0),(2322,20150311,'09:00','18:00',444,0),(2323,20150312,'09:00','18:00',444,0),(2324,20150313,'09:00','18:00',444,0),(2325,20150314,'09:00','18:00',444,0);
 
 /*Table structure for table `services` */
 
@@ -700,28 +766,28 @@ DROP TABLE IF EXISTS `services`;
 
 CREATE TABLE `services` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(100) NOT NULL,
-  `comments` text NOT NULL,
+  `name` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `comments` text CHARACTER SET latin1 NOT NULL,
   `createdby` int(11) NOT NULL,
   `isdeleted` tinyint(2) NOT NULL,
   `createdon` datetime NOT NULL,
   `franchiseid` int(11) NOT NULL,
-  `type` varchar(50) NOT NULL,
+  `type` varchar(50) CHARACTER SET latin1 NOT NULL,
   `time` tinyint(2) DEFAULT NULL,
-  `price` varchar(20) DEFAULT NULL,
+  `price` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `jobtypeid` int(11) DEFAULT NULL,
   `isactivated` int(11) unsigned DEFAULT NULL,
-  `color` varchar(20) DEFAULT NULL,
+  `color` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `jobtypeid` (`jobtypeid`),
   KEY `services_ibfk_1` (`franchiseid`),
   CONSTRAINT `services_ibfk_1` FOREIGN KEY (`franchiseid`) REFERENCES `franchises` (`id`),
   CONSTRAINT `services_ibfk_2` FOREIGN KEY (`jobtypeid`) REFERENCES `jobtypes` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8;
 
 /*Data for the table `services` */
 
-insert  into `services`(`id`,`name`,`comments`,`createdby`,`isdeleted`,`createdon`,`franchiseid`,`type`,`time`,`price`,`jobtypeid`,`isactivated`,`color`) values (16,'s','',4,0,'2015-02-09 00:00:00',4,'bookable',15,'2',12,1,'#333333'),(26,'s','s',2,0,'2015-02-10 00:00:00',2,'bookable',122,'22',2,1,'#333333'),(27,'abc','test',4,0,'2015-02-12 00:00:00',4,'bookable',21,'22',21,1,'#30e986'),(28,'abd','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(29,'s','',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(30,'s','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(31,'sss','test',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(32,'ss','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(33,'sssss','ss',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(34,'ffff','',2,0,'2015-02-17 00:00:00',2,'non bookable',22,'2',NULL,1,'#333333');
+insert  into `services`(`id`,`name`,`comments`,`createdby`,`isdeleted`,`createdon`,`franchiseid`,`type`,`time`,`price`,`jobtypeid`,`isactivated`,`color`) values (16,'s','',4,0,'2015-02-09 00:00:00',4,'bookable',15,'2',12,1,'#333333'),(26,'s','s',2,0,'2015-02-10 00:00:00',2,'bookable',122,'22',2,1,'#333333'),(27,'abc','test',4,0,'2015-02-12 00:00:00',4,'bookable',21,'22',21,1,'#30e986'),(28,'abd','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(29,'s','',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(30,'s','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(31,'sss','test',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(32,'ss','s',2,0,'2015-02-17 00:00:00',2,'bookable',22,'22',NULL,1,'#333333'),(33,'Testing Service 1','ss',2,0,'2015-03-06 00:00:00',2,'bookable',22,'22',NULL,1,'#aad119'),(34,'Test 123','',2,0,'2015-03-06 00:00:00',2,'non bookable',45,'2',NULL,1,'#2219fa'),(35,'t','',10,0,'2015-02-25 00:00:00',10,'bookable',21,'22',NULL,1,'#333333');
 
 /*Table structure for table `servicesjobtypes` */
 
@@ -734,11 +800,11 @@ CREATE TABLE `servicesjobtypes` (
   `franchiseid` int(11) DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=55 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8;
 
 /*Data for the table `servicesjobtypes` */
 
-insert  into `servicesjobtypes`(`id`,`jobtypeid`,`serviceid`,`franchiseid`,`isdeleted`) values (41,26,33,2,NULL),(42,23,33,2,NULL),(43,28,33,2,NULL),(44,24,33,2,NULL),(45,1,33,2,NULL),(46,2,33,2,NULL),(47,25,33,2,NULL),(48,27,33,2,NULL),(49,27,28,2,NULL),(51,28,34,2,NULL),(52,24,34,2,NULL),(53,1,34,2,NULL),(54,27,34,2,NULL);
+insert  into `servicesjobtypes`(`id`,`jobtypeid`,`serviceid`,`franchiseid`,`isdeleted`) values (49,27,28,2,NULL),(55,27,35,10,NULL),(74,26,33,2,NULL),(75,23,33,2,NULL),(76,24,33,2,NULL),(77,1,33,2,NULL),(78,2,33,2,NULL),(79,25,33,2,NULL),(80,24,34,2,NULL),(81,1,34,2,NULL);
 
 /*Table structure for table `timings` */
 
@@ -746,20 +812,20 @@ DROP TABLE IF EXISTS `timings`;
 
 CREATE TABLE `timings` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `opened` varchar(20) DEFAULT NULL,
-  `closed` varchar(20) DEFAULT NULL,
+  `opened` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
+  `closed` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   `isdeleted` tinyint(2) DEFAULT NULL,
   `createdon` datetime DEFAULT NULL,
   `branchid` int(11) NOT NULL,
-  `day` varchar(20) DEFAULT NULL,
+  `day` varchar(20) CHARACTER SET latin1 DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `branchid` (`branchid`),
   CONSTRAINT `timings_ibfk_1` FOREIGN KEY (`branchid`) REFERENCES `branches` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=440 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=489 DEFAULT CHARSET=utf8;
 
 /*Data for the table `timings` */
 
-insert  into `timings`(`id`,`opened`,`closed`,`isdeleted`,`createdon`,`branchid`,`day`) values (45,'9:00','17:00',0,'2015-01-28 00:00:00',8,'monday'),(46,'9:00','17:00',0,'2015-01-28 00:00:00',8,'tuesday'),(47,'9:00','17:00',0,'2015-01-28 00:00:00',8,'wensday'),(48,'9:00','17:00',0,'2015-01-28 00:00:00',8,'thursday'),(49,'9:00','17:00',0,'2015-01-28 00:00:00',8,'friday'),(50,'9:00','17:00',0,'2015-01-28 00:00:00',9,'monday'),(51,'9:00','17:00',0,'2015-01-28 00:00:00',9,'tuesday'),(52,'9:00','17:00',0,'2015-01-28 00:00:00',9,'wensday'),(53,'9:00','17:00',0,'2015-01-28 00:00:00',9,'thursday'),(54,'9:00','17:00',0,'2015-01-28 00:00:00',9,'friday'),(55,'9:00','17:00',0,'2015-01-28 00:00:00',9,'saturday'),(56,'9:00','17:00',0,'2015-01-28 00:00:00',9,'sunday'),(133,'9:00','17:00',0,'2015-02-02 00:00:00',10,'monday'),(134,'9:00','17:00',0,'2015-02-02 00:00:00',10,'tuesday'),(135,'9:00','17:00',0,'2015-02-02 00:00:00',10,'wensday'),(136,'9:00','17:00',0,'2015-02-02 00:00:00',10,'thursday'),(137,'9:00','17:00',0,'2015-02-02 00:00:00',10,'friday'),(138,'9:00','17:00',0,'2015-02-02 00:00:00',10,'saturday'),(139,'9:00','17:00',0,'2015-02-02 00:00:00',10,'sunday'),(154,'13:00','16:30',0,'2015-02-04 00:00:00',7,'monday'),(155,'9:00','17:00',0,'2015-02-04 00:00:00',7,'tuesday'),(156,'9:00','17:00',0,'2015-02-04 00:00:00',7,'wensday'),(157,'9:00','17:00',0,'2015-02-04 00:00:00',7,'thursday'),(158,'9:00','17:00',0,'2015-02-04 00:00:00',7,'friday'),(159,'9:00','17:00',0,'2015-02-04 00:00:00',7,'saturday'),(160,'9:00','17:00',0,'2015-02-04 00:00:00',7,'sunday'),(175,'9:00','17:00',0,'2015-02-09 00:00:00',6,'monday'),(176,'9:00','17:00',0,'2015-02-09 00:00:00',6,'tuesday'),(177,'9:00','17:00',0,'2015-02-09 00:00:00',6,'wensday'),(178,'9:00','17:00',0,'2015-02-09 00:00:00',6,'thursday'),(179,'9:00','17:00',0,'2015-02-09 00:00:00',6,'friday'),(180,'9:00','17:00',0,'2015-02-09 00:00:00',6,'saturday'),(181,'9:00','17:00',0,'2015-02-09 00:00:00',6,'sunday'),(189,'9:00','17:00',0,'2015-02-09 00:00:00',14,'monday'),(190,'9:00','17:00',0,'2015-02-09 00:00:00',14,'tuesday'),(191,'9:00','17:00',0,'2015-02-09 00:00:00',14,'wensday'),(192,'9:00','17:00',0,'2015-02-09 00:00:00',14,'thursday'),(193,'9:00','17:00',0,'2015-02-09 00:00:00',14,'friday'),(194,'9:00','17:00',0,'2015-02-09 00:00:00',14,'saturday'),(195,'9:00','17:00',0,'2015-02-09 00:00:00',14,'sunday'),(196,'9:00','17:00',0,'2015-02-09 00:00:00',15,'monday'),(197,'9:00','17:00',0,'2015-02-09 00:00:00',15,'tuesday'),(198,'9:00','17:00',0,'2015-02-09 00:00:00',15,'wensday'),(199,'9:00','17:00',0,'2015-02-09 00:00:00',15,'thursday'),(200,'9:00','17:00',0,'2015-02-09 00:00:00',15,'friday'),(201,'9:00','17:00',0,'2015-02-09 00:00:00',15,'saturday'),(202,'9:00','17:00',0,'2015-02-09 00:00:00',15,'sunday'),(203,'9:00','17:00',0,'2015-02-09 00:00:00',16,'monday'),(204,'9:00','17:00',0,'2015-02-09 00:00:00',16,'tuesday'),(205,'9:00','17:00',0,'2015-02-09 00:00:00',16,'wensday'),(206,'9:00','17:00',0,'2015-02-09 00:00:00',16,'thursday'),(207,'9:00','17:00',0,'2015-02-09 00:00:00',16,'friday'),(208,'9:00','17:00',0,'2015-02-09 00:00:00',16,'saturday'),(209,'9:00','17:00',0,'2015-02-09 00:00:00',16,'sunday'),(301,'9:00','17:00',0,'2015-02-10 00:00:00',30,'monday'),(302,'9:00','17:00',0,'2015-02-10 00:00:00',30,'tuesday'),(303,'9:00','17:00',0,'2015-02-10 00:00:00',30,'wensday'),(304,'9:00','17:00',0,'2015-02-10 00:00:00',30,'thursday'),(305,'9:00','17:00',0,'2015-02-10 00:00:00',30,'friday'),(306,'9:00','17:00',0,'2015-02-10 00:00:00',30,'saturday'),(307,'9:00','17:00',0,'2015-02-10 00:00:00',30,'sunday'),(308,'9:00','17:00',0,'2015-02-10 00:00:00',31,'monday'),(309,'9:00','17:00',0,'2015-02-10 00:00:00',31,'tuesday'),(310,'9:00','17:00',0,'2015-02-10 00:00:00',31,'wensday'),(311,'9:00','17:00',0,'2015-02-10 00:00:00',31,'thursday'),(312,'9:00','17:00',0,'2015-02-10 00:00:00',31,'friday'),(313,'9:00','17:00',0,'2015-02-10 00:00:00',31,'saturday'),(314,'9:00','17:00',0,'2015-02-10 00:00:00',31,'sunday'),(329,'9:00','17:00',0,'2015-02-10 00:00:00',32,'monday'),(330,'9:00','17:00',0,'2015-02-10 00:00:00',32,'tuesday'),(331,'9:00','17:00',0,'2015-02-10 00:00:00',32,'wensday'),(332,'9:00','17:00',0,'2015-02-10 00:00:00',32,'thursday'),(333,'9:00','17:00',0,'2015-02-10 00:00:00',32,'friday'),(334,'9:00','17:00',0,'2015-02-10 00:00:00',32,'saturday'),(335,'9:00','17:00',0,'2015-02-10 00:00:00',32,'sunday'),(336,'9:00','17:00',0,'2015-02-10 00:00:00',33,'monday'),(337,'9:00','17:00',0,'2015-02-10 00:00:00',33,'tuesday'),(338,'9:00','17:00',0,'2015-02-10 00:00:00',33,'wensday'),(339,'9:00','17:00',0,'2015-02-10 00:00:00',33,'thursday'),(340,'9:00','17:00',0,'2015-02-10 00:00:00',33,'friday'),(341,'9:00','17:00',0,'2015-02-10 00:00:00',33,'saturday'),(342,'9:00','17:00',0,'2015-02-10 00:00:00',33,'sunday'),(343,'9:00','17:00',0,'2015-02-11 00:00:00',34,'monday'),(344,'9:00','17:00',0,'2015-02-11 00:00:00',34,'tuesday'),(345,'9:00','17:00',0,'2015-02-11 00:00:00',34,'wensday'),(346,'9:00','17:00',0,'2015-02-11 00:00:00',34,'thursday'),(347,'9:00','17:00',0,'2015-02-11 00:00:00',34,'friday'),(348,'9:00','17:00',0,'2015-02-11 00:00:00',34,'saturday'),(349,'9:00','17:00',0,'2015-02-11 00:00:00',34,'sunday'),(350,'9:00','17:00',0,'2015-02-11 00:00:00',35,'monday'),(351,'9:00','17:00',0,'2015-02-11 00:00:00',35,'tuesday'),(352,'9:00','17:00',0,'2015-02-11 00:00:00',35,'wensday'),(353,'9:00','17:00',0,'2015-02-11 00:00:00',35,'thursday'),(354,'9:00','17:00',0,'2015-02-11 00:00:00',35,'friday'),(355,'9:00','17:00',0,'2015-02-11 00:00:00',35,'saturday'),(356,'9:00','17:00',0,'2015-02-11 00:00:00',35,'sunday'),(357,'9:00','17:00',0,'2015-02-11 00:00:00',36,'monday'),(358,'9:00','17:00',0,'2015-02-11 00:00:00',36,'tuesday'),(359,'9:00','17:00',0,'2015-02-11 00:00:00',36,'wensday'),(360,'9:00','17:00',0,'2015-02-11 00:00:00',36,'thursday'),(361,'9:00','17:00',0,'2015-02-11 00:00:00',36,'friday'),(362,'9:00','17:00',0,'2015-02-11 00:00:00',36,'saturday'),(363,'9:00','17:00',0,'2015-02-11 00:00:00',36,'sunday'),(364,'9:00','17:00',0,'2015-02-11 00:00:00',29,'monday'),(365,'9:00','17:00',0,'2015-02-11 00:00:00',29,'tuesday'),(366,'9:00','17:00',0,'2015-02-11 00:00:00',29,'wensday'),(367,'9:00','17:00',0,'2015-02-11 00:00:00',29,'thursday'),(368,'9:00','17:00',0,'2015-02-11 00:00:00',29,'friday'),(369,'9:00','17:00',0,'2015-02-11 00:00:00',29,'saturday'),(370,'9:00','17:00',0,'2015-02-11 00:00:00',29,'sunday'),(371,'9:00','17:00',0,'2015-02-11 00:00:00',46,'monday'),(372,'9:00','17:00',0,'2015-02-11 00:00:00',46,'tuesday'),(373,'9:00','17:00',0,'2015-02-11 00:00:00',46,'wensday'),(374,'9:00','17:00',0,'2015-02-11 00:00:00',46,'thursday'),(375,'9:00','17:00',0,'2015-02-11 00:00:00',46,'friday'),(376,'9:00','17:00',0,'2015-02-11 00:00:00',46,'saturday'),(377,'9:00','17:00',0,'2015-02-11 00:00:00',46,'sunday'),(378,'9:00','17:00',0,'2015-02-13 00:00:00',49,'monday'),(379,'9:00','17:00',0,'2015-02-13 00:00:00',49,'tuesday'),(380,'9:00','17:00',0,'2015-02-13 00:00:00',49,'wensday'),(381,'9:00','17:00',0,'2015-02-13 00:00:00',49,'thursday'),(382,'9:00','17:00',0,'2015-02-13 00:00:00',49,'friday'),(383,'9:00','17:00',0,'2015-02-13 00:00:00',49,'saturday'),(384,'9:00','17:00',0,'2015-02-13 00:00:00',49,'sunday'),(433,'00:30','17:00',0,'2015-02-23 00:00:00',5,'monday'),(434,'00:30','17:00',0,'2015-02-23 00:00:00',5,'tuesday'),(435,'00:30','17:00',0,'2015-02-23 00:00:00',5,'wednesday'),(436,'00:30','17:00',0,'2015-02-23 00:00:00',5,'thursday'),(437,'00:30','17:00',0,'2015-02-23 00:00:00',5,'friday'),(438,'00:30','17:00',0,'2015-02-23 00:00:00',5,'saturday'),(439,'00:30','17:00',0,'2015-02-23 00:00:00',5,'sunday');
+insert  into `timings`(`id`,`opened`,`closed`,`isdeleted`,`createdon`,`branchid`,`day`) values (468,'09:00','17:00',0,'2015-02-26 00:00:00',52,'monday'),(469,'09:00','17:00',0,'2015-02-26 00:00:00',52,'tuesday'),(470,'09:00','17:00',0,'2015-02-26 00:00:00',52,'wednesday'),(471,'09:00','17:00',0,'2015-02-26 00:00:00',52,'thursday'),(472,'09:00','17:00',0,'2015-02-26 00:00:00',52,'friday'),(473,'09:00','17:00',0,'2015-02-26 00:00:00',52,'saturday'),(474,'09:00','17:00',0,'2015-02-26 00:00:00',52,'sunday'),(475,'09:00','18:00',0,'2015-03-02 00:00:00',5,'monday'),(476,'09:00','18:00',0,'2015-03-02 00:00:00',5,'tuesday'),(477,'09:00','18:00',0,'2015-03-02 00:00:00',5,'wednesday'),(478,'09:00','18:00',0,'2015-03-02 00:00:00',5,'thursday'),(479,'09:00','18:00',0,'2015-03-02 00:00:00',5,'friday'),(480,'09:00','18:00',0,'2015-03-02 00:00:00',5,'saturday'),(481,'09:00','18:00',0,'2015-03-02 00:00:00',5,'sunday'),(482,'09:00','18:00',0,'2015-03-18 00:00:00',9,'monday'),(483,'09:00','18:00',0,'2015-03-18 00:00:00',9,'tuesday'),(484,'09:00','18:00',0,'2015-03-18 00:00:00',9,'wednesday'),(485,'09:00','18:00',0,'2015-03-18 00:00:00',9,'thursday'),(486,'09:00','18:00',0,'2015-03-18 00:00:00',9,'friday'),(487,'09:00','18:00',0,'2015-03-18 00:00:00',9,'saturday'),(488,'09:00','18:00',0,'2015-03-18 00:00:00',9,'sunday');
 
 /*Table structure for table `users` */
 

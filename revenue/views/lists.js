@@ -5,7 +5,8 @@ define(['text!revenue/tpl/lists.html','revenue/collections/revenues','revenue/vi
 			tagName:"div",
 			className:"col-lg-12 ",
 			events:{
-			 
+			  "change #ddlservices":"changeListing",
+			  "change #ddlemployees":"changeListing"
 			},
             initialize: function () {
 				this.template = _.template(template);
@@ -20,6 +21,8 @@ define(['text!revenue/tpl/lists.html','revenue/collections/revenues','revenue/vi
 				this.datesearch = null;
 				this.objRevenues = new ColRevenue();
 				this.render();
+				this.fetchServices();
+				this.fetchEmployees();
 				
 			}, 
 			render: function () { 
@@ -51,13 +54,32 @@ define(['text!revenue/tpl/lists.html','revenue/collections/revenues','revenue/vi
                 	);
                 
 			},
-			 
+			changeListing:function(ev){
+				var id = ev.target.value
+				this.serviceid = 0;
+				this.employeeidd = 0;
+				
+				if(id != "0"){
+					if($(ev.target).attr('id') == "ddlemployees"){
+						this.employeeidd = id;
+					}else{
+						this.serviceid = id;
+					}
+				}
+				this.fetchRevenue();
+			},
 			fetchRevenue:function(offset){ 
 				var that = this;
 				var _data = {}; 
+				  if(this.serviceid){
+					  _data['serviceid'] = this.serviceid;
+				  }
+				  if(this.employeeidd){
+					  _data['employeeid'] = this.employeeidd;
+				  }
 				 _data['branchid'] = this.branchid;
 				 _data['franchiseid'] = this.franchiseid;  
-				 _data['employeeid'] = this.employeeid; 
+				// _data['employeeid'] = this.employeeid; 
 				 if(that.datesearch){
 					 _data['datesearch'] = this.datesearch;
 				 }
@@ -146,8 +168,30 @@ define(['text!revenue/tpl/lists.html','revenue/collections/revenues','revenue/vi
 	                                that.fetchJobTypes(that.langaugeFilter);
 	                           }, 500); // 2000ms delay, tweak for faster/slower
                             }
-            }  
-           
-            
+            }  ,
+            fetchServices:function(){
+				 var URL = "api/services";
+		         var that = this;
+		         
+		         that.$el.find("#ddlservices").html("<option value='0' data-price = '0' data-time = '0'> Select Service </option>");
+		          jQuery.getJSON(URL,{franchiseid:this.app.user_franchise_id,jobtypeid:this.jobtypeid},  function (tsv, state, xhr) {
+	                var _json = jQuery.parseJSON(xhr.responseText);
+		                 that.$el.find("#ddlservices").append(_.map(_json,function(value,key,list){ return "<option data-price="+value.price+" data-time="+value.time+" value="+value.id+">"+value.name+"</option>";}).join());
+		                 
+		          }); 
+		     },
+		      
+		     fetchEmployees:function(branchid){
+		    	  
+					 var URL = "api/employees";
+					 var that = this;
+					 this.$el.find("#ddlemployees").html("<option value='0'> Select Employee </option>");
+				      jQuery.getJSON(URL,{frachiseid:this.app.user_franchise_id,jobtypeid:this.jobtypeid},  function (tsv, state, xhr) {
+		                var _json = jQuery.parseJSON(xhr.responseText);
+		                that.$el.find("#ddlemployees").append(_.map(_json,function(value,key,list){   
+		                	 return "<option value="+value.id+"  >"+value.firstname + ' ' + value.lastname+  "</option>";
+		                	 }).join());  
+				      });
+		     }
 		});
 	}); 

@@ -1,0 +1,29 @@
+    <%
+    var bk = "background: none repeat scroll 0% 0% rgb(255, 255, 255)";
+    if(this.model.get('currentpackage') == "1"){
+      bk="background: none repeat scroll 0% 0% #FFEEFF";    
+ }%>                                     
+<td style="  padding: 15px; <%=bk%>">
+
+	<h4 style="color: #229AD0"><%=this.model.get('name')%> </h4>
+	<p>
+		<ul class="list-inline">
+		    <li><i class="fa fa-map-price fa-muted"></i> Monthly Price: <%=this.model.get('monthlyprice')%></li>
+		    <li><i class="fa fa-sms fa-muted"></i> No Of SMS: <%=this.model.get('sms')%></li>
+		    <li><i class="fa fa-email fa-muted"></i> Email Allowed: <%=this.model.get('email]')%></li>
+		    <li><i class="fa fa-calendar fa-muted"></i> Avail On: <%=this.model.get('createdtime')%></li>
+		</ul>
+	  </p>
+	<div class="pull-right" style="vertical-align: top">  
+                               	<%if(this.model.get('currentpackage') == "1"){%>
+                               	    <label class="label label-warning"> Current </label>
+                               	<%}%>
+                                    
+                                                	 
+
+	</div>
+</td>
+
+                                           		 
+                                                                                         
+                                           

@@ -3,12 +3,12 @@
 
 	<h4 style="color: #229AD0"><%=this.model.get('name')%></h4>
 	<p>
-		<strong> <%= this.model.get('city') + ' ' +
-			this.model.get('zip')%> </strong> <%=this.getStatus()%>
+		<strong> <% if(this.model.get('city') != "null"){%>
+				<%=this.model.get('city') %>    
+				<%=  this.model.get('zip') %>
+			<%}%>
+			</strong> <%=this.getStatus()%>
 	</p>
-
-
-
 	<div class="pull-right" style="vertical-align: top">
 		<a class="btn btn-danger delete-branch btn-sm" style="color: #fff"
 			data-id="<%=this.model.get('id')%>">

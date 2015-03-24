@@ -33,16 +33,22 @@ define(['text!booking/tpl/list.html','app'],
 				var status = $(ev.target).data('status');
 				var URL = "api/bookingstatuschange";
 				var that = this;
-				that.model.set('status',status);
+				///that.model.set('status',status);
 				 $.get(URL, {id:this.model.get('id'),status:status})
                  .done(function(data) {
                       var _json = jQuery.parseJSON(data);
-                     
-                     	that.app.successMessage();
-                     	$('.divshowstatus').hide();
-                     	that.model.set('status',status);
-                     	that.render();
-                     
+                        if(_json.isemployee == "0"){
+                        	swal({
+              			      title: "Error?",
+              			      text: "No employee associated, please associate employee!",
+              			      type: "error",
+              			     })
+                        }else{
+	                     	that.app.successMessage();
+	                     	$('.divshowstatus').hide();
+	                     	that.model.set('status',status);
+	                     	that.render();
+                        }
                  });
 			},
 			changeStatus:function(ev){

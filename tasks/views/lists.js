@@ -23,6 +23,7 @@ define(['text!tasks/tpl/lists.html','tasks/collections/tasks','tasks/views/list'
 			}, 
 			render: function () { 
 				this.$el.html(this.template({}));
+				return;
 				this.app.showLoading('Loading Tasks....',this.$el);
 				//$(window).scroll(_.bind(this.lazyLoading, this));
                // $(window).resize(_.bind(this.lazyLoading, this));

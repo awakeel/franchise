@@ -12,7 +12,8 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							'click .btn-change-employee':'showEmployeeList',
 							'click .btn-change-service':'showServiceList',
 							'change #ddlemployees':'changeBooking',
-							'change #ddlservices':'changeBooking'
+							'change #ddlservices':'changeBooking',
+							'click .send-sms':'sendSMS'
 						},
 						initialize : function() {
 							this.template = _.template(template); 
@@ -20,6 +21,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							this.cloneId = 1;
 							this.model = null;
 							this.branchid = this.app.user_branch_id; 
+							console.log(this.options);
 							this.render();  
 						},
 						showEmployeeList:function(){
@@ -38,6 +40,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							this.getComments();
 							this.getHistory();
 							this.getLogs();
+							this.getSMS();
 						},
 						closeView:function(){
 							var that = this;
@@ -76,6 +79,24 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 			                   })
 			                   that.$el.find("#divlogs").html(str);
 			               
+			                  });
+						},
+						getSMS:function(){
+							var url = "api/getsms";
+							 var that = this; 
+			                  jQuery.getJSON(url,{bookingid:this.options.model.get('id')}, function(tsv, state, xhr) {
+			                   var logs = jQuery.parseJSON(xhr.responseText);
+			                   var mdr = ""; 
+			                   _.each(logs,function(value,key,list){
+			                		 mdr +='<div class="col-lg-12 col-md-12 col-sm-12">';
+				                	    mdr +='<div class="info-container" style="margin-top:20px;">';
+				                	    mdr +='<p><strong> '+value.createdon+'</strong></p>';
+				                	    mdr +='<strong>To:'+that.model.name+'</strong></span></p>';
+				                	    mdr +='<p>'+value.text+'</p></div></div>';
+				                	    	 
+			                   })
+
+	                	    	that.$el.find("#smshistory").prepend(mdr);
 			                  });
 						},
 						getComments:function(){
@@ -152,11 +173,19 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						},
 						updateCustomer:function(){
 							var that = this;
+							this.$el.find('.email-error').addClass('hide');
 							var name =  this.$el.find('#txtname').val();
 							var phone = this.$el.find('#txtphone').val();
 							var email = this.$el.find('#txtemail').val();
+							
+							if(!email || !this.app.IsEmail(email)){
+								this.$el.find('.email-error').removeClass('hide');
+								return false;
+							}
+							this.$el.find('#txtemailcustomer').val(this.model.email);
+							this.$el.find('#lblnamecustomer').html(this.model.name);
 							var id = this.model.customerid;
-							var URL = "api/savcustomer";
+							var URL = "api/savcustomer1";
 							 this.app.showLoading('Wait, Saving info...',this.$el);
 								$.post(URL, {phone:phone,name:name,id:id,email:email})
 				                .done(function(data) { 
@@ -194,6 +223,8 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							this.$el.find('#txtname').val(this.model.name);
 							this.$el.find('#txtphone').val(this.model.phone);
 							this.$el.find('#txtemail').val(this.model.email);
+							this.$el.find('#txtemailcustomer').val(this.model.email);
+							this.$el.find('#lblnamecustomer').html(this.model.name);
 							console.log(this.model);
 							if(this.model.isregistered == "0"){
 								this.$el.find("#isregistered").show();
@@ -207,10 +238,47 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						 	this.$el.find('#pprice').html(this.model.price + "$");
 							this.$el.find('#pdatetime').html(this.model.dayid);
 							this.$el.find('#pbookingtype').html(this.model.bookingtype);
-							 	this.$el.find('#pDatetime').html(this.getDate(this.model.dayid) + ' from '+ this.model.timestart + ' to ' + this.model.timeend); 
+							this.$el.find('#pstatus').html(this.model.status);
+							this.$el.find('#pDatetime').html(this.getDate(this.model.dayid) + ' from '+ this.model.timestart + ' to ' + this.model.timeend); 
 						},
 						getDate:function(date){
 							return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
+						},
+						sendSMS:function(){
+							this.$el.find('.email-error-sms').addClass('hide');
+							this.$el.find('.text-error-sms').addClass('hide');
+							var email = this.$el.find('#txtemailcustomer').val();
+							var bookingid = this.model.bookingid;
+							var customerid = this.model.customerid;
+							if(!this.model.name)
+								this.model.name = "not register";
+							var text = this.$el.find('#txtemailtext').val();
+							if(!email || !this.app.IsEmail(email)){
+								this.$el.find('.email-error-sms').removeClass('hide');
+								return;
+							}
+							if(!text){
+								this.$el.find('.text-error-sms').removeClass('hide');
+								return;
+							}
+							var that = this;
+							 this.app.showLoading('Wait, Sending...',this.$el);
+							 var mdr = "";
+							 var URL = "api/sendsms";
+								$.post(URL, {franchiseid:this.app.user_franchise_id,text:text,customerid:customerid,bookingid:bookingid,email:email})
+				                .done(function(data) { 
+				                	 that.app.showLoading(false,that.$el);
+				                	 that.app.successMessage();
+				                	 
+				                	 mdr +='<div class="col-lg-12 col-md-12 col-sm-12">';
+				                	    mdr +='<div class="info-container" style="margin-top:20px;">';
+				                	    mdr +='<p><strong> Just now</strong></p>';
+				                	    mdr +='<strong>To:'+that.model.name+'</strong></span></p>';
+				                	    mdr +='<p>'+text+'</p></div>';
+				                	    	 
+				                	    	that.$el.find("#smshistory").prepend(mdr);
+				                });
+							
 						},
 						updateComments:function(){
 							var that = this;

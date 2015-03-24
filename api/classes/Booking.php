@@ -9,10 +9,16 @@ class Booking{
     		$app->get('/employeesgetall', function () {
     			$this->getAll(1);
     		});
+    			$app->get('/getsms', function () {
+    				$this->getallSMS();
+    			});
 	    	$app->post('/bookings',function(){
 	    		$request = Slim::getInstance()->request();
 	    		$this->saveBooking($request);
 	    	});
+	    		$app->post('/sendsms', function () {
+	    			$this->sendSMS();
+	    		});
 	    		$app->get('/deletebooking',function(){
 	    			 
 	    			$this->deleteBooking( );
@@ -24,6 +30,54 @@ class Booking{
 	    			
 	    		
 	 }
+ 	  function sendSMS(){ 
+    	 $customerid = @$_POST['customerid'];
+    	 $text = @$_POST['text'];
+    	 $bookingid = @$_POST['bookingid'];
+    	 $email = @$_POST['email'];
+    	  try { 
+	 		$bookingsms = R::dispense( 'bookingsms' );
+	 			 $bookingsms->customerid = $customerid;
+	 			$bookingsms->bookingid = $bookingid;
+	 			$bookingsms->email = $email;
+	 			$bookingsms->text = $text; 
+	 			$bookingsms->createdon = R::isoDateTime();
+	 			$id = R::store($bookingsms);
+    	   } catch(PDOException $e) {
+    		 echo '{"error":{"text":'. $e->getMessage() .'}}';
+    	   } 
+    	   $this->savePackage();
+    	 }
+    	 function savePackage(){
+    	 	$franchiseid = @$_POST['franchiseid'];
+    	 	$sql = "UPDATE franchises SET noofsms = noofsms - 1 WHERE id = $franchiseid";
+    	 	 
+    	 	try {
+    	 		R::exec($sql);
+    	 		echo json_encode(1);
+    	 	} catch(Exception $e) {
+    	 		//error_log($e->getMessage(), 3, '/var/tmp/php.log');
+    	 		echo json_encode(['error'=>$e->getMessage()]);
+    	 	}
+    	 	$this->savePackageHistory();
+    	 
+    	 }
+    	 function getAllSMS() {
+    	 	$bookingid = @$_GET['bookingid'];
+    	 	$sql = "select * from bookingsms where bookingsms.bookingid = $bookingid order by createdon desc";
+    	 	try {
+    	 		$bookings = R::getAll($sql);
+    	 		if (!isset($_GET['callback'])) {
+    	 			echo json_encode($bookings);
+    	 		} else {
+    	 			echo $_GET['callback'] . '(' . json_encode($bookings) . ');';
+    	 		}
+    	 	} catch(PDOException $e) {
+    	 		$error = array("error"=> array("text"=>$e->getMessage()));
+    	 		echo json_encode($error);
+    	 	}
+    	 }
+    	  
 	 function getAllBookings() {
 	 	$branchid = @$_GET['branchid'];
 	 	$search = @$_GET['search'];
@@ -133,12 +187,30 @@ class Booking{
 	 	return $id;
 	 }
 	 function changeStatusBooking(){
+	 	if($this->getBookingById($_GET['id']) == "0" && $_GET['status'] == "Completed"){
+	 		echo json_encode(array("isemployee"=>0));
+	 		return 0 ;
+	 	}
 	 	$customer = R::dispense( 'bookings' );
 	 	$customer->status = $_GET['status'];
 	 	$customer->id = $_GET['id'];
 	 	$id = R::store($customer);
 	 	echo json_encode($id);
 	 } 
+	 function getBookingById( $id){
+	 	$search = "";
+	 	try {
+	 
+	 		$bookings =  R::getCol( 'SELECT employeeid FROM bookings WHERE id = :id',
+	 				[':id' => $id]
+	 		);
+	 		return $bookings[0];
+	 		 
+	 	} catch(PDOException $e) {
+	 		$error = array("error"=> array("text"=>$e->getMessage()));
+	 		echo json_encode($error);
+	 	}
+	 }
 	 function deleteBooking(){
 	 	$id = $_GET['id'];
 	 	$sql = "delete from bookings where id=$id";

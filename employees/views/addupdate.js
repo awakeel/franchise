@@ -453,7 +453,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 						this.$el.find('.firstname-error').removeClass('hide');
 						return false;
 					}
-					if(!_e || !this.app.IsEmail(_e)){
+					if(_e && !this.app.IsEmail(_e)){
 						this.$el.find('.email-error').removeClass('hide');
 						return false;
 					}

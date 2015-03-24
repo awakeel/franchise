@@ -8,12 +8,12 @@ class Customers
 	    	});
     		$app->post('/customers',function(){
 	    		$request = Slim::getInstance()->request();
-	    		$this->saveCustomer($request);
+	    		$this->saveCustomer1($request);
     		});
     			$app->get('/bookingbyid', function () {
     				$this->getAllBookings();
     			});
-    			$app->post('/savcustomer', function () {
+    			$app->post('/savcustomer1', function () {
     				$this->saveCustomer();
     			});
     			$app->post('/changebooking', function () {
@@ -101,7 +101,7 @@ class Customers
     		echo json_encode($error);
     	}
     }
-    function saveCustomer($request){
+    function saveCustomer1($request){
     	 
     		$params = json_decode($request->getBody());
     		try {
@@ -241,7 +241,7 @@ class Customers
     	  			}
     	  			}
     	  			function saveCustomer(){
-    		$id = @$_POST['customerid'];
+    		$id = @$_POST['id'];
     	$name = @$_POST['name'];
     	$email = @$_POST['email'];
     	$phone = @$_POST['phone'];

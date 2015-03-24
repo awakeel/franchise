@@ -130,6 +130,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 						}, 	
 						closeView:function() {
 							this.$el.find('.modal').modal('hide'); 
+							this.options.page.render();
 							this.$el.remove();
 						},
 						clearErrorFilter:function() {
@@ -153,6 +154,7 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 							var email = this.$el.find("#txtemail").val();
 							var phone = this.$el.find("#txtphone").val();
 							var status = "Present";
+							
 							this.app.showLoading('Wait a moment....', this.$el );
 							this.objBookingModel.set('employeeid', employeeid);
 							this.objBookingModel.set('jobtypeid', this.jobtypeid);
@@ -195,12 +197,18 @@ define([ 'text!booking/tpl/newbooking.html','booking/models/booking','timepick',
 						  			    },
 						  			    function(isConfirm) {
 						  			    	if(isConfirm){
+						  			    		
 						  			    		that.saveConfirmed();
 						  			    	}else{
-						  			    		
+						  			    		if(!email || !this.app.IsEmail(email)){
+													that.$el.find('.email-error').removeClass('hide');
+													return false;
+												}
+						  			    		that.saveConfirmed();
 						  			    	}
 						  			    })
 							}else{
+								 
 								that.saveConfirmed();
 							}
 							

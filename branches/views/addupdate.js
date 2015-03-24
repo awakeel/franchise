@@ -205,6 +205,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 				this.$el.find('.top-info').html(txt);
 			},
 			saveBasicInfo:function(id){
+				this.fillDepartments();
 				//this.app.showLoading('Saving information....',this.$el);
 				//this.clearFormInput();
 				//var name = this.$el.find('#txtname').val();

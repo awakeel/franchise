@@ -45,6 +45,9 @@
 											</div>
 											<div class="feaild_container">
 												<div class="form-group">
+												<span
+														class="help-block email-error hide"><i
+														class="fa fa-warning"></i>Please enter valid email!</span>
 													<label class="col-sm-3 control-label">Email:</label>
 													<div class="col-sm-9">
 														<input type="text" id="txtemail" placeholder="@ "
@@ -135,7 +138,7 @@
 												<div class="form-group">
 													<label class="col-sm-4 control-label">Status:</label>
 													<div class="col-sm-8">
-														<p style="font-size:20px; font-weight:bold;">(<%=this.options.model.get('status')%>)</p>
+														<p style="font-size:20px; font-weight:bold;" id="pstatus">(<%=this.options.model.get('status')%>)</p>
 													</div>
 												</div>
 											</div>
@@ -290,6 +293,9 @@
 
 							<div class="row ">
 								<div class="col-md-9">
+								<span
+				class="help-block comments-error hide"><i
+				class="fa fa-warning"></i>Please enter comments!</span>
 									<textarea placeholder="Placeholder Text" id="txtcomments"
 										class="form-control text-feaild"></textarea>
 								</div>
@@ -312,26 +318,25 @@
 							</div>
 						</div>
 						<div id="sms" class="tab-pane fade">
-							<h3>SMS</h3>
-							</br>
+							 
 
 							<div class="row ">
 								<div class="col-sm-6">
-									<input name="" type="checkbox" value=""> Customer: <strong>(Name)</strong>
+									 <label id="lblnamecustomer"></label>
 								</div>
-								<div class="col-sm-6">
-									<input name="" type="checkbox" value=""> Employee: <strong>JOA</strong>
-								</div>
+							 
 								<div class="clearfix"></div>
 								<div class="margin">
 									<div class="col-md-6">
 										<div class="row">
 											<div class="col-md-5">
-												<input name="" type="checkbox" value=""> Enter
-												Mobils No:
+												Email
+												<span
+														class="help-block email-error-sms hide"><i
+														class="fa fa-warning"></i>Please enter valid email!</span>
 											</div>
 											<div class="col-sm-7">
-												<input type="text" id="txtdate" placeholder="Name "
+												<input type="text" id="txtemailcustomer" placeholder="Name "
 													class="form-control text-feaild">
 											</div>
 										</div>
@@ -340,79 +345,19 @@
 									<div class="clearfix"></div>
 									<div class="margin">
 										<div class="col-md-9">
-											<textarea placeholder="Placeholder Text" id="textArea"
+										<span
+														class="help-block email-error-sms hide"><i
+														class="fa fa-warning"></i>Please enter text!</span>
+											<textarea placeholder="Placeholder Text" id="txtemailtext"
 												class="form-control text-feaild"></textarea>
 										</div>
 										<div class="col-md-2 ">
-											<button class="btn btn-green add-new">Send SMS</button>
+											<button class="btn btn-green send-sms">Send SMS</button>
 										</div>
 
 										<div class="clearfix"></div>
-										<div class="history_container">
-											<div class="col-lg-12 col-md-12 col-sm-12">
-												<div class="info-container" style="margin-top: 20px;">
-													<p>
-														<strong>20/01/2015</strong> <span class="pull-right"><strong>To:
-																Customer</strong></span>
-													</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's
-														marfa nulla single-origin coffee squid. Exercitation +1
-														labore velit, blog sartorial PBR leggings next level wes
-														anderson artisan four loko farm-to-table craft beer twee.
-														Qui photo booth letterpress, commodo enim craft beer
-														mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR.
-														Homo nostrud organic, assumenda labore aesthetic magna
-														delectus mollit. Keytar helvetica VHS salvia yr, vero
-														magna velit sapiente labore stumptown. Vegan fanny pack
-														odio cillum wes anderson 8-bit, sustainable jean shorts
-														beard ut DIY ethical culpa terry richardson biodiesel. Art
-														party scenester stumptown, tumblr butcher vero sint qui
-														sapiente accusamus tattooed echo park.</p>
-												</div>
-											</div>
-											<div class="col-lg-12 col-md-12 col-sm-12">
-												<div class="info-container" style="margin-top: 20px;">
-													<p>
-														<strong>20/01/2015</strong> <span class="pull-right"><strong>To:
-																Employee</strong></span>
-													</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's
-														marfa nulla single-origin coffee squid. Exercitation +1
-														labore velit, blog sartorial PBR leggings next level wes
-														anderson artisan four loko farm-to-table craft beer twee.
-														Qui photo booth letterpress, commodo enim craft beer
-														mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR.
-														Homo nostrud organic, assumenda labore aesthetic magna
-														delectus mollit. Keytar helvetica VHS salvia yr, vero
-														magna velit sapiente labore stumptown. Vegan fanny pack
-														odio cillum wes anderson 8-bit, sustainable jean shorts
-														beard ut DIY ethical culpa terry richardson biodiesel. Art
-														party scenester stumptown, tumblr butcher vero sint qui
-														sapiente accusamus tattooed echo park.</p>
-												</div>
-											</div>
-											<div class="col-lg-12 col-md-12 col-sm-12">
-												<div class="info-container" style="margin-top: 20px;">
-													<p>
-														<strong>20/01/2015</strong> <span class="pull-right"><strong>To:
-																Customer</strong></span>
-													</p>
-													<p>Food truck fixie locavore, accusamus mcsweeney's
-														marfa nulla single-origin coffee squid. Exercitation +1
-														labore velit, blog sartorial PBR leggings next level wes
-														anderson artisan four loko farm-to-table craft beer twee.
-														Qui photo booth letterpress, commodo enim craft beer
-														mlkshk aliquip jean shorts ullamco ad vinyl cillum PBR.
-														Homo nostrud organic, assumenda labore aesthetic magna
-														delectus mollit. Keytar helvetica VHS salvia yr, vero
-														magna velit sapiente labore stumptown. Vegan fanny pack
-														odio cillum wes anderson 8-bit, sustainable jean shorts
-														beard ut DIY ethical culpa terry richardson biodiesel. Art
-														party scenester stumptown, tumblr butcher vero sint qui
-														sapiente accusamus tattooed echo park.</p>
-												</div>
-											</div>
-
+										<div id="smshistory" class="history_container">
+											
 										</div>
 										<div class="clearfix"></div>
 									</div>

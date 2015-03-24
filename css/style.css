@@ -5907,6 +5907,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 	display:none;
 	position:absolute;
 	top:30px;
+	z-index:999;
 	border:1px solid #eee; 
 }
 .divshowstatus button{
@@ -5916,3 +5917,28 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 .table{
 	border:1px solid #eee!important;
 } 
+.detail-item{padding:0;margin:0}
+.event-details-label{display:block;clear:left;float:left;font-size:100%;font-weight:bold;padding:3px 0;
+margin:0;width:7em;color:#4e4e4e}
+.event-when,.event-where,.event-description,.event-who,.event-going{
+	display:block;margin-left:7em;padding:3px 0}
+	.detail-content{
+	padding:1em 0}.bubble .details .title{font-weight:bold;font-size:medium}
+	.bubble .detail-content{padding-bottom:0}.bubble .separator{height:1px;line-height:0;font-size:0;width:100%;margin-top:10px;margin-bottom:5px}
+.bubble-top,.bubble-bottom{height:24px;background:#fff}.bubble-top{}.bubble-bottom{}.bubble-mid{background:#fff;padding:0 20px}.prong{width:98px;height:72px;margin-bottom:-72px;position:relative;top:-1px;overflow:hidden}.prong .bubble-sprite{left:-52px;top:-24px}.bubble .event-description{white-space:pre-wrap}.ie .bubble .event-description{white-space:pre;word-wrap:break-word}.bubble-lightbox{background:#666;position:fixed;left:0;top:0;right:0;bottom:0;opacity:.5;filter:alpha(opacity=50)}.te{padding:1px;overflow:hidden;white-space:nowrap;zoom:1}.te-t{font-size:91%;font-family:Arial,sans-serif;font-weight:bold;white-space:nowrap;line-height:1.2}td.te-t{vertical-align:bottom}.te-rev{width:100%}.te-rev-s{width:100%;white-space:nowrap;vertical-align:bottom}.te-rev-spos{position:relative;zoom:1}.te-rev-scont{text-align:left;position:absolute;left:0;width:100%;top:0;overflow:hidden}
+
+
+  .pricing ul.list-group.col-lg-4 > li {
+	  background-color: #c952ca;
+	  color: white;
+	  text-align: center;
+	  font-size:125%;
+  }
+  .pricing ul.list-group.col-lg-4 > li.list-group-item:first-child{
+	  background-color: #64086f;
+	  font-size: 200%; 
+  }
+  .pricing .badge {
+	  background-color: #FAFAD2;
+	  color:#FF8C00;
+  }

@@ -5,7 +5,8 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                 tagName: 'div',
                 events: {
                     'click .dep-change':'changeDepartment',
-                    'click .logout_open': 'logout'
+                    'click .logout_open': 'logout',
+                    'click .change-packages':'changePackages'
                 },
                 initialize: function() { 
                     this.template = _.template(template);
@@ -25,7 +26,15 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
     	                        })
     		            }); 
     				
+    		            
     			},
+    			changePackages:function(){
+    				  var that = this;
+    	              require(['views/pricing'],function(pricing){
+                      	that.$el.find('#pricing').html(new pricing({app:that.app}).$el);
+                      	that.$el.find('#mdlpricing').modal('show');
+                      })
+	         	},
     			changeDepartment:function(ev){
 	    			 var branchid = $(ev.target).data('id');
 	    			 var data = this.app.data;

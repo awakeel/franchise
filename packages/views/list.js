@@ -1,8 +1,8 @@
-define(['text!jobtypes/tpl/list.html','app','swal'],
+define(['text!packages/tpl/list.html','app','swal'],
 	function (template,app,swal) {
 		'use strict';
 		return Backbone.View.extend({  
-			tagName:'tr',
+			tagName:'tr', 
 			events:{
 			 	"click .delete-token":"deleteToken",
 			 	"click .edit-token":"updateToken"
@@ -18,7 +18,12 @@ define(['text!jobtypes/tpl/list.html','app','swal'],
 				this.$el.html(this.template(this.model.toJSON()));
 				
 			},
-			
+			getDate:function(date){
+				return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
+			},
+			getWhen:function( ){
+				return this.getDate(this.model.get('dayid')) +' Time: '+  this.model.get('timestart') + ' - '+  this.model.get('timeend')
+			},
 			deleteToken:function(ev){
 				var that = this;
             	var id = $(ev.target).data('id'); 
@@ -58,11 +63,12 @@ define(['text!jobtypes/tpl/list.html','app','swal'],
                
                  },
                  updateToken:function(ev){
-                	 var that = this;  
-                	 require(['jobtypes/views/addupdate'],function(addupdate){
-                		 that.options.page.$el.html(new addupdate({model:that.model,page:that}).$el);
-                		 	// $("#newjobtypes").modal('show');
-                	})
+                	   var that = this;
+       	              require(['views/pricing'],function(pricing){
+                         	$('#pricing').html(new pricing({app:that.app}).$el);
+                         	$('#mdlpricing').modal('show');
+                         })
+   	         	 
                  },
                  
                  save:function(title,comments,branchid,view){
