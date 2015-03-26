@@ -86,7 +86,7 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				var iterator = 0;
 				var html = "<li class='nav-search'> <span></span> </li>";
 				var which_child = "";
-				if(!this.app.modules || typeof this.app.modules == "undefined"){
+				if(!this.app.modules || typeof this.app.modules[0] == "undefined"){
 					this.getMenu();
 					return false;
 				}

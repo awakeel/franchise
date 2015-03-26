@@ -226,8 +226,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 	   	 		                var l =that.$el.find('.schedule-div:not(:last-child)').length;
 	   	 		                that.$el.find('.schedule-div:not(:last-child)').each(function(index){
 	   	 		                	var data = that.getScheduleTiming($(this));
-	   	 		                	var days = "";
-	   	 		                	l = l + 1;
+	   	 		                	var days = ""; 
 	   	 		                    $(this).find('.timings-div-schedule .days:checked').each(function() {
 							    	 days +=($(this).val())+",";
 							        });
@@ -251,7 +250,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 											that.app.showLoading(false, that.$el.find('.schedule-row')); 
 											l = l - 1;
 											console.log(l);
-											if(l == 0){
+											if(l == 1){
 												that.app.successMessage('Schedule Group Saved Successfully.' );
 											}
 									       	that.closeView();

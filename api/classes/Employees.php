@@ -311,9 +311,10 @@ class Employees
     }
     function deleteEmployee(){
     	 $id = $_GET['id'];
+    	 $fid = $_GET['franchiseid'];
     	 $this->deleteEmployeeJobTypes($id);
     	 $this->deleteEmployeeServices($id);
-    	 $this->deleteEmployeeDepartments($id);
+    	 $this->deleteEmployeeDepartments($id,$fid);
     	$sql = "delete from employees where id=$id ";
     	$this->deleteEmployeeJobTypes($id);
     	$this->deleteEmployeeServices($id);

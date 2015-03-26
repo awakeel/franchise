@@ -35,7 +35,8 @@ define(['text!employees/tpl/list.html','app','swal'],
 			},
 			deleteToken:function(ev){
 				var that = this;
-            	var id = $(ev.target).data('id'); 
+            	var id = this.model.get('id');
+            	var franchiseid = this.model.get('franchiseid');
                 var URL = "api/deleteemployees";
                 swal({
     			      title: "Are you sure?",
@@ -47,7 +48,7 @@ define(['text!employees/tpl/list.html','app','swal'],
     			    },
     			    function(isConfirm) {
     			    	    if (isConfirm) {
-    			    	        jQuery.getJSON(URL, {id:id}, function (tsv, state, xhr) {
+    			    	        jQuery.getJSON(URL, {id:id,franchiseid:that.setting.user_franchise_id}, function (tsv, state, xhr) {
     				                var _json = jQuery.parseJSON(xhr.responseText);
     		                          
     				                if (typeof _json.error == "undefined") {
