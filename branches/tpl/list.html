@@ -13,13 +13,15 @@
 			<%}%> 
 			</strong> <%=this.getStatus()%>
 	</p>
-	<div class="pull-right" style="vertical-align: top">
-		<a class="btn btn-danger delete-branch btn-sm" style="color: #fff"
-			data-id="<%=this.model.get('id')%>">
-			<%=this.setting.language['delete']%></a>
-		<button class="btn btn-info edit-token btn-sm"><%=this.setting.language['edit']%></button>
-		<button class="btn btn-success change-status btn-s1m">
-			<%if(this.model.get('isactivated') == "1"){%> Deactivate <%}else{%>
-			Activate <%}%></button>
+	<div class="col-md-2 pull-right">
+          <div class="icons-container">
+	    <a title="Delete" data-placement="top"  data-id="<%=this.model.get('id')%>" data-toggle="tooltip" class="icons delete-branch"><i class="fa fa-times"></i></a>
+		<a title="Edit" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="tooltip" class="icons  edit-token"><i class="fa fa-edit"></i></a>
+		 	<%if(this.model.get('isactivated') == "1"){%> 
+		 	 <a title="Deactivate" data-placement="top" data-toggle="tooltip" class="icons change-status"><i class="fa fa-unlock"></i></a> 
+		 	 <%}else{%>
+			 <a title="Activate" data-placement="top" data-toggle="tooltip" class="icons change-status"><i class="fa fa-lock"></i></a>
+			 <%}%> 
+			</div>
 	</div>
 </td>

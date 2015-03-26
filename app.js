@@ -109,7 +109,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			if(typeof this.timings  === "undefined"){
 				swal({
 				      title: "Warning?",
-				      text: "No, department selected, would you like to logout!",
+				      text: "Please choose department timing, department have no time defined!",
 				      type: "info" ,
 				   
 				    	  showCancelButton: true,

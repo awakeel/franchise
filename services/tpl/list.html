@@ -7,8 +7,8 @@
                                                  <td><label class="label label-default"><%=this.model.get('type')%></label></td> 
                                                  
                                                 <td width="25%">
-                                                	<a class="btn btn-danger delete-token btn-sm" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info edit btn-sm"><%=this.setting.language['edit']%></button>
-                                                 </td>
+                                                   <a title="Delete" data-placement="top"  data-id="<%=this.model.get('id')%>" data-toggle="tooltip" class="icons delete-token"><i class="fa fa-times"></i></a>
+													<a title="Edit" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="tooltip" class="icons  edit"><i class="fa fa-edit"></i></a>
+                                                  </td>
                                            
                                            

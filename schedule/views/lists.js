@@ -129,7 +129,13 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 			        var that = this;
 
 			    	
-			        this.$el.find('#calendar').empty();
+			        this.$el.find('#calendar').html('');
+			        if(typeof this.$el.find('#calendar .fc-header') !="undefined")
+			        	this.$el.find('#calendar .fc-header').remove();
+			        if(typeof this.$el.find('#calendar .fc-content') !="undefined")
+			        	this.$el.find('#calendar .fc-content').remove();
+			        
+			        this.$el.find('#calendar').fullCalendar('destroy');
 	                var calendar = this.$el.find('#calendar').fullCalendar({
 	                    header: {
 	                    	left: 'prev,next today',

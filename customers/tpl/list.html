@@ -9,8 +9,9 @@
 	     </ul>   
 	 </div>	 
 	<div class="col-md-3 pull-right">
-		<button class="btn btn-success btn-sm edit">Edit</button>
-		<button class="btn btn-info btn-sm viewbookings">Bookings</button>
+	<a title="Edit" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="modal"  data-toggle="tooltip" class="icons  edit"><i class="fa fa-edit"></i></a>
+	<a title="Booking View" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="modal"  data-toggle="tooltip" class="icons  viewbookings"><i class="fa fa-book"></i></a>
+		 
 	</div>
 </div>
 </td>

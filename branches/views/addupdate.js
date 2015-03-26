@@ -146,7 +146,8 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					switch($current){
 					case 1:
 						that.changeText('Follow the instruction to create <strong>new department</strong>, These are basic information each department have name, language, timings(close at, open at) etc.');
-						 break;
+						that.fillEmployees(); 
+						break;
 					 
 					case 2:
 						that.changeText('Add a few <strong>Job types</strong> eg <em> Hair Dresser </em>, if you leave this empty, than no problem, you can add this later.');
@@ -168,6 +169,7 @@ define(['text!branches/tpl/addupdate.html','wizard','branches/models/branch','ti
 					var id = tab.data('id');
 					switch(id){
 					case 1:
+						that.fillEmployees(); 
 						return that.saveBasicInfo(id);
 						//that.saveBasicSetting();
 						break;

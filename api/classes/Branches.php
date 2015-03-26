@@ -280,9 +280,9 @@ class Branches {
 			$status = $_GET ['status'];
 		}
 		$total = intval ( $this->getAllByFranchiseCount ( $_GET ['franchiseid'] ) );
-		if ($total < 2) {
+		if ($total < 2 && $status == 0) {
 			echo json_encode ( [ 
-					'error' => ' You have only one department, can\'t be Deactivated' 
+					'error' => ' You have only one active department, can\'t be Deactivated' 
 			] );
 			return;
 		}

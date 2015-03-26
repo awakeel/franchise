@@ -91,8 +91,7 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 			    var start,end;
 				start = this.app.timings[0].opened.split(':')[0];
 				end = this.app.timings[0].closed.split(':')[0];
-				console.log(start + end);
-				//}
+				 
 			    var date = new Date();
                 var d = date.getDate();
                 var m = date.getMonth();
@@ -101,8 +100,13 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 		        var btns = 'prev,next today';
 		        if(this.from){
 		        	btns = "";
-		        }
-		        this.$el.find('#calendar').empty(''); 
+		        } 
+		        this.$el.find('#calendar').html('');
+		        if(typeof this.$el.find('#calendar .fc-header') !="undefined")
+		        	this.$el.find('#calendar .fc-header').remove();
+		        if(typeof this.$el.find('#calendar .fc-content') !="undefined")
+		        	this.$el.find('#calendar .fc-content').remove();
+		        this.$el.find('#calendar').fullCalendar('destroy');
 		        $('#calendar').fullCalendar({
 		          header: {
 		            left: btns,

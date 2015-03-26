@@ -94,7 +94,7 @@ define(['text!branches/tpl/editdepartment.html','wizard','branches/models/branch
 					
 				}) 
 
-				this.$el.find(".timepicker").timepicker({ 'timeFormat': 'H:i'  ,
+				this.$el.find(".timepicker").timepicker({ 'step': 15 ,'timeFormat': 'H:i'  ,
 							    'useSelect':false});
 				this.$el.find('.days').on('click',function(){
 					if($(this).prop('checked')!= true){

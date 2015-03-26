@@ -52,8 +52,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 							// });
 							var endDate;
 							var startDate = new Date(); startDate.setDate( startDate.getDate() + 1 );
-							if(typeof this.options.model  !="undefined"){
-								console.log(this.model.get('datefrom'));
+							if(typeof this.options.model  !="undefined"){ 
 								var date = this.getDate(this.options.model.get('datefrom'));
 								var date1 = this.getDate(this.options.model.get('dateto'));
 								   this.startDate = date.trim();
@@ -224,7 +223,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 							 this.app.showLoading('Saving Schedule....', this.$el.find('.schedule-row'));
 							 $.getJSON(URL,data,  function (tsv, state, xhr) {
 	   	 		                var groupid = jQuery.parseJSON(xhr.responseText);
-	   	 		                var l = 0;
+	   	 		                var l =that.$el.find('.schedule-div:not(:last-child)').length;
 	   	 		                that.$el.find('.schedule-div:not(:last-child)').each(function(index){
 	   	 		                	var data = that.getScheduleTiming($(this));
 	   	 		                	var days = "";
@@ -250,7 +249,11 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 									objScheduleModel.set('schedulegroupid',groupid); 
 										objScheduleModel.save(null,{success:function(){
 											that.app.showLoading(false, that.$el.find('.schedule-row')); 
-											that.app.successMessage('Schedule  Saved Successfully' );
+											l = l - 1;
+											console.log(l);
+											if(l == 0){
+												that.app.successMessage('Schedule Group Saved Successfully.' );
+											}
 									       	that.closeView();
 										}} );
 									})
@@ -287,8 +290,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 								    	 var end =div.find("#txte"+index).val()
 								    	
 								    	 var diff = that.calculate(start,end);
-								    	 console.log(index + 'start '+ start + ' end '+ end + 'difference')
-								    	 if(diff < 1 ){
+								     	 if(diff < 1 ){
 								    		var span = '<span class="help-block"><i class="fa fa-warning"></i>  Time from</span>';
 								    		div.find("#txts"+index).after(span);
 								    		 var span = '<span class="help-block"><i class="fa fa-warning"></i> Time to</span>';
@@ -398,6 +400,13 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 			                   var employees = jQuery.parseJSON(xhr.responseText);
 			                         var str = ""; 
 			                         that.$el.find(".timings-div-schedule").html('');
+			                         if(employees.length == 0){
+			                        	 swal({
+			           				      title: "Warning?",
+			           				      text: "Please choose department timing, department have no time defined!",
+			           				      type: "error"  
+			           		  			   });
+			                         }
 			                   		_.each(employees,function(value,key,list){ 
 			                   		 day = value.day;
 								      close = value.closed;
@@ -411,13 +420,13 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 									      that.$el.on('focus',"#txts"+day, function(){
 									    	  var open1 = $(this).data('start');
 									    	  var close1 =$(this).data('end');
-									    	    $(this).timepicker({ 'timeFormat': 'H:i' , 'minTime':open1, 'maxTime': close1,
+									    	    $(this).timepicker({ 'timeFormat': 'H:i' ,'step':15, 'minTime':open1, 'maxTime': close1,
 												    'showDuration': true});
 									    	});
 									      that.$el.on('focus',"#txte"+day, function(){
 									    	  var open1 = $(this).data('start');
 									    	  var close1 =$(this).data('end');
-									    	    $(this).timepicker({ 'timeFormat': 'H:i' , 'minTime':open1, 'maxTime': close1,
+									    	    $(this).timepicker({ 'timeFormat': 'H:i' , 'step':15,'minTime':open1, 'maxTime': close1,
 												    'showDuration': true});
 									    	});
 
@@ -430,8 +439,7 @@ define( [ 'text!schedulelist/tpl/createschedule.html','schedule/models/schedule'
 
 						},
 						weekDays:function(day,open,close){
-							var that = this;
-							console.log(that.$el.find('.timings-div').find("#txts"+day));
+							var that = this; 
 						},
 						capatalize:function(str){
 							return str.charAt(0).toUpperCase() + str.slice(1);

@@ -11,7 +11,7 @@ define(['backbone', 'underscore',  'text!dashboard/tpl/lists.html'],
 				this.app = this.options.setting;
 				 this.app.showLoading('loading dashboard..',this.$el);
 				this.render();
-				this.loadQuickStats();
+				///this.loadQuickStats();
 				this.loadTodayBookings();
 				this.loadTasks();
 				//  			

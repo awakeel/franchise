@@ -15,12 +15,10 @@
 
 	</ul> 
 	<div class="pull-right" style="vertical-align: top">
-		<a class="btn btn-danger delete-token"
-			data-id="<%=this.model.get('id')%>">
-			<%=this.setting.language['delete']%></a>
-		<button class="btn btn-info edit-token"><%=this.setting.language['edit']%></button>
-		<button class="btn btn-info change-day">Change Day</button>
-
+	    <a title="Delete" data-placement="top"  data-id="<%=this.model.get('id')%>" data-toggle="tooltip" class="icons delete-token"><i class="fa fa-times"></i></a>
+		<a title="Edit" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="tooltip" class="icons  edit-token"><i class="fa fa-edit"></i></a>
+	    <a title="Change Day" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="tooltip" class="icons  change-day"><i class="fa fa-calendar"></i></a>
+	    
 	</div>
 </td>
 

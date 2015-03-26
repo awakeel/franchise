@@ -235,7 +235,7 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						},
 						basicBooking:function(){
 							this.$el.find('#pdepartment').html(this.model.branch);
-						 	this.$el.find('#pprice').html(this.model.price + "$");
+						 	this.$el.find('#pprice').html(this.model.price  );
 							this.$el.find('#pdatetime').html(this.model.dayid);
 							this.$el.find('#pbookingtype').html(this.model.bookingtype);
 							this.$el.find('#pstatus').html(this.model.status);

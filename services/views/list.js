@@ -20,7 +20,7 @@ define(['text!services/tpl/list.html','app'],
 			},
 			deleteToken:function(ev){
 				var that = this;
-            	var id = $(ev.target).data('id'); 
+            	var id = this.model.get('id');
                 var URL = "api/deleteservices";
                 swal({
   			      title: "Are you sure?",

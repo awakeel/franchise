@@ -21,7 +21,7 @@ define(['text!jobtypes/tpl/list.html','app','swal'],
 			
 			deleteToken:function(ev){
 				var that = this;
-            	var id = $(ev.target).data('id'); 
+            	var id = this.model.get('id'); 
                 var URL = "api/deletejobtypes";
                 
 			    swal({

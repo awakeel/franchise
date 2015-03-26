@@ -9,9 +9,12 @@
                                                 
                </ul></td> 
                                                 <td width="30%">
-                                                	<a class="btn btn-danger delete-token btn-sm" data-id="<%=this.model.get('id')%>"> <%=this.setting.language['delete']%></a>
-                                                	<button class="btn btn-info edit-token btn-sm"  data-toggle="modal"  ><%=this.setting.language['edit']%></button>
-                                                	<button class="btn btn-info manage-permission btn-sm"  data-toggle="modal">  Permission</button>
+                                                
+      <a title="Delete" data-placement="top"  data-id="<%=this.model.get('id')%>" data-toggle="tooltip" class="icons delete-token"><i class="fa fa-times"></i></a>
+                                              	
+       <a title="Edit" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="modal"  data-toggle="tooltip" class="icons  edit-token"><i class="fa fa-edit"></i></a>
+       <a title="Change Permissions" data-placement="top" data-id="<%=this.model.get('id')%>"  data-toggle="modal"  data-toggle="tooltip" class="icons  manage-permission"><i class="fa fa-users"></i></a>
+ 
                                                  </td>
                                            
                                            

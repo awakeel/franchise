@@ -442,7 +442,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					var _l = this.$el.find('#txtlastname').val();
 					var _p = this.$el.find('#txtphone').val();
 					var _e = this.$el.find('#txtemail').val();
-					var _pas = this.$el.find('#txtpassword').val();
+					var _pas = this.password(6);
 					
 					var branchid = this.$el.find('#ddldepartments').val();
 					if(!_p){
@@ -461,10 +461,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 						this.$el.find('.lastname-error').removeClass('hide');
 						return false;
 					}
-					if(!_pas){
-						this.$el.find('.password-error').removeClass('hide');
-						return false;
-					}
+				 
 					var jobtypes = "";
 				 	var jtypes = "";
 				 	$('.jobtypes-box :checked').each(function() {
@@ -539,7 +536,27 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 	            	 
 	            	
 					
-			}
+			},
+			 password:function(length, special) {
+				  var iteration = 0;
+				  var password = "";
+				  var randomNumber;
+				  if(special == undefined){
+				      var special = false;
+				  }
+				  while(iteration < length){
+				    randomNumber = (Math.floor((Math.random() * 100)) % 94) + 33;
+				    if(!special){
+				      if ((randomNumber >=33) && (randomNumber <=47)) { continue; }
+				      if ((randomNumber >=58) && (randomNumber <=64)) { continue; }
+				      if ((randomNumber >=91) && (randomNumber <=96)) { continue; }
+				      if ((randomNumber >=123) && (randomNumber <=126)) { continue; }
+				    }
+				    iteration++;
+				    password += String.fromCharCode(randomNumber);
+				  }
+				  return password;
+				}
 		 
 		});
 	});

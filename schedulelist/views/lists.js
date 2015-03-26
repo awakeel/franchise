@@ -44,6 +44,7 @@ define(['text!schedulelist/tpl/lists.html','schedulelist/collections/schedulelis
 				 that.setting.jobTypes = {};
 				 if(this.request)
 	                    this.request.abort();
+				 
 					 if(offset){
 							
 						 _data['offset'] = this.offsetLength + offset;
@@ -51,6 +52,9 @@ define(['text!schedulelist/tpl/lists.html','schedulelist/collections/schedulelis
 						 that.$el.find('tbody').empty();
 					 } 
 				     this.request = this.objScheduleLists.fetch({data: _data, success: function(data) {
+				    	 if(!offset){
+				    		 that.$el.find('tbody').empty();
+				    	 }
 					_.each(data.models,function(model){
 						var objScheduleList = new ScheduleList({model:model,page:that,setting:that.setting});
 						that.$el.find('tbody').append(objScheduleList.$el);
