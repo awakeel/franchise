@@ -3,6 +3,7 @@
 session_start();  
 $path =  dirname(__FILE__) ;
 require $path .'/rb.php';  
+
 R::setup('mysql:host=localhost;dbname=franchise',
 'root',''); // 
      //     R::debug( TRUE );
@@ -22,8 +23,9 @@ require $path .'/classes/Leaves.php';
 require $path .'/classes/Booking.php';
 require $path .'/classes/BookingCalender.php';
 require $path .'/classes/Tasks.php';
-require $path .'/classes/Revenue.php';
-$app = new Slim(); 
+require $path .'/classes/Revenue.php'; 
+require $path .'/classes/Products.php';
+$app = new Slim();   
 //$app->contentType('charset=utf-8');
 $auth = new Authorize($app);
 $permission = new Permission($app,$auth);
@@ -44,7 +46,10 @@ $objLeaves = new Leaves($app,$auth);
 $objCustomer = new Customers($app,$auth);
 $objTasks = new Tasks($app,$auth);
 $objRevenue = new Revenue($app,$auth);
+$objProducts = new Products($app,$auth);
+
 $app->run(); 
+
 function getConnection() {
 	$dbhost="localhost";
 	$dbuser="root";

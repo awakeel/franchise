@@ -153,7 +153,6 @@ class Employees
     				$employees->firstname = $params->firstname;
     				$employees->lastname = $params->lastname;
     				$employees->email = $params->email;
-    			 
     				$employees->address = $params->address;
     				$employees->about = $params->about;
     				$employees->type = $params->type;
@@ -170,6 +169,7 @@ class Employees
     				$employees->email = $params->email;
     				$employees->password = $params->password;
     				$employees->address = $params->address;
+    				$employees->hash = hash('sha256', mt_rand());
     				$employees->about = $params->about;
     				$employees->phone = $params->phone;
     				$employees->type = $params->type;

@@ -156,6 +156,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                    formatDate:(new Date()).toISOString().slice(0, 10),
 	                    selectHelper: true,
 	                    minTime:start,
+	                    firstDay: 1,
 	                    maxTime:end, 
 	                    slotMinutes:30, 
 	                    allDayDefault:false,
@@ -194,7 +195,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	            		c+='<td class="bubble-cell-main"><div class="bubble-top"></div></td><td class="bubble-cell-side"><div class="bubble-corner" id="tr:1"><div class="bubble-sprite bubble-tr"></div></div></td></tr>';
 	            		c+='<tr><td colspan="3" class="bubble-mid"><div style="overflow:hidden" id="bubbleContent:1"><div class="details"><span class="title" style="color: #125A12">'+event.description +'</span><div class="detail-content"><div class="detail-item"><span class="event-details-label">When</span><span class="event-when">'+moment(event.start).format("LLL")+' - '+moment(event.end).format("LLL")+'</span></div> <div class="detail-item"><span class="event-details-label">Assign to </span><span class="event-description"> ' + event.name+ ' </span></div></div><div class="separator" style="background-color: #125A12;"></div><span class="links"><a class="more-detail" ></a></span></div></div></td></tr><tr><td><div class="bubble-corner" id="bl:1"><div class="bubble-sprite bubble-bl"></div></div></td><td><div class="bubble-bottom"></div></td><td><div class="bubble-corner" id="br:1"><div class="bubble-sprite bubble-br"></div></div></td></tr>';
 	            		c+='</tbody></table>';
-	            		
+	            		 
                        var content = '<h3>'+event.description+'</h3>' + 
 	                    	'<p> <h4>Assign to :  '+event.name+'</h4><br />' + 
 	        				'<p><b>Start:</b> '+event.start+'<br />' + 
@@ -224,7 +225,7 @@ define(['text!schedule/tpl/schedule.html','schedule/collections/schedules','full
 	                         }); 
  
 	                    },
-	                    eventBackgroundColor:'#fff',
+	                    ///eventBackgroundColor:'#fff',
 	                    editable: false, 
 	                    events:  models
 	                     

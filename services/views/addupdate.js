@@ -120,9 +120,12 @@ define(
 							this.$el.find('.jobtypes-error').addClass('hide');
 							this.$el.find('.price-error').addClass('hide')
 							this.$el.find('.time-error').addClass('hide')
+							this.$el.find('.already-error')
+								.addClass('hide')
 						},
 						save : function() {
 							this.clearErrorFilter();
+							
 							var name = this.$el.find('#txtservice').val();
 							var type = this.$el.find('input[name=group1]:checked').val();
 							var comments = this.$el.find('#txtcomments').val();
@@ -130,7 +133,14 @@ define(
 							var t = this.$el.find(".color").spectrum("get") ;
 							var color = t.toHexString() // "#ff0000"
 							var price = this.$el.find('#txtprice').val();
-							 
+							if(typeof this.options.id  != "undefined" ){
+								var isAlreadyExists = this.options.page.objServices.where({name: name});
+								if(isAlreadyExists.length !== 0 ){
+									this.$el.find('.already-error')
+									.removeClass('hide')
+											return false;
+								}
+							}
 								if (!name) {
 									this.$el.find('.name-error')
 											.removeClass('hide')

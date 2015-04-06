@@ -23,7 +23,8 @@
 			'spin':'libs/spin',
 			'swal':'libs/sweetalert',
 			'qtip':'libs/qtip',
-			'jqueryui':'libs/jquery-ui.min'
+			'jqueryui':'libs/jquery-ui.min',
+			'qtip':'libs/fileupload',
 			
 		},
 		shim : {

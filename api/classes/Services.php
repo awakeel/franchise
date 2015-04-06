@@ -34,6 +34,11 @@ class Services
     				 
     				$this->getGlobalServices();
     			});
+    				$app->get('/getallservicebybranch',function(){
+    						
+    					$this->getAllServiceByBranch();
+    				});
+    				
     }
     function getAll( ) {  
         $sql = "select * from branches";
@@ -196,6 +201,23 @@ GROUP BY s.id
     	$this->doLogic($params->jobtypes,$id,$params->franchiseid);
     	echo json_encode($params);
     }
+   function getAllServiceByBranch(){
+        $franchiseid = $_GET['franchiseid'];
+         $sql = "select * from services where franchiseid= $franchiseid";
+            try {
+            	$services = R::getAll($sql);
+ 		    // Include support for JSONP requests
+            if (!isset($_GET['callback'])) {
+                echo json_encode($services);
+            } else {
+                echo $_GET['callback'] . '(' . json_encode($services) . ');';
+            }
+
+            } catch(PDOException $e) {
+                    $error = array("error"=> array("text"=>$e->getMessage()));
+                    echo json_encode($error);
+            }   
+   }
     function getAllByBranchId( ) { 
     	$search = "";
     	  if(@$_GET['search'] !=''){

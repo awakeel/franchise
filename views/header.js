@@ -20,13 +20,10 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
     		            var that = this;
     		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
     		                var _json = jQuery.parseJSON(xhr.responseText);
-    		                	 
-    		                    require(['authorize/views/login'],function(login){
-    	                        	$('body').html(new login({app:that.app}).$el);
-    	                        })
-    		            }); 
-    				
-    		            
+    		                require(['authorize/views/login'],function(login){
+	                        	$('body').html(new login({app:that.app}).$el);
+	                        })
+    		            });  
     			},
     			changePackages:function(){
     				  var that = this;
@@ -42,8 +39,7 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
 	    			 if(typeof this.app.branches !="undefined")
 	    			     var branch = this.app.branches.filter(function(el){
 	    				 return el.id == branchid;
-	    			 });
-	    			
+	    			 }); 
 	    			 require([ 'app' ], function(app) {
 		 	              var settings = app.load(data,branch[0].name);
 		        		  app.getUser(branchid);
@@ -52,15 +48,16 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                 render: function() {
                     this.$el.html(this.template({}));
                     $("#sidebar-toggle").click(function(e) {
-                    	     e.preventDefault();
-                    	     $(".navbar-side").toggleClass("collapsed");
-                    	     $("#page-wrapper").toggleClass("collapsed");
+                	     e.preventDefault();
+                	     $(".navbar-side").toggleClass("collapsed");
+                	     $("#page-wrapper").toggleClass("collapsed");
                     });
                 	$(".portlet-widgets .fa-chevron-down, .portlet-widgets .fa-chevron-up").click(function() {
                 	    $(this).toggleClass("fa-chevron-down fa-chevron-up");
                 	});
                 },
                 getDepartments:function(id){
+                	return;
                 	var that = this;
                 	var str = "";
                 	var login = "";
@@ -187,8 +184,7 @@ define(['jquery', 'backbone', 'underscore',  'text!templates/header.html'],
                     });
                },
                getTimeAgo:function(date){ 
-                    return moment(date).fromNow();
-            
+                    return moment(date).fromNow(); 
                },
                setIsActiveTab:function(){
                         var hidden = "hidden";

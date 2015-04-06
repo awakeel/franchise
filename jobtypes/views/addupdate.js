@@ -69,28 +69,23 @@ define(
 							this.$el.find('.name-error').addClass('hide');
 						}, 
 						save : function() {
-							var name = this.$el.find('#txtname').val();
-							var name = this.$el.find('#txtname').val();
-							var a = '';
-							if(typeof this.options.id != "undefined"){
-							 a = this.options.page.objJobTypes.where({ name: name});
+							var name = this.$el.find('#txtname').val(); 
+							if(typeof this.options.id  != "undefined" ){
+								var isAlreadyExists = this.options.page.objJobTypes.where({name: name});
+								if(isAlreadyExists.length !== 0 ){
+									this.$el.find('.already-error')
+									.removeClass('hide')
+											return false;
+								}
 							}
-							if(a.length > 0){
-								  swal({
-								      title: "Warning?",
-								      text: "Job Type Already Exists",
-								      type: "error",
-								     });
-								return false;
-								
-							}else{
-								var t = this.$el.find(".color").spectrum("get") ;
+							var t = this.$el.find(".color").spectrum("get") ;
 								var color = t.toHexString() // "#ff0000"
 								var comments = this.$el.find('#txtcomments').val()
 								if (!name) {
 									this.$el.find('.name-error').removeClass('hide')
 									return false;
 								}
+								
 								this.app.showLoading('Wait a moment....', this.$el);
 								
 								this.objjobtype.set('franchiseid', this.franchiseid);
@@ -108,11 +103,6 @@ define(
 									that.closeView();
 									$("#tr_norecord").remove();
 								}}); 
-							}
-							
-							 
-							// this.closePopup();
-							
 							
 						}
 

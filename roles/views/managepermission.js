@@ -15,14 +15,7 @@ define(['text!roles/tpl/managepermission.html','roles/views/list','roles/models/
 				this.$el.html(this.template( ));
 				 
 			},
-			closeView:function(){
-				this.$el.find('.modal').modal('toggle'); 
-				 //this.undelegateEvents();
-				//1 this.$el.remove();
-				 //this.$el.removeData().unbind(); 
-				 //this.remove();  
-				 //Backbone.View.prototype.remove.call(this);
-			},
+			 
 			clearErrorFilter:function(){
 				this.$el.find('.name-error').addClass('hide');
 			},

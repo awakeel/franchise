@@ -1098,6 +1098,7 @@ transition: all 0.5s ease-in-out;}
 	padding:30px 10px ;
 	color:#fff;
 	 border-left: 3px solid #94768a;
+	 background:#94768a;
 	}
 .tabs_menu_bg .nav-stacked > li + li {
     background: none repeat scroll 0 0 #94768a;
@@ -2629,15 +2630,12 @@ ol.linenums li {
 	.bwizard-steps li:last-child {
 		margin-right: 0;
 		padding: 0;
-		  }
+		background-color: transparent }
 }
 /* General Typeahead styling, from http://jsfiddle.net/ragulka/Dy9au/1/ */
 .twitter-typeahead {
   width: 100%;
   position: relative;
-}
-.tabs_menu_bg .nav > li:not(:active) > a{
-	background-color:#7F6677!important;
 }
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {
@@ -3476,7 +3474,7 @@ font-size: 14px;
 .pagerw .disabled{opacity:.3}
 
     /* alerts */
-    .alert{margin-bottom: 10px; cursor: pointer; border: 0; text-shadow: none; color: #FFF; background: #009AD7;
+    .alert{margin-bottom: 10px; cursor: pointer; border: 0; text-shadow: none; color: #FFF; background: #94768a;
           -moz-border-radius: 0px; -webkit-border-radius: 0px; border-radius: 0px;}
     .block .alert, .block-fluid .alert{border: 0px; margin: 3px 0px;}
             
@@ -5367,7 +5365,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 	padding:20px;
 	float:left;}
 .info-container h4{
-	background:#e74c3c;
+	background:#94768a;
 	padding:10px;
 	color:#fff;
 	margin-top:0px;
@@ -5441,6 +5439,7 @@ margin:0;width:7em;color:#4e4e4e}
 .listing-container {
 	background:#fff;
 	width:100%;
+	border-bottom:none !important;
 	border:1px solid #cccccc;
 	padding:10px 20px;}
 .icons-container {
@@ -5448,3 +5447,6 @@ margin:0;width:7em;color:#4e4e4e}
 	}
 .listing-container h4 {
 	color: #c24028;}
+.margin-left {
+	margin-left:20px;}
+.ajax-file-upload-statusbar{border:1px solid #0ba1b5;margin-top:10px;margin-right:10px;margin:5px;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;padding:5px 5px 5px 5px}.ajax-file-upload-filename{width:100%;height:auto;margin:0 5px 5px 10px;color:#807579}.ajax-file-upload-progress{margin:0 10px 5px 10px;position:relative;width:250px;border:1px solid #ddd;padding:1px;border-radius:3px;display:inline-block}.ajax-file-upload-bar{background-color:#0ba1b5;width:0;height:20px;border-radius:3px;color:#fff}.ajax-file-upload-percent{position:absolute;display:inline-block;top:3px;left:48%}.ajax-file-upload-red{-moz-box-shadow:inset 0 39px 0 -24px #e67a73;-webkit-box-shadow:inset 0 39px 0 -24px #e67a73;box-shadow:inset 0 39px 0 -24px #e67a73;background-color:#e4685d;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;text-shadow:0 1px 0 #b23e35;cursor:pointer;vertical-align:top;margin-right:5px}.ajax-file-upload-green{background-color:#77b55a;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;margin:0;padding:0;display:inline-block;color:#fff;font-family:arial;font-size:13px;font-weight:normal;padding:4px 15px;text-decoration:none;cursor:pointer;text-shadow:0 1px 0 #5b8a3c;vertical-align:top;margin-right:5px}.ajax-file-upload{font-family:Arial,Helvetica,sans-serif;font-size:16px;font-weight:bold;padding:15px 20px;cursor:pointer;line-height:20px;height:25px;margin:0 10px 10px 0;display:inline-block;background:#fff;border:1px solid #e8e8e8;color:#888;text-decoration:none;border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px;-moz-box-shadow:0 2px 0 0 #e8e8e8;-webkit-box-shadow:0 2px 0 0 #e8e8e8;box-shadow:0 2px 0 0 #e8e8e8;padding:6px 10px 4px 10px;color:#fff;background:#2f8ab9;border:0;-moz-box-shadow:0 2px 0 0 #13648d;-webkit-box-shadow:0 2px 0 0 #13648d;box-shadow:0 2px 0 0 #13648d;vertical-align:middle}.ajax-file-upload:hover{background:#3396c9;-moz-box-shadow:0 2px 0 0 #15719f;-webkit-box-shadow:0 2px 0 0 #15719f;box-shadow:0 2px 0 0 #15719f}.ajax-upload-dragdrop{border:2px dotted #a5a5c7;color:#dadce3;text-align:left;vertical-align:middle;padding:10px 10px 0 10px}.ajax-upload-dragdrop.state-hover{border:2px solid #a5a5c7}.ajax-file-upload-error{color:red}

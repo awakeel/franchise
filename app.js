@@ -35,10 +35,10 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 cache_data: {}
             }, window.sz_config || {}));
 			  this.objLanguage = new Language();
-			   
+			  
 			  var that = this;
 			  this.getModules();
-			  this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage}, success: function(data) {
+			  this.objLanguage.fetch({data: {specific:1,languageid:this.selectedLanguage,isauth:false}, success: function(data) {
                                     //alert(key.languagetitle);
 			    		that.checkError('err');
 			    	  _.each(data.toJSON(), function( key, value ) {
@@ -59,7 +59,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 			$('#wrapper').append(objContainer.$el);
 			$('#page-wrapper').find('.page-content').html(
 			objContainer.objBreadCrumb.$el);
-			 if(this.firsttime == "launch"){
+			 if(this.firsttime == "launch" && this.users.isnew == "1"){
 				 var that = this;
 				 
 	           	 require(['schedulelist/views/lists','views/breadcrumb'],function(Lists,BreadCrumb){
@@ -99,7 +99,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 				 var that = this;
 				  
                 jQuery.getJSON(url,{branchid:branchid}, function(tsv, state, xhr) {
-                    var timings = jQuery.parseJSON(xhr.responseText);
+                     var timings = jQuery.parseJSON(xhr.responseText);
                      that.timings = timings;
                 });
 			 
@@ -122,7 +122,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 		  		    				Backbone.history.length = 0;
 		  		    				 var URL = "api/logout";
 		  		    		            var that = this;
-		  		    		            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+		  		    		            jQuery.getJSON(URL,  {isauth:false}, function (tsv, state, xhr) {
 		  		    		                var _json = jQuery.parseJSON(xhr.responseText);
 		  		    		                    require(['authorize/views/login'],function(login){
 		  		    	                        	$('body').html(new login({app:app}).$el);
@@ -131,6 +131,16 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 		  			    	    }
 		  			   })
 			}
+		}, 
+		 validatePhone:function(a) {
+		   
+		    var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+		    if (filter.test(a)) {
+		        return true;
+		    }
+		    else {
+		        return false;
+		    }
 		},
 		IsEmail:function(email) {
 			  var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
@@ -150,12 +160,12 @@ define(['jquery','language/collections/languages','spin','moment','flex',
         getUser: function (branchid) {
             var URL = "api/getsession";
             var that = this;
-            jQuery.getJSON(URL,  function (tsv, state, xhr) {
+            jQuery.getJSON(URL,  {isauth:false}, function (tsv, state, xhr) {
                 var _json = jQuery.parseJSON(xhr.responseText);
                 that.users = _json.user;
                 that.data = _json;
                 var allowedAdmin = ['admin', 'ad', 'demo'];
-                
+               
                 if(typeof that.users !="undefined" && that.users.setting.is_logged_in){
                 	///that.user_branch_id = that.users.branchid;
                 	that.user_franchise_id = that.users.franchiseid;
@@ -166,7 +176,13 @@ define(['jquery','language/collections/languages','spin','moment','flex',
                 		that.user_branch_id = that.branches[0].id;
                 		 
                 	}
-                	    
+                	console.log(that.users)
+    	            $.ajaxSetup({
+    	                 headers: {
+    	                     'hash_key':that.users.hash,
+    	                     'api_key':'bbc'
+    	                 }
+    	             });   
                 	that.loadPages( );
                 }else{
 	        	    require(['authorize/views/login'],function(login){
@@ -202,6 +218,7 @@ define(['jquery','language/collections/languages','spin','moment','flex',
             window.setTimeout(_.bind(this.removeAllCache, this), 1000 * 60 * 30);
          },
          checkError: function (result) {
+        	
         	 console.log('usrs ' + this.users);
             var isError = true; 
             if(typeof this.users !="undefined"){
@@ -213,6 +230,13 @@ define(['jquery','language/collections/languages','spin','moment','flex',
 	            	this.getUser();
 	            	 
 	            }
+	            console.log(this.users)
+	            $.ajaxSetup({
+	                 headers: {
+	                     'hash_key':this.users.hash,
+	                     'api_key':'bbc'
+	                 }
+	             });  
             }
             
             

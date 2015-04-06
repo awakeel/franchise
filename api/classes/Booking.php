@@ -3,6 +3,16 @@ class Booking{
 	 
 	function __construct($app){
     	$this->branchid = @$_SESSION['branchid'];
+    	    $hashkey = @$_SERVER['hash_key'];
+    	    $isAuth= @$_GET['isauth'];
+    	    if(is_null($isAuth)){
+    	    	if($hashkey == @$_SESSION['hash_key']){
+    	    		
+    	    	}else{
+    	    		echo json_encode(['error'=>' Your keys not matched']);
+    	    		echo json_encode('Error, handling request, Problem in uploading.');
+    	    	}
+    	    }
 	    	$app->get('/bookings', function () { 
 	    		$this->getAllBookings();
 	    	});
@@ -30,61 +40,52 @@ class Booking{
 	    			
 	    		
 	 }
-	 function SendActuallSMS(){
-	 	 
-	 	$user = "yaredev";
-	 	$password = "UeYSBEWVEXfYda";
-	 	$api_id = "3533683";
-	 	$baseurl ="http://api.clickatell.com";
-	 	
-	 	$text = urlencode("This is an example message");
-	 	$to = "00923365648162";
-	 	
-	 	// auth call
-	 	$url = "$baseurl/http/auth?user=$user&password=$password&api_id=$api_id";
-	 	
-	 	// do auth call
-	 	$ret = file($url);
-	 	
-	 	// explode our response. return string is on first line of the data returned
-	 	$sess = explode(":",$ret[0]);
-	 	if ($sess[0] == "OK") {
-	 	
-	 		$sess_id = trim($sess[1]); // remove any whitespace
-	 		$url = "$baseurl/http/sendmsg?session_id=$sess_id&to=$to&text=$text";
-	 	
-	 		// do sendmsg call
-	 		$ret = file($url);
-	 		$send = explode(":",$ret[0]);
-	 	
-	 		if ($send[0] == "ID") {
-	 			echo json_encode("successnmessage ID: ". $send[1]);
-	 		} else {
-	 			echo json_encode($send);
-	 		}
-	 	} else {
-	 		echo json_encode("Authentication failure: ". $ret[0]);
-	 	}
+	 function SendActuallSMS($phone,$text){ 
 	 
+			 
+			$text = $text; 
+			$username = 'yaredev';
+			$password = 'UeYSBEWVEXfYda';
+			$API_ID = '3533683';
+			$to = $phone;
+			
+			$url = "http://api.clickatell.com/http/auth?user=$username&password=$password&api_id=$API_ID";
+			$ret = file($url);
+			$sess = explode(":",$ret[0]);
+			if ($sess[0] == "OK") {
+			    $sess_id = trim($sess[1]);
+			    $url = "http://api.clickatell.com/http/sendmsg?session_id=$sess_id&to=$to&text=$text";
+			    $ret = file($url);
+			    $send = explode(":",$ret[0]);
+			
+			    if ($send[0] == "ID") {
+			        echo json_encode("Message Sent Successfuly.");
+			    } else {
+			        echo json_encode("Problem in sending message, please try again.");
+			    }
+			} else {
+			    echo json_encode($sess);
+			}
+	 	 
 	 }
  	  function sendSMS(){ 
     	 $customerid = @$_POST['customerid'];
     	 $text = @$_POST['text'];
     	 $bookingid = @$_POST['bookingid'];
-    	 $email = @$_POST['email'];
+    	 $phone = @$_POST['email'];
     	  try { 
 	 		$bookingsms = R::dispense( 'bookingsms' );
 	 			 $bookingsms->customerid = $customerid;
 	 			$bookingsms->bookingid = $bookingid
 	 			;
-	 			$bookingsms->email = $email;
+	 			$bookingsms->email = $phone;
 	 			$bookingsms->text = $text; 
 	 			$bookingsms->createdon = R::isoDateTime();
 	 			$id = R::store($bookingsms);
     	   } catch(PDOException $e) {
     		 echo '{"error":{"text":'. $e->getMessage() .'}}';
     	   } 
-    	   $this->SendActuallSMS();
+    	   $this->SendActuallSMS($phone,$text);
     	 }
     	 function savePackage(){
     	 	$franchiseid = @$_POST['franchiseid'];

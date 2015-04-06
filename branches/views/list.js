@@ -47,10 +47,14 @@ define(['text!branches/tpl/list.html','app'],
 	  			    			$.get(URL, {id:id,status:status,franchiseid:that.app.user_franchise_id})
 		                        .done(function(data) {
 		                             var _json = jQuery.parseJSON(data);
-					                
+		                           
 					                if (typeof _json.error == "undefined" || _json == "") {
 	  		                            	that.setting.successMessage();
-	  		                                  
+	  		                              if(status == 1){
+	  		     					    	$('#ddlmenubranches').append('<option value='+that.model.get('id')+'>'+that.model.get('name')+'</option>');
+	  		     					     }else{
+	  		     					    	$("#ddlmenubranches option[value='"+that.model.get('id')+"']").remove();
+	  		     					 	     }
 	  		                            	  swal("Status Changed!", "Transaction done.", "success");
 	  		                            	  // that.render();  
 	  		                            }

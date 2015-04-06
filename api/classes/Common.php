@@ -198,6 +198,7 @@ class Common
     		echo json_encode($error);
     	}
     }
+    
     function getAllTimings( ) {
     
     	$sql = "select * from timings where branchid = $this->branchId ";

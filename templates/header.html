@@ -6,8 +6,10 @@
                     <i class="fa fa-bars"></i> Menu
                 </button>
                 <div class="navbar-brand">
-                    <a href="index.html">
-                        <img src="img/flex-admin-logo@1x.png" data-1x="img/flex-admin-logo@1x.png" data-2x="img/flex-admin-logo@2x.png" class="hisrc img-responsive" alt="" width="172" height="20">
+                    <a>
+                        <h2 style="color: #fff;margin-top: 0px;">
+                        <%=this.app.users.company%>
+                        </h2>
                     </a>
                 </div>
             </div>
@@ -30,34 +32,7 @@
                 <ul class="nav navbar-right">
 
                     <!-- begin MESSAGES DROPDOWN -->
-                    <li class="dropdown">
-                        <a href="#" class="messages-link dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-gear"></i>
-                            <span class="number"> </span> <i class="fa fa-caret-down"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-scroll dropdown-messages">
-
-                            <!-- Messages Dropdown Heading -->
-                            <li class="dropdown-header">
-                                <i class="fa fa-gear"></i> <%=this.app.branches.length%> Total departments
-                            </li>
-
-                            <!-- Messages Dropdown Body - This is contained within a SlimScroll fixed height box. You can change the height using the SlimScroll jQuery features. -->
-                            <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;"><li id="messageScroll" style="overflow-y: scroll; overflow-x:hidden; width: auto; height: 200px;">
-                                <ul class="list-unstyled total-departments">
-                                   <%=this.getDepartments()%>
-                                   
-                                </ul>
-                            </li><div class="slimScrollBar" style="width: 7px; position: absolute; top: 0px; opacity: 0.4; display: block; border-radius: 7px; z-index: 99; right: 1px; background: rgb(0, 0, 0);"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; opacity: 0.2; z-index: 90; right: 1px; background: rgb(51, 51, 51);"></div></div>
-
-                            <!-- Messages Dropdown Footer -->
-                            <li class="dropdown-footer">
-                               
-                            </li>
-
-                        </ul>
-                        <!-- /.dropdown-menu -->
-                    </li>
+                     
                     <!-- /.dropdown -->
                     <!-- end MESSAGES DROPDOWN -->
 

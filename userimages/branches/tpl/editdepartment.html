@@ -1,0 +1,222 @@
+
+
+<div >
+	<div class="modal-footer">
+			<button type="button" class="btn btn-default close-p">Close</button>
+			<button type="button" class="btn btn-green btn-save save-p">Save
+				changes</button>
+
+		</div>
+	<div>
+		<div id="content_right_container">
+			<div class="row">
+
+				<div class="clearfix"></div>
+				<div class="col-md-6">
+					<h4>Department Basic Info</h4>
+					<p>
+						Each department have name, description etc, e.g <strong>OSLO
+							Hair Dresser</strong>
+					</p>
+					<div class="row">
+						<div class="form_container">
+							<div class="col-xs-3">
+								</br>
+								<p>Name *</p>
+							</div>
+							<div class="col-xs-9">
+								<div class="form_container">
+									<input type="text" required="required"
+										placeholder="Enter name, eg department 1" id="txtname"
+										class="form-control"> <span
+										class="help-block hide name-error"><i
+										class="fa fa-warning"></i> You must name your department, e.g
+										Oslo Branch!</span>
+								</div>
+
+							</div>
+							<div class="form_container">
+								<div class="col-xs-3">
+									</br>
+									<p>City</p>
+								</div>
+								<div class="col-xs-9">
+									<div class="form_container">
+										<select  id="txtcity">	
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="form_container">
+								<div class="col-xs-3">
+									</br>
+									<p>Zip</p>
+								</div>
+								<div class="col-xs-9">
+									<div class="form_container">
+										<input type="text" id="txtzip" width="40px"
+											class="form-control" />
+
+									</div>
+								</div>
+							</div>
+							<div class="form_container">
+								<div class="col-xs-3">
+									</br>
+									<p>Address</p>
+								</div>
+								<div class="col-xs-9">
+									<div class="form_container">
+										<input type="text" id="txtaddress" class="form-control" />
+
+									</div>
+								</div>
+							</div>
+							 
+						</div>
+					</div>
+
+				</div>
+				<div class="col-md-6">
+					<h4>Timings</h4>
+					<p>
+						Choose timings for <strong class='department-name'>
+							department </strong> . eg. 9 to 18 <span
+							class="help-block hide timing-error"
+							style="font-size: 15px; margin-right: 20px;"><i
+							class="fa fa-warning"></i>Please select timing, eg <strong
+							class='department-name'> </strong> opened at 9:00 and closed at
+							18:00!</span>
+					</p>
+					<div class="table-responsive" style="margin-right: 20px;">
+						<table class="table table-hover  table-striped  ">
+							<thead>
+								<tr>
+									<th>
+										<div class="checkbox">
+											<label> <input id='chkall' type="checkbox" value="">All
+											</label>
+										</div>
+									</th>
+									<th><div class="checkbox">
+											<label> From</label>
+										</div></th>
+									<th><div class="checkbox">
+											<label> To</label>
+										</div></th>
+								</tr>
+							</thead>
+							<tbody class="timings-div">
+
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" class='days'
+												id='monday'  type="checkbox" value="monday">Monday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker form-control  first-text" id="txtsmonday" /></td>
+									<td><input type="text"
+										class="timepicker form-control end-text" id="txtemonday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" id='tuesday'
+												class='days' type="checkbox" value="tuesday">Tuesday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtstuesday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtetuesday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" class='days'
+												id='wednesday' type="checkbox" value="wednesday">Wednesday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtswednesday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtewednesday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" class='days'
+												id='thursday' type="checkbox" value="thursday">Thursday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtsthursday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtethursday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" class='days'
+												id='friday' type="checkbox" value="friday">Friday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtsfriday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtefriday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" class='days'
+												id='saturday' type="checkbox" value="saturday">Saturday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtssaturday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtesaturday" /></td>
+								</tr>
+								<tr>
+									<td>
+										<div class="checkbox">
+											<label> <input name="days_group[]" id='sunday'
+												class='days' type="checkbox" value="sunday">Sunday
+											</label>
+										</div>
+									</td>
+									<td><input type="text"
+										class="timepicker first-text form-control" id="txtssunday" /></td>
+									<td><input type="text"
+										class="timepicker end-text form-control" id="txtesunday" /></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+
+
+		<div class="clearfix"></div>
+		<div class="modal-footer">
+			<button type="button" class="btn btn-default close-p">Close</button>
+			<button type="button" class="btn btn-green btn-save save-p">Save
+				changes</button>
+
+		</div>
+
+	</div>
+	</div>
+	

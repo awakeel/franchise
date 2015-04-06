@@ -77,7 +77,7 @@ class BookingCalender {
 		}  
 		$sql = "select * from (SELECT * FROM  (SELECT CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`start`) COLLATE latin1_danish_ci AS start ,
                 CONCAT(CONCAT_WS('-',SUBSTR(st.dayid, 1,4),SUBSTR(st.dayid, 5,2),SUBSTR(st.dayid, 7,2)),'T',st.`end`) COLLATE latin1_danish_ci AS end,
-                '#e6edf7' AS backgroundColor, sb.jobtypeid,'' as service  ,' ' AS title,$resourceid, '' AS employee,'' as customer ,0 AS booking,'' as customerid,'' as status
+                '' AS backgroundColor, sb.jobtypeid,'' as service  ,' ' AS title,$resourceid, '' AS employee,'' as customer ,0 AS booking,'' as customerid,'' as status
                 FROM scheduletiming AS st
                 INNER JOIN schedule sb ON sb.id = st.`scheduleid` 
                 $filters

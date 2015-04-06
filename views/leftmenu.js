@@ -8,7 +8,8 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
                 
                 events: {
                    'click .navbar-side li':'openWorkspace',
-                    "click .fa-sign-out":"logout"	   
+                    "click .fa-sign-out":"logout"	,
+                    'change #ddlmenubranches':'changeDepartment'
                 },
 
 			initialize: function () {
@@ -17,6 +18,7 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 				this.app = this.options.setting;
 			
 				this.render();
+				this.getDepartments();
 				 			
 			},
 			logout:function(){
@@ -33,7 +35,43 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 		            }); 
 				
 			},
-
+			getDepartments:function(){
+				var str = "";
+				var that = this;
+				var URL = "api/branchbyemployee";
+				var str = "";
+				$.when($.getJSON(URL,{employeeid:this.app.user_employee_id},  function (tsv, state, xhr) {
+				})).then(function(data) {
+					
+					_.each(data,function(value,key,list){
+						var selected = "";
+						console.log(that.app.user_branch_id  + 'branchid');
+						if(that.app.user_branch_id == value.id){
+							selected ="selected";
+						}
+						 str+='<option '+selected+' value='+value.id+'>'+value.name+'</option>';
+					});
+					
+					that.$el.find('#ddlmenubranches').append(str);
+					if(data.length==0){
+						that.$el.find('#ddlmenubranches').hide();
+					}
+				}); 
+			} ,
+			changeDepartment:function(ev){
+	   			 var branchid = ev.target.value;
+	   			 var name= this.$el.find("#ddlmenubranches option:selected").text();
+	   			 var data = this.app.data;
+	   			 Backbone.history.length = 0;
+	   			 if(typeof this.app.branches !="undefined")
+				     var branch = this.app.branches.filter(function(el){
+					 return el.id == branchid;
+				 });
+	   			 require([ 'app' ], function(app) {
+	 	              var settings = app.load(data,name);
+	        		  app.getUser(branchid);
+	             });
+			 },
 			openWorkspace:function(ev){
 				var that = this;
 				var title = $(ev.target).text();
@@ -61,11 +99,10 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 					$(this).next('.nav-col').slideToggle();
 				})
 			},
-			getMenu:function(){ 
+			getMenu:function(i){ 
 				  var that = this;
 				if(typeof this.app.modules == "undefined"){
 					 var URL = "api/modules";
-		           
 		             var data = {};
 		             if(this.app.user_branch_id){
 		            	 data = {branchid:this.app.user_branch_id} 
@@ -73,27 +110,46 @@ define(['jquery', 'backbone','bootstrap', 'underscore',  'text!templates/leftmen
 		             jQuery.getJSON(URL,data,  function (tsv, state, xhr) {
 		                 var _json = jQuery.parseJSON(xhr.responseText);
 		                 that.app.modules = _json;
-		                return that.showMenu();
+		                 return that.showMenu(i);
 		             }); 
 				}else{
-					return that.showMenu();
+					return that.showMenu(i);
 				}
 			}, 
-			showMenu:function(){
-
+			showMenu:function(i){
+				
 				var that = this; 
 				var total = this.options.setting.modules.length;
 				var iterator = 0;
 				var html = "<li class='nav-search'> <span></span> </li>";
 				var which_child = "";
 				if(!this.app.modules || typeof this.app.modules[0] == "undefined"){
-					this.getMenu();
-					return false;
-				}
-				var departments = this.app.modules.filter(function(el){
+					if(i==1) return false;
 					
-					return el.childof == "management";
+					setTimeout(function(){
+						that.getMenu(1);
+					},1000);
+					 
+				}
+				var departments;
+				try {
+				    var departments = this.app.modules.filter(function(el){
+							
+							return el.childof == "management";
+					}) 
+				} catch (e) {
+					swal({
+					      title: "Info?",
+					      text: "Problem selecting department, department may not have modules, try to refresh the application",
+					      type: "info" ,
+					   });
+				}
+				
+			    var departments = this.app.modules.filter(function(el){
+						
+						return el.childof == "management";
 				})
+				
 				var settings = this.options.setting.modules.filter(function(el){
 					
 					return el.childof == "setting";

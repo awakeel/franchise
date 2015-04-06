@@ -55,12 +55,12 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 							var url = "api/bookingbyid";
 							 var that = this; 
 			                  jQuery.getJSON(url,{bookingid:this.options.model.get('id'),branchid:this.branchid}, function(tsv, state, xhr) {
-			                   var employees = jQuery.parseJSON(xhr.responseText);
-			                   that.model = employees[0];
-			                   that.basicInfo();
-			                   that.basicBooking();
-			                   that.fetchEmployees();
-			                   that.fetchServices();
+					                   var employees = jQuery.parseJSON(xhr.responseText);
+					                   that.model = employees[0];
+					                   that.basicInfo();
+					                   that.basicBooking();
+					                   that.fetchEmployees();
+					                   that.fetchServices();
 			                   
 			                   	});
 						},
@@ -244,31 +244,26 @@ define( [ 'text!booking/tpl/createbooking.html','booking/models/booking' ,'timep
 						getDate:function(date){
 							return date.slice(0,4) + '-' + date.slice(4,6) +'-'+ date.slice(6,8);
 						},
-						sendSMS:function(){
-							this.$el.find('.email-error-sms').addClass('hide');
-							this.$el.find('.text-error-sms').addClass('hide');
-							var email = this.$el.find('#txtemailcustomer').val();
+						sendSMS:function(){ 
+							var phone = this.$el.find('#txtphonenumber').val();
 							var bookingid = this.model.bookingid;
 							var customerid = this.model.customerid;
 							if(!this.model.name)
 								this.model.name = "not register";
 							var text = this.$el.find('#txtemailtext').val();
-							if(!email || !this.app.IsEmail(email)){
+							this.$el.find('.email-error-sms').addClass('hide');
+							if(!this.app.validatePhone(phone)){
 								this.$el.find('.email-error-sms').removeClass('hide');
-								return;
-							}
-							if(!text){
-								this.$el.find('.text-error-sms').removeClass('hide');
-								return;
+								return false;
 							}
 							var that = this;
 							 this.app.showLoading('Wait, Sending...',this.$el);
 							 var mdr = "";
 							 var URL = "api/sendsms";
-								$.post(URL, {franchiseid:this.app.user_franchise_id,text:text,customerid:customerid,bookingid:bookingid,email:email})
+								$.post(URL, {franchiseid:this.app.user_franchise_id,text:text,customerid:customerid,bookingid:bookingid,email:phone})
 				                .done(function(data) { 
 				                	 that.app.showLoading(false,that.$el);
-				                	 that.app.successMessage();
+				                	 that.app.successMessage(data);
 				                	 
 				                	 mdr +='<div class="col-lg-12 col-md-12 col-sm-12">';
 				                	    mdr +='<div class="info-container" style="margin-top:20px;">';

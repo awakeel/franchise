@@ -44,7 +44,34 @@ class Branches {
 		} );
 		$app->get ( '/branchesbyid', function () {
 			$this->getBranchById ();
+		} ); 
+		$app->get ( '/branchbyemployee', function () {
+			$this->getBranchByEmployeeId ();
 		} );
+		
+	}
+	function getBranchByEmployeeId(){
+		$employeeid = @$_GET['employeeid'];
+		$sql = "select   b.* from branches b
+				inner join employeedepartments ed on ed.branchid = b.id
+				where b.isactivated = 1 and ed.employeeid = ".$employeeid."
+						group by ed.branchid
+						";
+	 	try {
+			 $branches = R::getAll($sql);
+			 if (! isset ( $_GET ['callback'] )) {
+			 	echo json_encode ( $branches );
+			 } else {
+			 	echo $_GET ['callback'] . '(' . json_encode ( $branches ) . ');';
+			 }
+		} catch ( PDOException $e ) {
+			$error = array (
+					"error" => array (
+							"text" => $e->getMessage () 
+					) 
+			);
+			echo json_encode ( $error );
+		}
 	}
 	function getEmployeeDepartments() {
 		if ($this->auth->getLoggedInMessages () == false) {
@@ -54,24 +81,20 @@ class Branches {
 			$employeeid = $_GET ['employeeid'];
 			if (empty ( $employeeid ))
 				$employeeid = 0;
-			$sql = "  
-	  SELECT * FROM (SELECT  b.*,
-      IF(r.branchid IS NULL, '', 'checked') AS selected,
-      IF(r.roleid IS NULL, 0, r.roleid) AS role,
-      role.name AS rolename 
-      FROM  branches b 
-      INNER JOIN employeedepartments r  ON r.branchid = b.id 
-      INNER JOIN role  ON role.id = r.roleid 
-      WHERE r.employeeid = $employeeid and b.isactivated = 1
-      GROUP BY b.NAME
-   UNION
-      SELECT w.*, '' AS selected, 0 AS role, '' AS rolename  FROM branches w  
-      
-      
- WHERE franchiseid = :franchiseid and w.isactivated = 1
- ) AS v
- GROUP BY NAME
-             			";
+			$sql = "  SELECT * FROM (SELECT  b.*,
+				      IF(r.branchid IS NULL, '', 'checked') AS selected,
+				      IF(r.roleid IS NULL, 0, r.roleid) AS role,
+				      role.name AS rolename 
+				      FROM  branches b 
+				      INNER JOIN employeedepartments r  ON r.branchid = b.id 
+				      INNER JOIN role  ON role.id = r.roleid 
+				      WHERE r.employeeid = $employeeid and b.isactivated = 1
+				      GROUP BY b.NAME
+				   UNION
+				      SELECT w.*, '' AS selected, 0 AS role, '' AS rolename  FROM branches w  
+				 	 WHERE franchiseid = :franchiseid and w.isactivated = 1
+					 ) AS v
+					 GROUP BY NAME ";
 			$branches = R::getAll ( $sql, [ 
 					':franchiseid' => $_GET ['franchiseid'] 
 			] );
@@ -191,6 +214,7 @@ class Branches {
 			$branch->notes = $params->notes;
 			$branch->id = $params->id;
 			$id = R::store ( $branch );
+			echo json_encode ($id );
 		} else {
 			
 			$branch->name = $params->name;
@@ -204,10 +228,11 @@ class Branches {
 			$branch->isactivated = 1;
 			$branch->isdeleted = 0;
 			$id = R::store ( $branch );
+			echo json_encode ($id );
 			$this->addEmployeeDepartments ( @$_SESSION ['employeeid'], $id, $this->auth->getFranchiseId () );
 		}
 		
-		echo json_encode ( $id );
+		
 		$this->updateIsNew ( @$_SESSION ['employeeid'] );
 		
 		$this->doLogic ( $params->timing, $id );
@@ -252,8 +277,7 @@ class Branches {
 			$employees->branchid = $departmentid;
 			$employees->franchiseid = $franid;
 			$employees->roleid = $rid;
-			$id = R::store ( $employees );
-			echo json_encode ( $id );
+			$id = R::store ( $employees ); 
 		} catch ( PDOException $e ) {
 			// error_log($e->getMessage(), 3, '/var/tmp/php.log');
 			echo '{"error":{"text":' . $e->getMessage () . '}}';

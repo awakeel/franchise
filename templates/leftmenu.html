@@ -4,21 +4,20 @@
                     <!-- begin SIDE NAV USER PANEL -->
                     <li class="side-user hidden-xs">
                         <img class="img-circle" src="img/default.gif" style="width:150px; height:150px">
-                        <p class="welcome">
-                            <i class="fa fa-key"></i> Logged in as <strong><%=this.getBranchName()%></strong>
-                        </p>
                         <p class="name tooltip-sidebar-logout">
                             <%=this.options.setting.users.firstname%>
-						                <%=this.options.setting.users.lastname%>  <a style="color: inherit" class="logout_open" href="#logout" data-toggle="tooltip" data-placement="top" title="" data-popup-ordinal="1" id="open_75034880" data-original-title="Logout"><i class="fa fa-sign-out"></i></a>
+						    <%=this.options.setting.users.lastname%> 
+						    <a style="color: inherit" class="logout_open" href="#logout" data-toggle="tooltip" data-placement="top" title="" data-popup-ordinal="1" id="open_75034880" data-original-title="Logout"><i class="fa fa-sign-out"></i></a>
                         </p>
+                        
+                        <p class="welcome">
+                            <i class="fa fa-key"></i> Logged in as <strong><%=this.getBranchName()%></strong>
+                            <select id="ddlmenubranches"></select>
+                        </p>
+                        
                         <div class="clearfix"></div>
                     </li>
-                    <%=this.getMenu() %>
-                   
-                          
-                    
-                      
-                   
+                    <%=this.getMenu() %> 
                     <!-- end PAGES DROPDOWN -->
                 </ul>
                 <!-- /.side-nav -->

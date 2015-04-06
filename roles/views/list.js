@@ -83,7 +83,7 @@ define(['text!roles/tpl/list.html','app'],
                  updateToken:function(ev){
                 	 var that = this;
                 	 
-                	 var id =$(ev.target).data('id');
+                	 var id = this.model.get('id');
                 	 require(['roles/views/addupdate'],function(addupdate){
                 		   that.options.page.$el.find('.roles').html(new addupdate({model:that.model,isnew:false,id:id,name:that.model.get('name'),description:that.model.get('description'),page:that}).$el);
                 		   $('#newrole').modal('show');
@@ -92,7 +92,7 @@ define(['text!roles/tpl/list.html','app'],
                  showManagePermission:function(ev){
                 	 var that = this;
                 	 
-                	 var id =$(ev.target).data('id');
+                	 var id = this.model.get('id');
                 	 require(['roles/views/managepermission'],function(manage){
                 		   that.options.page.$el.find('.permission').html(new manage({ roleid:that.model.get('id'),page:that,modules:that.model.get('modulename')}).$el);
                 		   $('#managepermission').modal('show');

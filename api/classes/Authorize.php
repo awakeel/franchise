@@ -81,11 +81,13 @@ class Authorize {
         						$_SESSION['franchiseid'] = $cursor[0]->franchiseid;
         						$_SESSION['isfranchise'] = $cursor[0]->isfranchise;
         						$_SESSION['roleid'] = $cursor[0]->roleid;
+        						$_SESSION['hash_key'] = $cursor[0]->hash;
         						$basic['ip'] =  $_SERVER['REMOTE_ADDR'];
         						$basic['since'] = date("F j, Y, g:i a");
         						$basic['login_failure'] = false;
         						$basic['is_logged_in'] = true;
         						$cursor[0]->setting = $basic;
+        						$cursor[0]->password='ENCRIPTED';
         						$_SESSION['user'] = $cursor[0];
         						
         						$this->saveLoginHistory($_SERVER['REMOTE_ADDR'],$cursor[0]->id);
@@ -249,11 +251,13 @@ function getSession(){
 	$_SESSION['franchiseid'] = $employees[0]->franchiseid;
 	$_SESSION['isfranchise'] = $employees[0]->isfranchise;
 	$_SESSION['roleid'] = $employees[0]->roleid;
+	$_SESSION['hash_key'] = $employees[0]->hash;
 	$basic['ip'] =  $_SERVER['REMOTE_ADDR'];
 	$basic['since'] = date("F j, Y, g:i a");
 	$basic['login_failure'] = false;
 	$basic['is_logged_in'] = true;
 	$employees[0]->setting = $basic;
+	$employees[0]->password='ENCRIPTED';
 	$_SESSION['user'] = $employees[0];
 	$_SESSION['firsttime'] = '';
 	$_SESSION['firsttime'] = @$_GET['firsttime'];

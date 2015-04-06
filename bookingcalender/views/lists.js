@@ -166,6 +166,8 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 		                    var dayClass = ".fc-day" + _Diff; 
 		                    console.log(dayClass);
 		                    $(dayClass).addClass('fc-sun');
+		                    var dataToFind = moment(event.start).format('YYYY-MM-DD');
+		                    $('#calendar').find("td[data-date='"+dataToFind+"']").addClass('activeDay');
 		                  	return;
 		            	}else{
 		            		element.find('.fc-event-inner').empty();
@@ -218,7 +220,7 @@ define(['text!bookingcalender/tpl/bookingcalender.html','bookingcalender/collect
 			 
 			require([ 'booking/views/createbooking' ],	function(Lists) { 
 					var objLists = new Lists({model:obj,page:that,app:that.app}) 
-					$('#page-wrapper').find('.page-content .cslg').remove()
+					$('#page-wrapper').find('.page-content > div:gt(0)').remove();
 					$('#page-wrapper').find('.page-content').append(objLists.$el); 
 				 
 					

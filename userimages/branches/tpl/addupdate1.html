@@ -1,0 +1,279 @@
+	<div id="white_background_wrapper">
+                    		<div class="row">
+                            	<div class="col-md-1">
+                                	<div class="tabs_menu_bg">
+                                    	<ul class="nav nav-pills nav-stacked" id="myStacked">
+                                    	<li data-id="1"><a href="#tab1" data-toggle="tab"><span class="label">1</span>
+			Basic Info</a></li>
+	<li data-id="2"> <a href="#tab2" data-toggle="tab"><span class="label">2</span>
+			Basic Settings</a></li>
+	 <li data-id="3"><a href="#tab3" data-toggle="tab"><span class="label">3</span>
+			Department Timing</a></li>
+	<li data-id="4"><a href="#tab4" data-toggle="tab"><span class="label">4</span>
+			Add Job Types </a></li>
+	<li data-id="5"><a href="#tab5" data-toggle="tab"><span class="label">5</span>
+			Add Services</a></li>
+	
+	<li data-id="6"><a href="#tab6" data-toggle="tab"><span class="label">6</span>
+			Add Employees</a></li>
+                              </ul>
+<div class="col-lg-12" style="padding-top: 40px;">
+	<div class="stepwizard">
+		<div class="stepwizard-row">
+			<div class="stepwizard-step" data-id="1">
+				<button type="button" class="btn btn-primary btn-circle">2</button>
+				<p>
+					<a href="#tab1" data-toggle="tab"> Basic Settings</a>
+				</p>
+			</div>
+			<div class="stepwizard-step">
+				<button type="button" class="btn btn-default btn-circle"
+					disabled="disabled">3</button>
+				<p>Payment</p>
+			</div>
+			<div class="stepwizard-step">
+				<button type="button" class="btn btn-default btn-circle">1</button>
+				<p>Cart</p>
+			</div>
+
+		</div>
+	</div>
+	<div class="tab-content">
+		<div class="tab-pane active" id="tab1">
+			<form class="form-horizontal">
+				<fieldset>
+
+					<!-- Form Name -->
+					<legend> </legend>
+
+					<!-- Text input-->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="txtname">Name</label>
+						<div class="col-md-5">
+							<input id="txtname" name="txtname" type="text"
+								placeholder="department name e.g xyz hair saloon"
+								class="form-control input-md" required="">
+
+						</div>
+					</div>
+					<!-- Textarea -->
+					<div class="form-group">
+						<label class="col-md-4 control-label" for="txtdescription">Description</label>
+						<div class="col-md-5">
+							<textarea class="form-control" id="txtdescription"
+								name="txtdescription">Description</textarea>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="tab-pane" id="tab2">
+			<form class="form-horizontal">
+				<fieldset>
+					<legend> </legend>
+					<div class=" col-md-5 timings-div">
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="ddlcountries">Countries</label>
+							<div class="col-md-4">
+								<select id="ddlcountries" name="ddlcountries"
+									class="form-control">
+									<option value="1">Select countries</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="ddlcurrencies">
+								Currencies</label>
+							<div class="col-md-4">
+								<select id="ddlcurrencies" name="ddlcurrencies"
+									class="form-control">
+									<option value="1">Select Currencies</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-md-4 control-label" for="ddllanguage">
+								Language</label>
+							<div class="col-md-4">
+								<select id="ddllanguage" name="ddllanguage" class="form-control">
+									<option value="1">Select Language</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class=" col-md-5 timings-div">
+
+						<h4>Timing</h4>
+						<p> <em class='department-name'></em>may have time <em>rendered as italicized text</em></p>
+						<div class="table-responsive">
+							<table class="table table-hover  table-striped">
+								<thead>
+									<tr>
+										<th>
+											<div class="checkbox">
+												<label> <input id='chkall' type="checkbox" value="">All
+												</label>
+											</div>
+										</th>
+										<th>From</th>
+										<th>To</th>
+									</tr>
+								</thead>
+								<tbody>
+
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" class='days'
+													id='m' type="checkbox" value="m">Monday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker" id="txtsm" /></td>
+										<td><input type="text" class="timepicker" id="txtem" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" id='t'
+													class='days' type="checkbox" value="t">Tuesday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtst" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txtet" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" class='days'
+													id='w' type="checkbox" value="w">Wensday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtsw" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txtew" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" class='days'
+													id='th' type="checkbox" value="th">Thursday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtsth" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txteth" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" class='days'
+													id='f' type="checkbox" value="f">Friday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtsf" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txtef" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" class='days'
+													id='st' type="checkbox" value="st">Saturday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtsst" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txtest" /></td>
+									</tr>
+									<tr>
+										<td>
+											<div class="checkbox">
+												<label> <input name="days_group[]" id='s'
+													class='days' type="checkbox" value="s">Sunday
+												</label>
+											</div>
+										</td>
+										<td><input type="text" class="timepicker first-text"
+											id="txtss" /></td>
+										<td><input type="text" class="timepicker end-text"
+											id="txtes" /></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+
+
+				</fieldset>
+			</form>
+
+		</div>
+
+		<div class="tab-pane" id="tab4">
+			<form class="form-horizontal">
+				<fieldset>
+					<legend> </legend>
+					<div class="form-group">
+						<label class="col-md-8 control-label" for="txtjobtype"> </label>
+						<div class="col-md-8">
+
+							<div class="table-jobtypes"></div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+
+		<div class="tab-pane" id="tab5">
+
+
+			<form class="form-horizontal">
+				<fieldset>
+					<legend> </legend>
+					<div class="form-group">
+						<label class="col-md-8 control-label" for=" "> </label>
+						<div class="col-md-8">
+							<div class="table-services"></div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+		<div class="tab-pane" id="tab6">
+			<form class="form-horizontal">
+				<fieldset>
+					<legend> </legend>
+					<div class="form-group">
+						<label class="col-md-10 control-label" for=" "> </label>
+						<div class="col-md-10">
+							<div class="table-employees"></div>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+
+
+		<ul class="pager wizard">
+
+			<li class="previous"><a href="javascript:;">Previous</a></li>
+
+			<li class="next"><a href="javascript:;">Next</a></li>
+			<li class="next finish " style="display: none;"><a
+				href="javascript:;">Finish</a></li>
+		</ul>
+	</div>
+</div>
+

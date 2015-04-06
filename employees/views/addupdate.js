@@ -40,7 +40,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					this.firstname = this.objModelEmployee.get('firstname');
 					this.lastname = this.objModelEmployee.get('lastname');
 					this.email = this.objModelEmployee.get('email');
-					this.password = this.objModelEmployee.get('password');
+					//this.password = this.objModelEmployee.get('password');
 					this.phone = this.objModelEmployee.get('phone');
 					this.address = this.objModelEmployee.get('address');
 					this.roleid = this.objModelEmployee.get('roleid');
@@ -53,7 +53,7 @@ define(['text!employees/tpl/addupdate.html','employees/models/employee','employe
 					this.$el.find('#txtphone').val(this.phone);
 					this.$el.find('#txtaddress').val(this.address);
 					this.$el.find('#txtemail').val(this.email);
-					this.$el.find('#txtpassword').val(this.password);
+					//this.$el.find('#txtpassword').val(this.password);
 					this.$el.find("input:radio[value='"+this.model.get('type')+"']").attr('checked', true);
 					if(this.model.get('type').trim()=="Hourly"){
 						this.$el.find('.visit-timing').removeClass('hide');

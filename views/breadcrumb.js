@@ -7,7 +7,8 @@ define([ 'backbone', 'underscore',  'text!templates/breadcrumb.html'],
 		    },
 			initialize: function () {
 				 this.language = this.options.setting.language;
-				this.template = _.template(template); 
+				this.template = _.template(template);
+				this.app = this.options.setting;
 				 this.title = this.options.title;
 				this.render();
 				 	console.log(this.title)		
@@ -16,6 +17,15 @@ define([ 'backbone', 'underscore',  'text!templates/breadcrumb.html'],
 				var that = this;
 				this.$el.html(this.template({})); 
 			},
+			getBranchName:function(){ 
+				if(this.app.current_branch !=""){
+					return this.app.current_branch;
+				}else if(typeof this.app.branches[0] !="undefined"){
+            		return this.app.branches[0].name;
+            	}else if(this.app.users.isfranchise == "1"){
+            		return this.app.users.company;
+            	}
+            },
 			logout:function(){
 				this.options.setting.users = {};
 				Backbone.history.length = 0;
